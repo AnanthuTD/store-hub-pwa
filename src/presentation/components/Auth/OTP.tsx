@@ -164,10 +164,9 @@ function OTP({
 export default function OTPInput({ onChange }: { onChange: (otp: string) => void }) {
   const [otp, setOtp] = React.useState('');
 
-  function handleOTPChange(otp: string) {
-    setOtp(otp);
+  React.useEffect(() => {
     onChange(otp);
-  }
+  }, [otp, onChange]);
 
   return (
     <Box
@@ -177,7 +176,7 @@ export default function OTPInput({ onChange }: { onChange: (otp: string) => void
         gap: 2,
       }}
     >
-      <OTP separator={<span>-</span>} value={otp} onChange={handleOTPChange} length={6} />
+      <OTP separator={<span>-</span>} value={otp} onChange={setOtp} length={6} />
     </Box>
   );
 }
