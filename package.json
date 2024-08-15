@@ -27,13 +27,14 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^5.15.0",
     "@mui/lab": "5.0.0-alpha.156",
-    "@mui/material": "^5.15.0",
+    "@mui/material": "^5.16.6",
     "@mui/system": "^5.15.0",
     "@mui/utils": "^5.15.0",
+    "axios": "^1.7.3",
     "is-mobile": "^4.0.0",
     "notistack": "^3.0.1",
     "react": "^18.2.0",
@@ -42,7 +43,7 @@
     "react-helmet-async": "^2.0.3",
     "react-hotkeys-hook": "^4.4.1",
     "react-router-dom": "^6.21.0",
-    "recoil": "^0.7.7"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.1",
