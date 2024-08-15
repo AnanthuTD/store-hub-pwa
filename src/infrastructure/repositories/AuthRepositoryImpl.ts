@@ -3,7 +3,14 @@ import { VerifyEmailError, RegisterUserError } from '@/application/errors';
 import { ZodError } from 'zod';
 import { emailSchema } from '@/validators/Shared';
 import axios, { AxiosResponse } from 'axios';
-import { RegisterUser, SignInParams, SignInResponse } from '@/domain/models/AuthModels';
+import {
+  LoginWithOtpParams,
+  LoginWithOtpResponse,
+  OTPResponse,
+  RegisterUser,
+  SignInParams,
+  SignInResponse,
+} from '@/domain/models/AuthModels';
 import { AuthRepository } from '@/domain/repositories/AuthRepository';
 
 export class AuthRepositoryImpl implements AuthRepository {
@@ -66,6 +73,47 @@ export class AuthRepositoryImpl implements AuthRepository {
         const { status, data } = err.response;
         if (status === 401) {
           return { error: 'Invalid credentials. Please try again.' };
+        } else if (status === 500) {
+          return { error: 'Server error. Please try again later.' };
+        } else {
+          return { error: data.message || 'An unknown error occurred.' };
+        }
+      } else {
+        return { error: 'Network error. Please check your connection.' };
+      }
+    }
+  }
+
+  async sendOTP(countryCode: string, mobileNumber: string): Promise<OTPResponse> {
+    try {
+      const response = await axiosInstance.post('/auth/otp/send', { countryCode, mobileNumber });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const { data } = error.response;
+        throw new Error(data?.error || 'An error occurred while sending OTP.');
+      } else {
+        throw new Error('Network error. Please check your connection.');
+      }
+    }
+  }
+
+  async loginWithOtp(params: LoginWithOtpParams): Promise<LoginWithOtpResponse> {
+    try {
+      const response = await axiosInstance.post('/auth/signin/otp', params);
+
+      return {
+        message: response.data.message,
+        user: response.data.user,
+      };
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        const { status, data } = err.response;
+
+        if (status === 400) {
+          return { error: data.error || 'Invalid request. Please check your input.' };
+        } else if (status === 404) {
+          return { error: 'User not found.' };
         } else if (status === 500) {
           return { error: 'Server error. Please try again later.' };
         } else {
