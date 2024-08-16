@@ -3,9 +3,15 @@ import { Box, TextField, Button, Typography, Tabs, Tab, FormControl } from '@mui
 import OTPInput from '../Auth/OTP';
 import PhoneForm, { MobileNumberObject } from '../SignUp/PhoneForm';
 import { AuthRepositoryImpl } from '@/infrastructure/repositories/AuthRepositoryImpl';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/infrastructure/redux/store';
+import { login } from '@/infrastructure/redux/slices/user/userSlice';
 
 const SignInForm = () => {
+  const user = useSelector((state: RootState) => state.user.data);
+  const dispatch = useDispatch<AppDispatch>();
+
   const navigate = useNavigate();
   const [emailOrMobile, setEmailOrMobile] = useState('');
   const [mobileNumber, setMobileNumber] = useState<MobileNumberObject>({
@@ -32,6 +38,7 @@ const SignInForm = () => {
       if (response.error) {
         setError(response.error);
       } else {
+        dispatch(login(response.data!));
         console.log('Sign-in successful:', response.data);
         navigate('/home');
       }
@@ -51,6 +58,7 @@ const SignInForm = () => {
         console.error('Error logging in:', response.error);
         setError(response.error);
       } else {
+        dispatch(login(response.user!));
         console.log('Login successful:', response.user);
         navigate('/home');
       }
@@ -71,6 +79,10 @@ const SignInForm = () => {
         setError('Failed to send OTP due to unknown reason ');
       }
     }
+  }
+
+  if (user?.id) {
+    return <Navigate to={'/home'} />;
   }
 
   return (
