@@ -18,7 +18,15 @@ const AadharCardUpload: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="xs">
+    <Container
+      maxWidth="xs"
+      sx={{
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexDirection: 'column',
+      }}
+    >
       <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
         <Typography variant="h6" align="center" gutterBottom fontWeight="bold">
           Aadhar card details
@@ -44,8 +52,9 @@ const AadharCardUpload: React.FC = () => {
           image={aadhar2}
           onUpload={(e) => handleUpload(e, setAadhar2)}
         />
-
-        <SubmitButton text="Submit" />
+      </Box>
+      <Box position={'relative'} bottom={0}>
+        <SubmitButton text="Submit" disabled={!(aadhar1 && aadhar2)} />
       </Box>
     </Container>
   );
