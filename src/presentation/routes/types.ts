@@ -14,6 +14,7 @@ enum Pages {
   PartnerProfileForm,
   PartnerDocumentSubmission,
   PartnerPersonalDocuments,
+  PartnerAadhar,
 }
 
 type PathRouteCustomProps = {

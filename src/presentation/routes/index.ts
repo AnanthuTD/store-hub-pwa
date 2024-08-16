@@ -69,6 +69,12 @@ const routes: Routes = {
     title: 'Partner SignUp',
     icon: LoginIcon,
   },
+  [Pages.PartnerAadhar]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/partner/AadharUpload')),
+    path: '/partner/signup/document/personal/aadhar',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
 };
 
 export default routes;
