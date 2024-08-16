@@ -41,6 +41,14 @@ const routes: Routes = {
     title: 'Partner SignUp',
     icon: LoginIcon,
   },
+  [Pages.PartnerOTPVerification]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/PartnerValidateOTP'),
+    ),
+    path: '/partner/signup/otp-verification',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
 };
 
 export default routes;
