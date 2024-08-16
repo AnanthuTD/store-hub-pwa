@@ -1,3 +1,5 @@
+import { User } from '../entities/User';
+
 export interface RegisterUser {
   firstName: string;
   lastName: string;
@@ -10,15 +12,30 @@ export interface SignInParams {
   password: string;
 }
 
-export interface User {
-  id: string;
-  profile: {
-    lastName: string;
-    firstName: string;
-  };
-}
-
 export interface SignInResponse {
   data?: User;
+  error?: string;
+}
+
+export interface OTPResponse {
+  status:
+    | 'pending'
+    | 'approved'
+    | 'canceled'
+    | 'max_attempts_reached'
+    | 'deleted'
+    | 'failed'
+    | 'expired';
+}
+
+export interface LoginWithOtpParams {
+  countryCode: string;
+  mobileNumber: string;
+  otp: string;
+}
+
+export interface LoginWithOtpResponse {
+  message?: string;
+  user?: User;
   error?: string;
 }
