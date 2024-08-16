@@ -49,6 +49,14 @@ const routes: Routes = {
     title: 'Partner SignUp',
     icon: LoginIcon,
   },
+  [Pages.PartnerProfileForm]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/PartnerProfileForm'),
+    ),
+    path: '/partner/signup/profile',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
 };
 
 export default routes;
