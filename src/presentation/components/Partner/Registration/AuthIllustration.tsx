@@ -2,9 +2,9 @@ import { Box } from '@mui/material';
 
 const AuthIllustration = () => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }} height={'45%'}>
+    <Box sx={{ display: 'flex', justifyContent: 'center' }} height={'50%'}>
       <img
-        src="your-illustration-url"
+        src="/partner-registration-signin.svg"
         alt="Delivery Illustration"
         style={{ width: '100%', maxWidth: 300 }}
       />
