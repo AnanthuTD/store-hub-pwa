@@ -57,6 +57,12 @@ const routes: Routes = {
     title: 'Partner SignUp',
     icon: LoginIcon,
   },
+  [Pages.PartnerDocumentSubmission]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/partner/Document')),
+    path: '/partner/signup/document',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
 };
 
 export default routes;
