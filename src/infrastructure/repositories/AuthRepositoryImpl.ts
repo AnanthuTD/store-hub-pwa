@@ -12,6 +12,7 @@ import {
   SignInResponse,
 } from '@/domain/models/AuthModels';
 import { AuthRepository } from '@/domain/repositories/AuthRepository';
+import { User } from '@/domain/entities/User';
 
 export class AuthRepositoryImpl implements AuthRepository {
   async verifyToken(token: string): Promise<{ email?: string; message?: string }> {
@@ -122,6 +123,16 @@ export class AuthRepositoryImpl implements AuthRepository {
       } else {
         return { error: 'Network error. Please check your connection.' };
       }
+    }
+  }
+
+  async fetchProfile(): Promise<User | null> {
+    try {
+      const response = await axiosInstance.get('/auth/profile');
+
+      return response.data;
+    } catch (err) {
+      return null;
     }
   }
 }
