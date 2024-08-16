@@ -13,6 +13,7 @@ enum Pages {
   PartnerOTPVerification,
   PartnerProfileForm,
   PartnerDocumentSubmission,
+  PartnerPersonalDocuments,
 }
 
 type PathRouteCustomProps = {
