@@ -9,12 +9,14 @@ enum Pages {
   SignUpWithMobile,
   SignIn,
   UserHome,
+  PartnerSignup,
 }
 
 type PathRouteCustomProps = {
   title?: string;
   component: FC;
   icon?: FC<SvgIconProps>;
+  isProtected?: boolean;
 };
 
 type Routes = Record<Pages, PathRouteProps & PathRouteCustomProps>;
