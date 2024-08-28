@@ -17,12 +17,14 @@ import useEmailVerification from '@/hooks/useEmailVerification';
 import PhoneForm, { MobileNumberObject } from '@/presentation/components/SignUp/PhoneForm';
 import EmailForm from '@/presentation/components/SignUp/EmailForm';
 import AuthThemeProvider from '../AuthThemeProvider';
-// import EmailForm from '../../../components/SignUp/EmailForm';
-// import PhoneForm, { MobileNumberObject } from '../../../components/SignUp/PhoneForm';
+import { AuthRepositoryImpl } from '@/infrastructure/repositories/AuthRepositoryImpl';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [inputType, setInputType] = useState('email');
   const [email, setEmail] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const { sending, emailSent, emailError, sentError, verify } = useEmailVerification();
 
@@ -35,11 +37,35 @@ const SignUp = () => {
     setInputType(e.target.value);
   };
 
-  const handleSubmit = () => {
+  async function sendOTP() {
+    try {
+      const authRepo = new AuthRepositoryImpl();
+      const response = await authRepo.sendOTP(mobileNumber.countryCode, mobileNumber.mobileNumber);
+
+      if (response.status !== 'pending' && response.status !== 'approved') {
+        setError('Failed to send OTP: ' + response.status);
+      }
+    } catch (error) {
+      if (error instanceof Error) setError('Failed to send OTP: ' + error.message);
+      else {
+        setError('Failed to send OTP due to unknown reason ');
+      }
+    }
+  }
+
+  const handleSubmit = async () => {
     if (inputType === 'email') {
       verify(email);
     } else {
-      console.log('Not implemented yet ', mobileNumber);
+      await sendOTP();
+      const encodedCountryCode = encodeURIComponent(mobileNumber.countryCode);
+      const url =
+        '/signup-with-mobile?mobileNumber=' +
+        mobileNumber.mobileNumber +
+        '&countryCode=' +
+        encodedCountryCode;
+
+      navigate(url);
     }
   };
 
@@ -93,7 +119,15 @@ const SignUp = () => {
             {inputType === 'email' ? (
               <EmailForm email={email} setEmail={setEmail} emailError={emailError} />
             ) : (
-              <PhoneForm onChange={handleMobileNumberChange} />
+              <>
+                {error && (
+                  <Typography color="error" variant="body2">
+                    {error}
+                  </Typography>
+                )}
+
+                <PhoneForm onChange={handleMobileNumberChange} />
+              </>
             )}
 
             <Box marginTop={'16px'}>

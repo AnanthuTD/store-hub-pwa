@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { TextField } from '@mui/material';
 
 interface InputFieldProps {
   label: string;
   placeholder: string;
+  onChange: (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ label, placeholder }) => {
+const InputField: React.FC<InputFieldProps> = ({ label, placeholder, onChange }) => {
   return (
     <TextField
       variant="outlined"
@@ -14,6 +15,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, placeholder }) => {
       placeholder={placeholder}
       fullWidth
       sx={{ my: 2, backgroundColor: '#FFF', borderRadius: 1 }}
+      onChange={onChange}
     />
   );
 };

@@ -48,7 +48,7 @@ export class AuthRepositoryImpl implements AuthRepository {
 
   async registerUser(user: RegisterUser): Promise<AxiosResponse> {
     try {
-      return await axiosInstance.post('/auth/register', user);
+      return await axiosInstance.post('/auth/register/email', user);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const { status, data } = error.response;
@@ -102,6 +102,54 @@ export class AuthRepositoryImpl implements AuthRepository {
   async loginWithOtp(params: LoginWithOtpParams): Promise<LoginWithOtpResponse> {
     try {
       const response = await axiosInstance.post('/auth/signin/otp', params);
+
+      return {
+        message: response.data.message,
+        user: response.data.user,
+      };
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        const { status, data } = err.response;
+
+        if (status === 400) {
+          return { error: data.error || 'Invalid request. Please check your input.' };
+        } else if (status === 404) {
+          return { error: 'User not found.' };
+        } else if (status === 500) {
+          return { error: 'Server error. Please try again later.' };
+        } else {
+          return { error: data.message || 'An unknown error occurred.' };
+        }
+      } else {
+        return { error: 'Network error. Please check your connection.' };
+      }
+    }
+  }
+
+  async signupWithOTP({
+    countryCode,
+    mobileNumber,
+    firstName,
+    lastName,
+    password,
+    otp,
+  }: {
+    countryCode: string;
+    mobileNumber: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    otp: string;
+  }): Promise<LoginWithOtpResponse> {
+    try {
+      const response = await axiosInstance.post('/auth/register/mobile', {
+        countryCode,
+        mobileNumber,
+        firstName,
+        lastName,
+        password,
+        otp,
+      });
 
       return {
         message: response.data.message,

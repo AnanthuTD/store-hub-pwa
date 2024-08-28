@@ -10,6 +10,8 @@ import Pages from '@/presentation/routes/Pages';
 import SW from '@/presentation/sections/SW';
 import { store } from './infrastructure/redux/store';
 import { Provider } from 'react-redux';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 function App() {
   return (
@@ -18,9 +20,11 @@ function App() {
       {/* <Notifications /> */}
       <SW />
       <Provider store={store}>
-        <BrowserRouter>
-          <Pages />
-        </BrowserRouter>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <BrowserRouter>
+            <Pages />
+          </BrowserRouter>
+        </LocalizationProvider>
       </Provider>
     </Fragment>
   );

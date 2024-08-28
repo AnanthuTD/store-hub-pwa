@@ -2,8 +2,52 @@ import { Box, TextField, Button, Typography, Link } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2';
 import Header from '../../Header';
 import AuthThemeProvider from '../../AuthThemeProvider';
+import { useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { AuthRepositoryImpl } from '@/infrastructure/repositories/AuthRepositoryImpl';
 
 const SignUpWithMobile = () => {
+  const [error, setError] = useState<string | null>(null);
+  const [otp, setOtp] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [searchParams] = useSearchParams();
+  const mobileNumber = searchParams.get('mobileNumber');
+  const countryCode = searchParams.get('countryCode') || ''; // Assuming countryCode is also passed in query params
+  const navigate = useNavigate();
+
+  const handleSubmit = async () => {
+    if (!otp || !firstName || !lastName || !password || !countryCode || !mobileNumber) {
+      setError('Please fill in all required fields.');
+      return;
+    }
+
+    try {
+      const authRepo = new AuthRepositoryImpl();
+
+      const response = await authRepo.signupWithOTP({
+        countryCode,
+        mobileNumber,
+        firstName,
+        lastName,
+        password,
+        otp,
+      });
+
+      if (response.error) {
+        console.error('Error signing up:', response.error);
+        setError(response.error);
+      } else {
+        console.log('Sign up successful:', response.user);
+        navigate('/signin');
+      }
+    } catch (error) {
+      console.error('An error occurred during sign up:', error);
+      setError('An error occurred. Please try again later.');
+    }
+  };
+
   return (
     <AuthThemeProvider>
       <Header variant="signin" />
@@ -41,18 +85,27 @@ const SignUpWithMobile = () => {
                   fullWidth
                   margin="none"
                   size="small"
+                  value={mobileNumber}
+                  disabled
                 />
-                <Button variant="contained" color="slateBlue" fullWidth size="small">
-                  Sign up
-                </Button>
               </Box>
-              <TextField label="OTP" variant="outlined" fullWidth margin="none" size="small" />
+              <TextField
+                label="OTP"
+                variant="outlined"
+                fullWidth
+                margin="none"
+                size="small"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
               <TextField
                 label="First Name"
                 variant="outlined"
                 fullWidth
                 margin="none"
                 size="small"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
               />
               <TextField
                 label="Last Name"
@@ -60,9 +113,25 @@ const SignUpWithMobile = () => {
                 fullWidth
                 margin="none"
                 size="small"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
               />
-              <TextField label="Password" variant="outlined" fullWidth margin="none" size="small" />
-              <Button variant="contained" color="primary" fullWidth>
+              <TextField
+                label="Password"
+                variant="outlined"
+                fullWidth
+                margin="none"
+                size="small"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {error && (
+                <Typography color="error" variant="body2">
+                  {error}
+                </Typography>
+              )}
+              <Button variant="contained" color="primary" fullWidth onClick={handleSubmit}>
                 Sign up
               </Button>
             </Box>
