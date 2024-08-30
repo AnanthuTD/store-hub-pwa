@@ -1,4 +1,4 @@
-import { User } from '@/domain/entities/User';
+import { User } from '@/domain/models/AuthModels';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {

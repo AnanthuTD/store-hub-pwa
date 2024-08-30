@@ -35,6 +35,78 @@ const routes: Routes = {
     title: 'Home',
     icon: LoginIcon,
   },
+  [Pages.PartnerSignup]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/partner/PartnerSignup')),
+    path: '/partner/signup',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+  [Pages.PartnerOTPVerification]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/PartnerValidateOTP'),
+    ),
+    path: '/partner/signup/otp-verification',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+  [Pages.PartnerProfileForm]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/PartnerProfileForm'),
+    ),
+    path: '/partner/signup/profile',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+  [Pages.PartnerDocumentSubmission]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/partner/Document')),
+    path: '/partner/signup/document',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+  [Pages.PartnerPersonalDocuments]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/partner/PersonalDocuments')),
+    path: '/partner/signup/document/personal',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+  [Pages.PartnerAadhar]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/partner/AadharUpload-old')),
+    path: '/partner/signup/document/personal/aadhar',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+  [Pages.RegistrationComplete]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/RegistrationComplete'),
+    ),
+    path: '/partner/signup/complete',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+  [Pages.PartnerVehicleInformation]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/VehicleInformation'),
+    ),
+    path: '/partner/signup/document/vehicle',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+  [Pages.PartnerEmergencyInformation]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/EmergencyContactDetails'),
+    ),
+    path: '/partner/signup/document/emergency',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+  [Pages.PartnerBankAccountInformation]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/BankAccountDetails'),
+    ),
+    path: '/partner/signup/document/bank',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
 };
 
 export default routes;
