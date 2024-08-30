@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import OTPInput from '@/presentation/components/Auth/OTP';
 import SubmitButton from '@/presentation/components/Partner/Registration/SubmitButton';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { verifyOTP } from '@/infrastructure/repositories/PartnerAuthRepository';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '@/infrastructure/redux/store';
+import { storePartner } from '@/infrastructure/redux/slices/partner/partnerSlice';
 
 const OtpVerification = () => {
+  const [searchParams] = useSearchParams();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [otp, setOtp] = useState('');
   const [error, setError] = useState<string | null>(null);
+
+  const mobileNumber = searchParams.get('mobileNumber');
 
   const handleChange = (otp: string) => {
     setOtp(otp);
@@ -33,6 +40,10 @@ const OtpVerification = () => {
       setError(response.error);
     } else {
       console.log('OTP verfication successfull');
+
+      // Store the delivery partner's contact information in the Redux store
+      dispatch(storePartner({ contactInfo: { phone: mobileNumber } }));
+
       navigate('/partner/signup/profile');
     }
   };
@@ -51,7 +62,7 @@ const OtpVerification = () => {
         Enter OTP to verify
       </Typography>
       <Typography variant="body2" sx={{ mb: 3 }}>
-        A 6 digit OTP has been sent to your phone number <strong>+91 9999988888</strong>{' '}
+        A 6 digit OTP has been sent to your phone number <strong>+91 {mobileNumber}</strong>{' '}
         <Typography component="span" sx={{ color: 'red', cursor: 'pointer' }}>
           Change
         </Typography>

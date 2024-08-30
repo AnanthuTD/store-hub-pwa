@@ -16,6 +16,9 @@ enum Pages {
   PartnerPersonalDocuments,
   PartnerAadhar,
   RegistrationComplete,
+  PartnerVehicleInformation,
+  PartnerBankAccountInformation,
+  PartnerEmergencyInformation,
 }
 
 type PathRouteCustomProps = {

@@ -18,7 +18,7 @@ const AuthForm = () => {
       if (response.status !== 'pending' && response.status !== 'approved') {
         setError('Failed to send OTP: ' + response.status);
       } else {
-        navigate('/partner/signup/otp-verification');
+        navigate('/partner/signup/otp-verification?mobileNumber=' + mobileNumber);
       }
     } catch (error) {
       if (error instanceof Error) setError('Failed to send OTP: ' + error.message);

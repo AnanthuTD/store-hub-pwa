@@ -1,6 +1,8 @@
 import { Box, Typography, Card, CardContent, Button } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { Link } from 'react-router-dom';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 const RegistrationComplete = () => {
   return (
@@ -10,6 +12,11 @@ const RegistrationComplete = () => {
           backgroundColor: '#FF5963',
         }}
       >
+        <Box>
+          <Link to={'/partner/signup/document'}>
+            <KeyboardArrowLeftIcon />
+          </Link>
+        </Box>
         <Box
           display={'flex'}
           bgcolor={'white'}

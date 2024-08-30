@@ -70,7 +70,7 @@ const routes: Routes = {
     icon: LoginIcon,
   },
   [Pages.PartnerAadhar]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/partner/AadharUpload')),
+    component: asyncComponentLoader(() => import('@/presentation/pages/partner/AadharUpload-old')),
     path: '/partner/signup/document/personal/aadhar',
     title: 'Partner SignUp',
     icon: LoginIcon,
@@ -80,6 +80,30 @@ const routes: Routes = {
       () => import('@/presentation/pages/partner/RegistrationComplete'),
     ),
     path: '/partner/signup/complete',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+  [Pages.PartnerVehicleInformation]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/VehicleInformation'),
+    ),
+    path: '/partner/signup/document/vehicle',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+  [Pages.PartnerEmergencyInformation]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/EmergencyContactDetails'),
+    ),
+    path: '/partner/signup/document/emergency',
+    title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+  [Pages.PartnerBankAccountInformation]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/BankAccountDetails'),
+    ),
+    path: '/partner/signup/document/bank',
     title: 'Partner SignUp',
     icon: LoginIcon,
   },
