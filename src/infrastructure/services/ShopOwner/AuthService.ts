@@ -1,5 +1,5 @@
 import axiosInstance from '@/config/axios';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 interface LoginParams {
   email: string;
@@ -56,6 +56,48 @@ const login = async ({ email, password }: LoginParams): Promise<ShopOwnerRespons
   }
 };
 
+interface SignUpParams {
+  email: string;
+  password: string;
+}
+
+interface SignUpResponse {
+  success: boolean;
+  message?: string;
+}
+
+const signUp = async ({ email, password }: SignUpParams): Promise<SignUpResponse> => {
+  try {
+    const response = await axiosInstance.post<any, AxiosResponse<SignUpResponse>>(
+      '/shopOwner/signup',
+      {
+        email,
+        password,
+      },
+    );
+
+    if (response.data.success) {
+      return {
+        success: true,
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.message || 'Sign up failed. Please try again.',
+      };
+    }
+  } catch (error) {
+    console.error('Error during sign up:', error);
+    return {
+      success: false,
+      message:
+        (error as AxiosError<{ message: string }>).response?.data?.message ||
+        'Sign up failed. Please try again later.',
+    };
+  }
+};
+
 export const authService = {
   login,
+  signUp,
 };
