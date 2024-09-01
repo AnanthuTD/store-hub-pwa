@@ -21,10 +21,10 @@ export const useLogin = () => {
       await authService.login({ email, password });
 
       // On successful login, navigate to the desired page
-      navigate('/dashboard'); // or any page where you want to redirect after login
+      navigate('/admin/dashboard'); // or any page where you want to redirect after login
     } catch (err) {
       // Handle errors appropriately
-      setError(err.message || 'Failed to login. Please try again.');
+      setError((err as Error).message || 'Failed to login. Please try again.');
     } finally {
       setLoading(false);
     }
