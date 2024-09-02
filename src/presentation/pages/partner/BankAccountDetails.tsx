@@ -18,6 +18,7 @@ const BankAccountDetails: React.FC = () => {
   const partnerDocs = useSelector<RootState, IDeliveryPartner['documents'] | undefined>(
     (state) => state.partner.data?.documents,
   );
+  const partnerDetails = useSelector<RootState>((state) => state.partner.data);
 
   /* const handleDocumentUpload = (frontImage: string | null) => {
     setProofOfBank(frontImage);
@@ -46,7 +47,12 @@ const BankAccountDetails: React.FC = () => {
       // proofOfBank,
     };
 
-    dispatch(storePartner({ documents: { ...partnerDocs, bankAccountDetails: bankDetails } }));
+    dispatch(
+      storePartner({
+        ...partnerDetails,
+        documents: { ...partnerDocs, bankAccountDetails: bankDetails },
+      }),
+    );
   };
 
   return (

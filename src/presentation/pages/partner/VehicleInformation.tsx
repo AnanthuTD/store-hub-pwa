@@ -21,6 +21,7 @@ const VehicleInformation: React.FC = () => {
   const partnerDocs = useSelector<RootState, IDeliveryPartner['documents'] | undefined>(
     (state) => state.partner.data?.documents,
   );
+  const partnerDetails = useSelector<RootState>((state) => state.partner.data);
 
   /* const partnerDocs = useSelector<RootState, IDeliveryPartner['documents'] | undefined>(
     (state) => state.partner.data?.documents,
@@ -54,7 +55,7 @@ const VehicleInformation: React.FC = () => {
       // insuranceFront,
     };
 
-    dispatch(storePartner({ documents: { ...partnerDocs, vehicle: newData } }));
+    dispatch(storePartner({ ...partnerDetails, documents: { ...partnerDocs, vehicle: newData } }));
   };
 
   return (

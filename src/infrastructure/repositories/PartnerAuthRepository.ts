@@ -1,4 +1,5 @@
 import axiosInstance from '@/config/axios';
+import { OTPResponse } from '@/domain/models/AuthModels';
 import axios from 'axios';
 
 export async function sendOTP(countryCode: string, mobileNumber: string): Promise<OTPResponse> {
@@ -15,12 +16,17 @@ export async function sendOTP(countryCode: string, mobileNumber: string): Promis
   }
 }
 
-export async function verifyOTP(otp: string) {
+export async function verifyOTP(otp: string, phone: string) {
   try {
-    const response = await axiosInstance.post('/partner/otp/verify', { otp });
+    const response = await axiosInstance.post('/partner/otp/verify', {
+      otp,
+      countryCode: '+91',
+      phone,
+    });
 
     return {
       message: response.data.message,
+      _id: response.data.user.id,
     };
   } catch (err) {
     if (axios.isAxiosError(err) && err.response) {

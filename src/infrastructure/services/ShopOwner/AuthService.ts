@@ -38,7 +38,10 @@ export interface ShopOwnerResponseDTO {
   } | null;
 }
 
-const login = async ({ email, password }: LoginParams): Promise<ShopOwnerResponseDTO> => {
+const login = async ({
+  email,
+  password,
+}: LoginParams): Promise<{ shopOwner: ShopOwnerResponseDTO; token: string }> => {
   try {
     const response: AxiosResponse<ShopOwnerResponseDTO> = await axiosInstance.post<
       any,

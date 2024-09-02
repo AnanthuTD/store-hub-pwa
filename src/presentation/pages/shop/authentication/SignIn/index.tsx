@@ -12,8 +12,13 @@ import {
 import Input from '@/presentation/components/Input';
 import useShopOwnerSignIn from '@/hooks/ShopOwner/useLogin';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/infrastructure/redux/store';
+import { login } from '@/infrastructure/redux/slices/shopOwner/shopOwnerSlice';
 
 function SignIn() {
+  // const shopOwner = useSelector((state: RootState) => state.user.data);
+  const dispatch = useDispatch<AppDispatch>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { signIn, loading, error, success, clearFeedback } = useShopOwnerSignIn();
@@ -28,7 +33,10 @@ function SignIn() {
   };
 
   const handleSignIn = async () => {
-    await signIn({ email, password });
+    const shopOwner = await signIn({ email, password });
+    if (shopOwner) {
+      dispatch(login(shopOwner));
+    }
   };
 
   const handleGoogleSignIn = () => {

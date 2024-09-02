@@ -33,16 +33,17 @@ const OtpVerification = () => {
       return;
     }
 
-    const response = await verifyOTP(otp);
+    const response = await verifyOTP(otp, mobileNumber as string);
 
     if (response.error) {
       console.error('Error logging in:', response.error);
       setError(response.error);
     } else {
-      console.log('OTP verfication successfull');
-
+      console.log(response);
       // Store the delivery partner's contact information in the Redux store
-      dispatch(storePartner({ contactInfo: { phone: mobileNumber } }));
+      dispatch(storePartner({ _id: response._id }));
+
+      console.log('OTP verfication successfull');
 
       navigate('/partner/signup/profile');
     }

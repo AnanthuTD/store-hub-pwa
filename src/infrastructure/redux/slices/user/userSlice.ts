@@ -1,4 +1,4 @@
-import { User } from '@/domain/models/AuthModels';
+import { User } from '@/domain/entities/User';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
@@ -24,9 +24,12 @@ const userSlice = createSlice({
         state.data = { ...state.data, ...action.payload };
       }
     },
+    clearUser: (state) => {
+      state.data = null;
+    },
   },
 });
 
-export const { login, logout, updateUser } = userSlice.actions;
+export const { login, logout, updateUser, clearUser } = userSlice.actions;
 
 export default userSlice.reducer;

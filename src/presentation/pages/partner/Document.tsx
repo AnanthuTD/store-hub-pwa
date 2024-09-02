@@ -159,7 +159,7 @@ const DocumentsPage: React.FC = () => {
         },
       });
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         navigate('/partner/signup/complete');
       } else {
         console.error('Failed to submit:', response.data);

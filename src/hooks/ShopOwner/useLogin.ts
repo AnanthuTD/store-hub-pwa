@@ -16,14 +16,19 @@ function useShopOwnerSignIn() {
     setError(null);
     setSuccess(null);
     try {
-      await authService.login({ email, password });
+      const { shopOwner } = await authService.login({ email, password });
 
       // Handle success response
       setSuccess('Sign in successful!');
+
+      return shopOwner;
       // Optionally, you could redirect the user or trigger any other side effects here
     } catch (err) {
       // Handle error response
-      setError('Sign in failed. Please check your credentials and try again.');
+      setError(
+        ((err as Error).message as string) ||
+          'Sign in failed. Please check your credentials and try again.',
+      );
     } finally {
       setLoading(false);
     }

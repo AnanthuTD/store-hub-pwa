@@ -21,6 +21,7 @@ const PersonalDocs: PersonalDoc[] = [
 ];
 
 const PersonalDocuments: React.FC = () => {
+  const partnerDetails = useSelector<RootState>((state) => state.partner.data);
   const dispatch = useDispatch<AppDispatch>();
 
   const partnerDocs = useSelector<RootState, IDeliveryPartner['documents'] | undefined>(
@@ -43,7 +44,7 @@ const PersonalDocuments: React.FC = () => {
       [documentType]: { frontImage, backImage },
     };
 
-    dispatch(storePartner({ documents: updatedDocs }));
+    dispatch(storePartner({ ...partnerDetails, documents: updatedDocs }));
 
     setSelectedDocument(null); // Hide the upload component after submission
   };

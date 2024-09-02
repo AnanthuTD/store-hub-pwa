@@ -34,7 +34,10 @@ const routes: Routes = {
     path: '/home',
     title: 'Home',
     icon: LoginIcon,
+    layoutType: 'user',
   },
+
+  // PARTNER
   [Pages.PartnerSignup]: {
     component: asyncComponentLoader(() => import('@/presentation/pages/partner/PartnerSignup')),
     path: '/partner/signup',
@@ -105,6 +108,56 @@ const routes: Routes = {
     ),
     path: '/partner/signup/document/bank',
     title: 'Partner SignUp',
+    icon: LoginIcon,
+  },
+
+  // ADMIN
+  [Pages.AdminSignIn]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/admin/authentication/SignIn'),
+    ),
+    path: '/admin/signin',
+    title: 'Admin Sign In',
+    icon: LoginIcon,
+  },
+
+  // SHOP OWNER
+  [Pages.ShopSignUp]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/shop/authentication/SignUp'),
+    ),
+    path: '/shop/signup',
+    title: 'Shop Sign Up',
+    icon: LoginIcon,
+  },
+  [Pages.ShopHomePage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/shop/Dashboard')),
+    path: '/shop/dashboard',
+    title: 'Shop Home',
+    icon: LoginIcon,
+    layoutType: 'shopOwner',
+  },
+  [Pages.ShopOwnerRegister]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/shop/RegisterShopOwner')),
+    path: '/shop/owner/register',
+    title: 'Shop Owner Register',
+    icon: LoginIcon,
+    layoutType: 'shopOwner',
+  },
+  [Pages.ShopSignUpWithOTP]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/shop/authentication/SignIn'),
+    ),
+    path: '/shop/signin',
+    title: 'Shop Owner Sign In',
+    icon: LoginIcon,
+  },
+
+  // status
+  [Pages.TokenVerificationStatus]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/TokenVerificationStatus')),
+    path: '/token-verification-status',
+    title: 'Token Verification Status',
     icon: LoginIcon,
   },
 };

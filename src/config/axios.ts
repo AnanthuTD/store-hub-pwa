@@ -1,8 +1,9 @@
+import { clearShopOwner } from '@/infrastructure/redux/slices/shopOwner/shopOwnerSlice';
+import { store } from '@/infrastructure/redux/store';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
-console.log(import.meta.env);
 const config: AxiosRequestConfig = {
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: '/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -11,32 +12,37 @@ const config: AxiosRequestConfig = {
 
 const axiosInstance: AxiosInstance = axios.create(config);
 
-// axiosInstance.interceptors.request.use(
-//   (config) => {
-//     const token = localStorage.getItem('authToken');
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
-
 // Response interceptor to handle responses and errors globally
-// axiosInstance.interceptors.response.use(
-//   (response: AxiosResponse) => {
-//     return response;
-//   },
-//   (error) => {
-//     // Handle specific status codes (like 401, 403, etc.)
-//     if (error.response && error.response.status === 401) {
-//       // For example, redirect to login
-//       window.location.href = '/login';
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const { response } = error;
+
+    if (response && response.status === 401) {
+      // Clear shopOwner details from Redux
+      store.dispatch(clearShopOwner());
+
+      // Determine where to redirect
+      let redirectPath = '/signin';
+      if (response.config.url.includes('/shopOwner/')) {
+        redirectPath = '/shop/signin';
+      } else if (response.config.url.includes('/admin/')) {
+        redirectPath = '/admin/signin';
+      } else if (response.config.url.includes('/partner/')) {
+        redirectPath = '/partner/signin';
+      }
+
+      // Redirect to login page
+      window.location.replace(`http://localhost:5173${redirectPath}`);
+
+      // Alternatively, you can show a popup if needed
+      // showPopup('Session expired. Please log in again.');
+
+      return Promise.reject(error);
+    }
+
+    return Promise.reject(error);
+  },
+);
 
 export default axiosInstance;

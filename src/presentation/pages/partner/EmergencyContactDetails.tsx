@@ -15,6 +15,7 @@ const EmergencyContactDetails: React.FC = () => {
   const partnerDocs = useSelector<RootState, IDeliveryPartner['documents'] | undefined>(
     (state) => state.partner.data?.documents,
   );
+  const partnerDetails = useSelector<RootState>((state) => state.partner.data);
 
   const handleSubmit = () => {
     // Dispatch the data or perform any necessary actions
@@ -30,7 +31,9 @@ const EmergencyContactDetails: React.FC = () => {
       phone,
     };
 
-    dispatch(storePartner({ documents: { ...partnerDocs, emergencyContact: newData } }));
+    dispatch(
+      storePartner({ ...partnerDetails, documents: { ...partnerDocs, emergencyContact: newData } }),
+    );
   };
 
   return (

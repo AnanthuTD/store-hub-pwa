@@ -19,6 +19,16 @@ enum Pages {
   PartnerVehicleInformation,
   PartnerBankAccountInformation,
   PartnerEmergencyInformation,
+
+  AdminSignIn,
+
+  ShopSignUp,
+  ShopSignUpWithOTP,
+  ShopSignIn,
+  ShopHomePage,
+  ShopOwnerRegister,
+
+  TokenVerificationStatus,
 }
 
 type PathRouteCustomProps = {
@@ -26,9 +36,12 @@ type PathRouteCustomProps = {
   component: FC;
   icon?: FC<SvgIconProps>;
   isProtected?: boolean;
+  layoutType?: 'user' | 'admin' | 'shopOwner' | 'deliveryPartner';
 };
 
 type Routes = Record<Pages, PathRouteProps & PathRouteCustomProps>;
+
+export type LayoutType = PathRouteCustomProps['layoutType'];
 
 export type { Routes };
 export { Pages };

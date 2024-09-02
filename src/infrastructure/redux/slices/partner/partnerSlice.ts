@@ -20,9 +20,15 @@ const partnerSlice = createSlice({
         state.data = action.payload;
       }
     },
+    setId(state, action: PayloadAction<{ id: string }>) {
+      state = { data: { _id: action.payload.id } };
+    },
+    clearPartner: (state) => {
+      state.data = null;
+    },
   },
 });
 
-export const { storePartner } = partnerSlice.actions;
+export const { storePartner, setId } = partnerSlice.actions;
 
 export default partnerSlice.reducer;
