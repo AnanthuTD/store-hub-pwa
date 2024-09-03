@@ -9,14 +9,14 @@ function UserLayout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!user.data) {
-      navigate('/signin');
+      // navigate('/signin');
     }
   }, [user, navigate]);
 
   // Prevent rendering if user data is missing
-  if (!user.data) {
+  /*  if (!user.data) {
     return null; // You can return a loading spinner or any placeholder here
-  }
+  } */
 
   return <div>{children}</div>;
 }

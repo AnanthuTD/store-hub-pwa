@@ -6,36 +6,36 @@ import { Pages, Routes } from './types';
 
 const routes: Routes = {
   [Pages.SignUp]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/auth/SignUp')),
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/SignUp')),
     path: '/signup',
     title: 'Sign Up',
     icon: LoginIcon,
   },
   [Pages.SignUpWithEmail]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/auth/SignUp/withEmail')),
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/SignUp/withEmail')),
     path: '/signup-with-email',
     title: 'Signup With Email',
     icon: LoginIcon,
   },
   [Pages.SignUpWithMobile]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/auth/SignUp/withMobile')),
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/SignUp/withMobile')),
     path: '/signup-with-mobile',
     title: 'Signup With Mobile',
     icon: LoginIcon,
   },
   [Pages.SignIn]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/auth/SignIn')),
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/SignIn')),
     path: '/signin',
     title: 'SignIn',
     icon: LoginIcon,
   },
-  [Pages.UserHome]: {
+  /*  [Pages.UserHome]: {
     component: asyncComponentLoader(() => import('@/presentation/pages/user/Home')),
     path: '/home',
     title: 'Home',
     icon: LoginIcon,
     layoutType: 'user',
-  },
+  }, */
 
   // PARTNER
   [Pages.PartnerSignup]: {
@@ -69,12 +69,6 @@ const routes: Routes = {
   [Pages.PartnerPersonalDocuments]: {
     component: asyncComponentLoader(() => import('@/presentation/pages/partner/PersonalDocuments')),
     path: '/partner/signup/document/personal',
-    title: 'Partner SignUp',
-    icon: LoginIcon,
-  },
-  [Pages.PartnerAadhar]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/partner/AadharUpload-old')),
-    path: '/partner/signup/document/personal/aadhar',
     title: 'Partner SignUp',
     icon: LoginIcon,
   },

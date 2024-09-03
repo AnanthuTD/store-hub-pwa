@@ -3,7 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import routes from '..';
 import { getPageHeight } from './utils';
-import CheckUserExist from '@/presentation/pages/user/CheckUserExist';
 import AdminLayout from '@/presentation/layouts/AdminLayout';
 import UserLayout from '@/presentation/layouts/UserLayout';
 import DeliveryPartnerLayout from '@/presentation/layouts/DeliveryPartnerLayout';
@@ -29,7 +28,7 @@ function Pages() {
   return (
     <Box sx={{ height: (theme) => getPageHeight(theme) }}>
       <Routes>
-        {Object.values(routes).map(({ path, component: Component, layoutType, isProtected }) => {
+        {Object.values(routes).map(({ path, component: Component, layoutType }) => {
           const Layout = getLayout(layoutType);
           return (
             <Route
@@ -37,7 +36,7 @@ function Pages() {
               path={path}
               element={
                 <Layout>
-                  {isProtected ? <CheckUserExist component={Component} /> : <Component />}
+                  <Component />
                 </Layout>
               }
             />

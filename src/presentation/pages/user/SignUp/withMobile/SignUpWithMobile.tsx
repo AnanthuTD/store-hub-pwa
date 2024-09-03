@@ -4,7 +4,7 @@ import Header from '../../Header';
 import AuthThemeProvider from '../../AuthThemeProvider';
 import { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { AuthRepositoryImpl } from '@/infrastructure/repositories/AuthRepositoryImpl';
+import { AuthRepositoryImpl } from '@/infrastructure/repositories/UserAuthRepository';
 
 const SignUpWithMobile = () => {
   const [error, setError] = useState<string | null>(null);

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ErrorMessage from '@/presentation/components/SignUpWithEmail/ErrorMessage';
 import SignUpInputField from '@/presentation/components/Auth/InputField';
 import SubmitButton from '@/presentation/components/Auth/Button';
-import { AuthRepositoryImpl } from '@/infrastructure/repositories/AuthRepositoryImpl';
+import { AuthRepositoryImpl } from '@/infrastructure/repositories/UserAuthRepository';
 import { RegisterUserError } from '@/application/errors';
 
 interface SignUpFormProps {

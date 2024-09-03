@@ -6,6 +6,22 @@ import { RootState } from '@/infrastructure/redux/store';
 import { IDeliveryPartner } from '@/domain/entities/DeliveryPartner';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '@/config/axios';
+import Compressor from 'compressorjs';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+
+async function compressImage(file: File) {
+  return new Promise((resolve, reject) => {
+    new Compressor(file, {
+      quality: 0.6, // Adjust quality as needed
+      success(result) {
+        resolve(result);
+      },
+      error(err) {
+        reject(err);
+      },
+    });
+  });
+}
 
 const baseUrl = '/partner/signup/document';
 
@@ -108,8 +124,12 @@ const DocumentsPage: React.FC = () => {
             docs[doc].backImage!,
             `${doc}_back.png`,
           );
-          formData.append(`documents[${doc}][frontImage]`, frontImageFile);
-          formData.append(`documents[${doc}][backImage]`, backImageFile);
+
+          const compressedFrontImage = await compressImage(frontImageFile);
+          const compressedBackImage = await compressImage(backImageFile);
+
+          formData.append(`documents[${doc}][frontImage]`, compressedFrontImage);
+          formData.append(`documents[${doc}][backImage]`, compressedBackImage);
         }
       }
 
@@ -181,6 +201,9 @@ const DocumentsPage: React.FC = () => {
       }}
     >
       <Box sx={{ marginBottom: 3 }}>
+        <Link to={'/partner/signup/profile'}>
+          <KeyboardArrowLeftIcon />
+        </Link>
         {/* Header */}
         <Box
           sx={{

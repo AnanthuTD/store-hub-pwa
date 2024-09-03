@@ -3,13 +3,14 @@ import { Container, Typography, TextField, Grid, Button, Box, MenuItem } from '@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/infrastructure/redux/store';
 import { storePartner } from '@/infrastructure/redux/slices/partner/partnerSlice';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { IDeliveryPartner } from '@/domain/entities/DeliveryPartner';
 
 const vehicleTypes = ['Bike', 'Car', 'Scooter', 'Van'];
 
 const VehicleInformation: React.FC = () => {
+  const navigate = useNavigate();
   const [vehicleType, setVehicleType] = useState<string>('');
   const [vehicleModel, setVehicleModel] = useState<string>('');
   const [registrationNumber, setRegistrationNumber] = useState<string>('');
@@ -56,6 +57,8 @@ const VehicleInformation: React.FC = () => {
     };
 
     dispatch(storePartner({ ...partnerDetails, documents: { ...partnerDocs, vehicle: newData } }));
+
+    navigate('/partner/signup/document');
   };
 
   return (

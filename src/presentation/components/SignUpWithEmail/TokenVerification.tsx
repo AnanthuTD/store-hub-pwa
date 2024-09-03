@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Loading from '@/presentation/components/Loading';
-import { AuthRepositoryImpl } from '@/infrastructure/repositories/AuthRepositoryImpl';
+import { AuthRepositoryImpl } from '@/infrastructure/repositories/UserAuthRepository';
 
 interface TokenVerificationProps {
   onTokenVerified: (email: string) => void;

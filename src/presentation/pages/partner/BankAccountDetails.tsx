@@ -3,11 +3,12 @@ import { Container, Typography, TextField, Grid, Button, Box } from '@mui/materi
 import { storePartner } from '@/infrastructure/redux/slices/partner/partnerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/infrastructure/redux/store';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { IDeliveryPartner } from '@/domain/entities/DeliveryPartner';
 
 const BankAccountDetails: React.FC = () => {
+  const navigate = useNavigate();
   const [accountHolderName, setAccountHolderName] = useState<string>('');
   const [bankName, setBankName] = useState<string>('');
   const [accountNumber, setAccountNumber] = useState<string>('');
@@ -53,6 +54,8 @@ const BankAccountDetails: React.FC = () => {
         documents: { ...partnerDocs, bankAccountDetails: bankDetails },
       }),
     );
+
+    navigate('/partner/signup/document');
   };
 
   return (

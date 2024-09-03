@@ -17,7 +17,7 @@ import useEmailVerification from '@/hooks/useEmailVerification';
 import PhoneForm, { MobileNumberObject } from '@/presentation/components/SignUp/PhoneForm';
 import EmailForm from '@/presentation/components/SignUp/EmailForm';
 import AuthThemeProvider from '../AuthThemeProvider';
-import { AuthRepositoryImpl } from '@/infrastructure/repositories/AuthRepositoryImpl';
+import { AuthRepositoryImpl } from '@/infrastructure/repositories/UserAuthRepository';
 import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {

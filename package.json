@@ -37,6 +37,7 @@
     "@mui/x-date-pickers": "^7.12.1",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.3",
+    "compressorjs": "^1.2.1",
     "dayjs": "^1.11.12",
     "is-mobile": "^4.0.0",
     "notistack": "^3.0.1",

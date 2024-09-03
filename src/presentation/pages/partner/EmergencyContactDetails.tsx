@@ -3,11 +3,12 @@ import { Container, Typography, TextField, Grid, Button, Box } from '@mui/materi
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/infrastructure/redux/store';
 import { storePartner } from '@/infrastructure/redux/slices/partner/partnerSlice';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { IDeliveryPartner } from '@/domain/entities/DeliveryPartner';
 
 const EmergencyContactDetails: React.FC = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState<string>('');
   const [relationship, setRelationship] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
@@ -34,6 +35,8 @@ const EmergencyContactDetails: React.FC = () => {
     dispatch(
       storePartner({ ...partnerDetails, documents: { ...partnerDocs, emergencyContact: newData } }),
     );
+
+    navigate('/partner/signup/document');
   };
 
   return (

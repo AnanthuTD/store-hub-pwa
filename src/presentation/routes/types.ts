@@ -35,7 +35,6 @@ type PathRouteCustomProps = {
   title?: string;
   component: FC;
   icon?: FC<SvgIconProps>;
-  isProtected?: boolean;
   layoutType?: 'user' | 'admin' | 'shopOwner' | 'deliveryPartner';
 };
 

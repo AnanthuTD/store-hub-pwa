@@ -17,7 +17,7 @@ import { User } from '@/domain/entities/User';
 export class AuthRepositoryImpl implements AuthRepository {
   async verifyToken(token: string): Promise<{ email?: string; message?: string }> {
     try {
-      const response = await axiosInstance.post(`/auth/verify-token`, { token });
+      const response = await axiosInstance.post(`/auth//verify-token`, { token });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

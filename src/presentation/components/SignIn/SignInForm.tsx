@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, TextField, Button, Typography, Tabs, Tab, FormControl } from '@mui/material';
 import OTPInput from '../Auth/OTP';
 import PhoneForm, { MobileNumberObject } from '../SignUp/PhoneForm';
-import { AuthRepositoryImpl } from '@/infrastructure/repositories/AuthRepositoryImpl';
+import { AuthRepositoryImpl } from '@/infrastructure/repositories/UserAuthRepository';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/infrastructure/redux/store';

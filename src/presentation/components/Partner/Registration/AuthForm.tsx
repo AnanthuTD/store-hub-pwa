@@ -2,7 +2,7 @@ import { Box, Typography, Checkbox, FormControlLabel, Link } from '@mui/material
 import InputField from './InputField';
 import SubmitButton from './SubmitButton';
 import { useState } from 'react';
-import { AuthRepositoryImpl } from '@/infrastructure/repositories/AuthRepositoryImpl';
+import { AuthRepositoryImpl } from '@/infrastructure/repositories/UserAuthRepository';
 import { useNavigate } from 'react-router-dom';
 
 const AuthForm = () => {
