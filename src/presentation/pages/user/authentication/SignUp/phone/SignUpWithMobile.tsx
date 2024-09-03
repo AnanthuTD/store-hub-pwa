@@ -1,7 +1,7 @@
 import { Box, TextField, Button, Typography, Link } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2';
-import Header from '../../Header';
-import AuthThemeProvider from '../../AuthThemeProvider';
+import Header from '../../components/Header';
+import AuthThemeProvider from '../../components/AuthThemeProvider';
 import { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { AuthRepositoryImpl } from '@/infrastructure/repositories/UserAuthRepository';

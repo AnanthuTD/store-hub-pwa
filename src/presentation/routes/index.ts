@@ -6,25 +6,33 @@ import { Pages, Routes } from './types';
 
 const routes: Routes = {
   [Pages.SignUp]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/user/SignUp')),
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/user/authentication/SignUp'),
+    ),
     path: '/signup',
     title: 'Sign Up',
     icon: LoginIcon,
   },
   [Pages.SignUpWithEmail]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/user/SignUp/withEmail')),
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/user/authentication/SignUp/email'),
+    ),
     path: '/signup-with-email',
     title: 'Signup With Email',
     icon: LoginIcon,
   },
   [Pages.SignUpWithMobile]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/user/SignUp/withMobile')),
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/user/authentication/SignUp/phone'),
+    ),
     path: '/signup-with-mobile',
     title: 'Signup With Mobile',
     icon: LoginIcon,
   },
   [Pages.SignIn]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/user/SignIn')),
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/user/authentication/SignIn'),
+    ),
     path: '/signin',
     title: 'SignIn',
     icon: LoginIcon,

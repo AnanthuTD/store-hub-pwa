@@ -11,12 +11,12 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2';
-import Header from '../Header';
-import AuthImage from '../AuthImage';
+import Header from '../components/Header';
+import AuthImage from '../components/AuthImage';
 import useEmailVerification from '@/hooks/useEmailVerification';
 import PhoneForm, { MobileNumberObject } from '@/presentation/components/SignUp/PhoneForm';
 import EmailForm from '@/presentation/components/SignUp/EmailForm';
-import AuthThemeProvider from '../AuthThemeProvider';
+import AuthThemeProvider from '../components/AuthThemeProvider';
 import { AuthRepositoryImpl } from '@/infrastructure/repositories/UserAuthRepository';
 import { useNavigate } from 'react-router-dom';
 

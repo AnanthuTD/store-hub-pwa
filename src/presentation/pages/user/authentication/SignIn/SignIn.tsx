@@ -1,7 +1,7 @@
 import { Box, Typography, Link, Divider } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2';
-import AuthThemeProvider from '../AuthThemeProvider';
-import Header from '../Header';
+import AuthThemeProvider from '../components/AuthThemeProvider';
+import Header from '../components/Header';
 import GoogleSignUpButton from '@/presentation/components/Auth/GoogleSignUpButton';
 import SignInForm from '@/presentation/components/SignIn/SignInForm';
 

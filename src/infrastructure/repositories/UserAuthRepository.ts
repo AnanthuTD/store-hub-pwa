@@ -17,7 +17,7 @@ import { User } from '@/domain/entities/User';
 export class AuthRepositoryImpl implements AuthRepository {
   async verifyToken(token: string): Promise<{ email?: string; message?: string }> {
     try {
-      const response = await axiosInstance.post(`/auth//verify-token`, { token });
+      const response = await axiosInstance.post(`/user/auth/email/verify-token`, { token });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -31,7 +31,7 @@ export class AuthRepositoryImpl implements AuthRepository {
   async verifyEmail(email: string): Promise<{ valid: boolean; email: string; message: string }> {
     try {
       emailSchema.parse(email);
-      const response = await axiosInstance.post('/auth/verify-email', { email });
+      const response = await axiosInstance.post('user/auth/verify/email', { email });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -48,7 +48,7 @@ export class AuthRepositoryImpl implements AuthRepository {
 
   async registerUser(user: RegisterUser): Promise<AxiosResponse> {
     try {
-      return await axiosInstance.post('/auth/register/email', user);
+      return await axiosInstance.post('user/auth/register/email', user);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const { status, data } = error.response;
@@ -67,7 +67,7 @@ export class AuthRepositoryImpl implements AuthRepository {
 
   async signIn(params: SignInParams): Promise<SignInResponse> {
     try {
-      const response = await axiosInstance.post('/auth/sign-in/credentials', params);
+      const response = await axiosInstance.post('user/auth/signin/credential', params);
       return { data: response.data };
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
@@ -87,7 +87,10 @@ export class AuthRepositoryImpl implements AuthRepository {
 
   async sendOTP(countryCode: string, mobileNumber: string): Promise<OTPResponse> {
     try {
-      const response = await axiosInstance.post('/auth/otp/send', { countryCode, mobileNumber });
+      const response = await axiosInstance.post('user/auth/otp/send', {
+        countryCode,
+        mobileNumber,
+      });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -101,7 +104,7 @@ export class AuthRepositoryImpl implements AuthRepository {
 
   async loginWithOtp(params: LoginWithOtpParams): Promise<LoginWithOtpResponse> {
     try {
-      const response = await axiosInstance.post('/auth/signin/otp', params);
+      const response = await axiosInstance.post('user/auth/signin/otp', params);
 
       return {
         message: response.data.message,
@@ -142,7 +145,7 @@ export class AuthRepositoryImpl implements AuthRepository {
     otp: string;
   }): Promise<LoginWithOtpResponse> {
     try {
-      const response = await axiosInstance.post('/auth/register/mobile', {
+      const response = await axiosInstance.post('user/auth/register/mobile', {
         countryCode,
         mobileNumber,
         firstName,
@@ -176,7 +179,7 @@ export class AuthRepositoryImpl implements AuthRepository {
 
   async fetchProfile(): Promise<User | null> {
     try {
-      const response = await axiosInstance.get('/auth/profile');
+      const response = await axiosInstance.get('user/auth/profile');
 
       return response.data;
     } catch (err) {

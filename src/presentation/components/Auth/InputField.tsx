@@ -1,15 +1,15 @@
 import React from 'react';
-import { TextField } from '@mui/material';
+import { TextField, TextFieldProps } from '@mui/material';
 
-interface SignUpInputFieldProps {
+/* interface SignUpInputFieldProps {
   label: string;
   value: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   disabled?: boolean;
-}
+} */
 
-const SignUpInputField: React.FC<SignUpInputFieldProps> = ({
+const SignUpInputField: React.FC<TextFieldProps> = ({
   label,
   value,
   onChange,
