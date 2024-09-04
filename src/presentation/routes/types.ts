@@ -29,6 +29,10 @@ enum Pages {
   ShopOwnerRegister,
 
   TokenVerificationStatus,
+
+  // user
+  UserProductsList,
+  UserProduct,
 }
 
 type PathRouteCustomProps = {

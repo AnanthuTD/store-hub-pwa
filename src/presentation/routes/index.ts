@@ -37,13 +37,27 @@ const routes: Routes = {
     title: 'SignIn',
     icon: LoginIcon,
   },
-  /*  [Pages.UserHome]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/user/Home')),
+  [Pages.UserHome]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/home')),
     path: '/home',
     title: 'Home',
     icon: LoginIcon,
     layoutType: 'user',
-  }, */
+  },
+  [Pages.UserProductsList]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/productsList')),
+    path: '/products/list',
+    title: 'Products List',
+    icon: LoginIcon,
+    layoutType: 'user',
+  },
+  [Pages.UserProduct]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/product')),
+    path: '/product',
+    title: 'Product Details',
+    icon: LoginIcon,
+    layoutType: 'user',
+  },
 
   // PARTNER
   [Pages.PartnerSignup]: {
