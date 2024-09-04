@@ -13,6 +13,10 @@ const sharedTheme = {
       main: '#505ABB',
       contrastText: '#ffffff',
     },
+    userPrimary: {
+      main: '#23A6F0',
+      contrastText: '#ffffff',
+    },
   },
   components: {
     MuiButtonBase: {
@@ -47,6 +51,9 @@ const themes: Record<Themes, ThemeOptions> = {
       },
       primary: {
         main: '#3f51b5',
+      },
+      userPrimary: {
+        main: '#23A6F0',
       },
     },
   }),
