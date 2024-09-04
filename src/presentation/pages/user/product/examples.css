@@ -1,0 +1,164 @@
+.fluid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial;
+  line-height: 1.3;
+  font-size: 16px;
+}
+
+.fluid__instructions {
+  flex: 0 0 auto;
+  margin: 0 20px;
+}
+
+.fixed__instructions {
+  flex: 1;
+  margin: 0 20px;
+}
+
+a {
+  color: black;
+}
+
+a:hover {
+  color: #666;
+}
+
+.code {
+  font-family:
+    Courier New,
+    Courier,
+    monospace;
+}
+
+@media (min-width: 480px) {
+  .fluid {
+    flex-direction: row;
+  }
+
+  .fluid__image-container {
+    flex: 0 0 30%;
+    margin: 20px 0 20px 20px;
+  }
+
+  .fluid__instructions {
+    flex: 0 0 50%;
+    padding-top: 30px;
+  }
+
+  .fixed__instructions {
+    padding-top: 30px;
+    margin: 0 10px;
+  }
+
+  .portal {
+    position: absolute;
+    top: 40px;
+    left: -30px;
+  }
+}
+
+.logo {
+  margin-top: -4px;
+  font:
+    25px Courier New,
+    Courier,
+    monospace;
+}
+
+h2 {
+  font:
+    22px 'Helvetica Neue',
+    Helvetica,
+    Arial,
+    sans-serif;
+  margin: 15px 0;
+}
+
+p.summary {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.summary__list {
+  margin: 0;
+}
+
+.jumbotron {
+  padding: 0;
+  margin: 96px 0 10px;
+}
+
+.jumbotron--home {
+  padding: 0;
+}
+
+li.active a {
+  cursor: default;
+}
+
+.example {
+  text-align: center;
+}
+
+.example__target {
+  padding: 10px;
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border 0.2s ease-in-out;
+  text-align: center;
+}
+
+.example__target.example__target--basic {
+  border-color: transparent;
+}
+
+.example__target:hover {
+  border-color: #337ab7;
+}
+
+.example__instructions {
+  margin-top: 10px;
+  color: #337ab7;
+}
+
+.example__instructions--solo {
+  margin-bottom: 10px;
+}
+
+.example__source-container {
+  margin: 20px 0;
+}
+
+.example__source-css {
+  margin-top: 15px;
+}
+
+.example__external-label {
+  margin-top: 10px;
+}
+
+@media (min-width: 420px) {
+  .jumbotron {
+    margin-top: 51px;
+  }
+}
+
+@media (min-width: 768px) {
+  .jumbotron {
+    margin-top: 51px;
+  }
+
+  .example__source-container {
+    margin: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .jumbotron {
+    margin-top: 97px;
+  }
+}
