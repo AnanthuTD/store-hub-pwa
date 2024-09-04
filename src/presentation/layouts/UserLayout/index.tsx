@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '@/infrastructure/redux/store'; // Adjust the path to your store file
+import Header from '@/presentation/pages/user/components/Header';
 
 function UserLayout({ children }: { children: React.ReactNode }) {
   const user = useSelector((state: RootState) => state.user); // Adjust according to your Redux state
@@ -18,7 +19,12 @@ function UserLayout({ children }: { children: React.ReactNode }) {
     return null; // You can return a loading spinner or any placeholder here
   } */
 
-  return <div>{children}</div>;
+  return (
+    <div>
+      <Header />
+      {children}
+    </div>
+  );
 }
 
 export default UserLayout;
