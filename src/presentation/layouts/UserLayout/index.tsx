@@ -1,23 +1,19 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { RootState } from '@/infrastructure/redux/store'; // Adjust the path to your store file
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/infrastructure/redux/store'; // Adjust the path to your store file
 import Header from '@/presentation/pages/user/components/Header';
+import { fetchProfile } from '@/infrastructure/repositories/UserAuthRepository';
+import { login } from '@/infrastructure/redux/slices/user/userSlice';
 
 function UserLayout({ children }: { children: React.ReactNode }) {
-  const user = useSelector((state: RootState) => state.user); // Adjust according to your Redux state
-  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (!user.data) {
-      // navigate('/signin');
-    }
-  }, [user, navigate]);
-
-  // Prevent rendering if user data is missing
-  /*  if (!user.data) {
-    return null; // You can return a loading spinner or any placeholder here
-  } */
+    fetchProfile().then((profile) => {
+      // Update Redux store with fetched profile data
+      dispatch(login(profile));
+    });
+  }, [dispatch]);
 
   return (
     <div>

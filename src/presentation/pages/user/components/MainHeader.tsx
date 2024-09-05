@@ -5,8 +5,12 @@ import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/infrastructure/redux/store';
 
 const MainHeader = () => {
+  const user = useSelector<RootState>((state) => state.user.data);
+
   return (
     <Toolbar
       sx={{
@@ -42,9 +46,15 @@ const MainHeader = () => {
 
       {/* Right Menu */}
       <Stack direction="row" spacing={2} alignItems="center">
-        <Link to="#" style={{ textDecoration: 'none', color: '#23A6F0' }}>
-          Login / Register
-        </Link>
+        {user ? (
+          <Link to="#" style={{ textDecoration: 'none', color: '#23A6F0' }}>
+            Accounts
+          </Link>
+        ) : (
+          <Link to="/signin" style={{ textDecoration: 'none', color: '#23A6F0' }}>
+            Login / Register
+          </Link>
+        )}
         <IconButton>
           <LocalMallOutlinedIcon color="userPrimary" />
         </IconButton>

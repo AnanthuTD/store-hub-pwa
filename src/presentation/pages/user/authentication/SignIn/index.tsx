@@ -1,3 +1,12 @@
+import CheckUserLoggedIn from '../components/CheckUserLoggedIn';
 import SignUp from './SignIn';
 
-export default SignUp;
+function Index() {
+  return (
+    <CheckUserLoggedIn>
+      <SignUp />
+    </CheckUserLoggedIn>
+  );
+}
+
+export default Index;

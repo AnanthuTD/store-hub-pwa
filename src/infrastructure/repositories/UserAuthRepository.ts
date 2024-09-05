@@ -104,7 +104,7 @@ export class AuthRepositoryImpl implements AuthRepository {
 
   async loginWithOtp(params: LoginWithOtpParams): Promise<LoginWithOtpResponse> {
     try {
-      const response = await axiosInstance.post('user/auth/signin/otp', params);
+      const response = await axiosInstance.post('user/auth/signin/mobile', params);
 
       return {
         message: response.data.message,
@@ -176,14 +176,13 @@ export class AuthRepositoryImpl implements AuthRepository {
       }
     }
   }
+}
+export async function fetchProfile(): Promise<User | null> {
+  try {
+    const response = await axiosInstance.get('user/auth/profile');
 
-  async fetchProfile(): Promise<User | null> {
-    try {
-      const response = await axiosInstance.get('user/auth/profile');
-
-      return response.data;
-    } catch (err) {
-      return null;
-    }
+    return response.data;
+  } catch (err) {
+    return null;
   }
 }

@@ -23,7 +23,7 @@ axiosInstance.interceptors.response.use(
       store.dispatch(clearShopOwner());
 
       // Determine where to redirect
-      let redirectPath = '/signin';
+      let redirectPath = '';
       if (response.config.url.includes('/shopOwner/')) {
         redirectPath = '/shop/signin';
       } else if (response.config.url.includes('/admin/')) {
@@ -32,8 +32,9 @@ axiosInstance.interceptors.response.use(
         redirectPath = '/partner/signin';
       }
 
-      // Redirect to login page
-      window.location.replace(`http://localhost:5173${redirectPath}`);
+      if (redirectPath)
+        // Redirect to login page
+        window.location.replace(`http://localhost:5173${redirectPath}`);
 
       // Alternatively, you can show a popup if needed
       // showPopup('Session expired. Please log in again.');
