@@ -31,7 +31,7 @@ const login = async ({ email, password }: LoginParams): Promise<AdminSignInRespo
     const response: AxiosResponse<AdminSignInResponseDTO> = await axiosInstance.post<
       any,
       AxiosResponse<AdminSignInResponseDTO>
-    >('/admin/signin', { email, password });
+    >('/admin/auth/signin', { email, password });
 
     return response.data; // Return the response data
   } catch (error: any) {
