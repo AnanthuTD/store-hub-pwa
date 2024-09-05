@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Typography, Box } from '@mui/material';
-import SubmitButton from '@/presentation/components/Partner/Registration/SubmitButton';
-import ImageUpload from '@/presentation/components/Partner/Registration/ImageUpload';
+import SubmitButton from '@/presentation/pages/partner/signup/components/SubmitButton';
+import ImageUpload from '@/presentation/pages/partner/signup/components/ImageUpload';
 
 interface DocumentUploadProps {
   documentType: string;

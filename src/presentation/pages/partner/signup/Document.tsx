@@ -1,5 +1,5 @@
 import React from 'react';
-import DocumentItem from '@/presentation/components/Partner/Registration/DocumentItem';
+import DocumentItem from '@/presentation/pages/partner/signup/components/DocumentItem';
 import { Box, Typography, Grid, Button } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';

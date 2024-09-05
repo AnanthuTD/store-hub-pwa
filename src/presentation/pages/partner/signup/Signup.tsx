@@ -1,7 +1,7 @@
 import { Container } from '@mui/material';
-import GradientBackground from '@/presentation/components/Partner/Registration/GradientBackground';
-import AuthIllustration from '@/presentation/components/Partner/Registration/AuthIllustration';
-import AuthForm from '@/presentation/components/Partner/Registration/AuthForm';
+import GradientBackground from '@/presentation/pages/partner/signup/components/GradientBackground';
+import AuthIllustration from '@/presentation/pages/partner/signup/components/AuthIllustration';
+import AuthForm from '@/presentation/pages/partner/signup/components/AuthForm';
 
 const PartnerSignup = () => {
   return (

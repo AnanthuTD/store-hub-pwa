@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Typography, Grid, Box } from '@mui/material';
-import DocumentUpload from '@/presentation/components/Partner/Registration/DocumentUpload';
-import DocumentItem from '@/presentation/components/Partner/Registration/DocumentItem';
+import DocumentUpload from '@/presentation/pages/partner/signup/components/DocumentUpload';
+import DocumentItem from '@/presentation/pages/partner/signup/components/DocumentItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { storePartner } from '@/infrastructure/redux/slices/partner/partnerSlice';
 import { IDeliveryPartner } from '@/domain/entities/DeliveryPartner';

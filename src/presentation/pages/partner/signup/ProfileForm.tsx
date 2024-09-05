@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import SubmitButton from '@/presentation/components/Partner/Registration/SubmitButton';
+import SubmitButton from '@/presentation/pages/partner/signup/components/SubmitButton';
 import { Box, TextField, Grid, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/infrastructure/redux/store';
 import { storePartner } from '@/infrastructure/redux/slices/partner/partnerSlice';
-import ImageUpload from '@/presentation/components/Partner/Registration/ImageUpload';
+import ImageUpload from '@/presentation/pages/partner/signup/components/ImageUpload';
 import { useNavigate } from 'react-router-dom';
 
 // Define type for form values
