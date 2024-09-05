@@ -173,7 +173,7 @@ const DocumentsPage: React.FC = () => {
     }
 
     try {
-      const response = await axiosInstance.post('/partner/signup', formData, {
+      const response = await axiosInstance.post('/partner/auth/signup', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
