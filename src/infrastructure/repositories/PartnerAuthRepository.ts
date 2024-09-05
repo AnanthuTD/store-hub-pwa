@@ -18,7 +18,7 @@ export async function sendOTP(countryCode: string, mobileNumber: string): Promis
 
 export async function verifyOTP(otp: string, phone: string) {
   try {
-    const response = await axiosInstance.post('/partner/otp/verify', {
+    const response = await axiosInstance.post('/partner/auth/otp/verify', {
       otp,
       countryCode: '+91',
       phone,

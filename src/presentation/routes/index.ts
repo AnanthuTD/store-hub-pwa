@@ -61,14 +61,14 @@ const routes: Routes = {
 
   // PARTNER
   [Pages.PartnerSignup]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/partner/PartnerSignup')),
+    component: asyncComponentLoader(() => import('@/presentation/pages/partner/signup/Signup')),
     path: '/partner/signup',
     title: 'Partner SignUp',
     icon: LoginIcon,
   },
   [Pages.PartnerOTPVerification]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/partner/PartnerValidateOTP'),
+      () => import('@/presentation/pages/partner/signup/ValidateOTP'),
     ),
     path: '/partner/signup/otp-verification',
     title: 'Partner SignUp',
@@ -76,27 +76,29 @@ const routes: Routes = {
   },
   [Pages.PartnerProfileForm]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/partner/PartnerProfileForm'),
+      () => import('@/presentation/pages/partner/signup/ProfileForm'),
     ),
     path: '/partner/signup/profile',
     title: 'Partner SignUp',
     icon: LoginIcon,
   },
   [Pages.PartnerDocumentSubmission]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/partner/Document')),
+    component: asyncComponentLoader(() => import('@/presentation/pages/partner/signup/Document')),
     path: '/partner/signup/document',
     title: 'Partner SignUp',
     icon: LoginIcon,
   },
   [Pages.PartnerPersonalDocuments]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/partner/PersonalDocuments')),
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/signup/PersonalDocuments'),
+    ),
     path: '/partner/signup/document/personal',
     title: 'Partner SignUp',
     icon: LoginIcon,
   },
   [Pages.RegistrationComplete]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/partner/RegistrationComplete'),
+      () => import('@/presentation/pages/partner/signup/RegistrationComplete'),
     ),
     path: '/partner/signup/complete',
     title: 'Partner SignUp',
@@ -104,7 +106,7 @@ const routes: Routes = {
   },
   [Pages.PartnerVehicleInformation]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/partner/VehicleInformation'),
+      () => import('@/presentation/pages/partner/signup/VehicleInformation'),
     ),
     path: '/partner/signup/document/vehicle',
     title: 'Partner SignUp',
@@ -112,7 +114,7 @@ const routes: Routes = {
   },
   [Pages.PartnerEmergencyInformation]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/partner/EmergencyContactDetails'),
+      () => import('@/presentation/pages/partner/signup/EmergencyContactDetails'),
     ),
     path: '/partner/signup/document/emergency',
     title: 'Partner SignUp',
@@ -120,7 +122,7 @@ const routes: Routes = {
   },
   [Pages.PartnerBankAccountInformation]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/partner/BankAccountDetails'),
+      () => import('@/presentation/pages/partner/signup/BankAccountDetails'),
     ),
     path: '/partner/signup/document/bank',
     title: 'Partner SignUp',

@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import OTPInput from '@/presentation/components/Auth/OTP';
 import SubmitButton from '@/presentation/components/Partner/Registration/SubmitButton';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { verifyOTP } from '@/infrastructure/repositories/PartnerAuthRepository';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '@/infrastructure/redux/store';
 import { storePartner } from '@/infrastructure/redux/slices/partner/partnerSlice';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 const OtpVerification = () => {
   const [searchParams] = useSearchParams();
@@ -51,8 +51,10 @@ const OtpVerification = () => {
 
   return (
     <Box sx={{ width: '100%', p: 2, textAlign: 'center', mt: 3 }}>
-      <Box display={'flex'} marginBottom={3}>
-        <ArrowBackIosIcon />
+      <Box>
+        <Box width={'fit-content'} onClick={() => navigate(-1)}>
+          <KeyboardArrowLeftIcon />
+        </Box>
       </Box>
       {error && (
         <Typography color="error" variant="body2">
