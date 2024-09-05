@@ -1,176 +1,282 @@
-import React, { useState } from 'react';
-import SubmitButton from '@/presentation/pages/partner/signup/components/SubmitButton';
+import React, { useCallback } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { Box, TextField, Grid, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/infrastructure/redux/store';
 import { storePartner } from '@/infrastructure/redux/slices/partner/partnerSlice';
 import ImageUpload from '@/presentation/pages/partner/signup/components/ImageUpload';
+import SubmitButton from '@/presentation/pages/partner/signup/components/SubmitButton';
 import { useNavigate } from 'react-router-dom';
+import { IDeliveryPartner } from '@/domain/entities/DeliveryPartner';
 
 // Define type for form values
 type FormValues = {
   firstName: string;
   lastName: string;
-  dob: Date | null;
+  dob: Dayjs | null;
   primaryMobile: string;
   bloodGroup: string;
   city: string;
   address: string;
-  referralCode: string;
+  referralCode?: string; // Make referralCode optional
   avatar: string | null;
 };
 
-// Define type for InputField props
-interface FormInputFieldProps {
-  label: string;
-  placeholder: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  optional?: boolean;
-}
-
-// Reusable InputField Component
-const FormInputField: React.FC<FormInputFieldProps> = ({
-  label,
-  placeholder,
-  value,
-  onChange,
-  optional = false,
-}) => (
-  <TextField
-    variant="outlined"
-    label={label}
-    placeholder={placeholder}
-    fullWidth
-    sx={{ my: 2, backgroundColor: '#FFF', borderRadius: 1 }}
-    value={value}
-    onChange={onChange}
-    required={!optional}
-  />
-);
+const isAtLeast18YearsOld = (dob: Dayjs | null): boolean => {
+  if (!dob) return false;
+  const today = dayjs();
+  const eighteenYearsAgo = today.subtract(18, 'year');
+  return dob.isBefore(eighteenYearsAgo);
+};
 
 const UserProfileForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const [formValues, setFormValues] = useState<FormValues>({
-    firstName: '',
-    lastName: '',
-    dob: null,
-    primaryMobile: '',
-    bloodGroup: '',
-    city: '',
-    address: '',
-    referralCode: '',
-    avatar: null,
+
+  // Initialize react-hook-form with validation rules
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      dob: null,
+      primaryMobile: '',
+      bloodGroup: '',
+      city: '',
+      address: '',
+      referralCode: '',
+      avatar: null,
+    },
+    mode: 'onBlur', // Trigger validation on field blur
+    criteriaMode: 'all', // Validate all criteria
   });
 
-  const handleInputChange = (field: keyof FormValues, value: string | Dayjs | null) => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [field]: value,
-    }));
-  };
+  // Handle file upload and set avatar URL
+  const handleUpload = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        setValue('avatar', URL.createObjectURL(file));
+      }
+    },
+    [setValue],
+  );
 
-  const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    console.log(file);
-    if (file) {
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        avatar: URL.createObjectURL(file),
-      }));
+  // Handle form submission
+  const onSubmit = (data: FormValues) => {
+    if (!data.avatar) {
+      alert('Please select a profile picture');
+      return;
+    } else if (!data.dob) {
+      alert('Please select a date of birth');
+      return;
     }
-  };
-
-  const handleSubmit = () => {
-    console.log('Form Values:', formValues);
-    dispatch(storePartner(formValues));
+    console.log('Form Values:', data);
+    dispatch(storePartner(data as unknown as Partial<IDeliveryPartner>));
     navigate('/partner/signup/document/personal');
   };
 
   return (
-    <Box sx={{ padding: 2, width: '100%', maxWidth: 400, margin: '0 auto' }}>
+    <Box sx={{ padding: 2, width: '100%', maxWidth: 600, margin: '0 auto' }}>
       <Typography variant="h5" fontWeight="bold" marginBottom={3}>
         Personal Information
       </Typography>
-      <Typography>Enter the details below so we can get to know and serve you better</Typography>
+      <Typography variant="body1" marginBottom={2}>
+        Enter the details below so we can get to know and serve you better.
+      </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <FormInputField
-            label="First Name"
-            placeholder="Please enter first name"
-            value={formValues.firstName}
-            onChange={(e) => handleInputChange('firstName', e.target.value)}
+        <Grid item xs={12} sm={6}>
+          <Controller
+            name="firstName"
+            control={control}
+            rules={{ required: 'First name is required' }}
+            render={({ field }) => (
+              <TextField
+                variant="outlined"
+                label="First Name"
+                placeholder="Please enter first name"
+                fullWidth
+                sx={{ my: 2, backgroundColor: '#FFF', borderRadius: 1 }}
+                {...field}
+                error={!!errors.firstName}
+                helperText={errors.firstName?.message}
+              />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Controller
+            name="lastName"
+            control={control}
+            rules={{ required: 'Last name is required' }}
+            render={({ field }) => (
+              <TextField
+                variant="outlined"
+                label="Last Name"
+                placeholder="Please enter last name"
+                fullWidth
+                sx={{ my: 2, backgroundColor: '#FFF', borderRadius: 1 }}
+                {...field}
+                error={!!errors.lastName}
+                helperText={errors.lastName?.message}
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12}>
-          <FormInputField
-            label="Last Name"
-            placeholder="Please enter last name"
-            value={formValues.lastName}
-            onChange={(e) => handleInputChange('lastName', e.target.value)}
+          <Controller
+            name="dob"
+            control={control}
+            rules={{
+              required: 'Date of birth is required',
+              validate: {
+                isAtLeast18YearsOld: (value) =>
+                  isAtLeast18YearsOld(value) || 'You must be at least 18 years old',
+              },
+            }}
+            render={({ field }) => (
+              <>
+                <DatePicker
+                  label="Date of Birth"
+                  value={field.value}
+                  onChange={(date) => field.onChange(date)}
+                />
+                <p style={{ color: '#d32f2f', fontSize: '0.75rem' }}>{errors.dob?.message}</p>
+              </>
+            )}
           />
         </Grid>
         <Grid item xs={12}>
-          <DatePicker
-            label="Date of birth"
-            value={formValues.dob}
-            onChange={(date) => handleInputChange('dob', date)}
+          <Controller
+            name="primaryMobile"
+            control={control}
+            rules={{
+              required: 'Primary mobile number is required',
+              pattern: {
+                value: /^[+]?[0-9]{10,15}$/,
+                message: 'Enter a valid mobile number',
+              },
+            }}
+            render={({ field }) => (
+              <TextField
+                variant="outlined"
+                label="Primary Mobile Number"
+                placeholder="+91 9999988888"
+                fullWidth
+                sx={{ my: 2, backgroundColor: '#FFF', borderRadius: 1 }}
+                {...field}
+                error={!!errors.primaryMobile}
+                helperText={errors.primaryMobile?.message}
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12}>
-          <FormInputField
-            label="Primary mobile number"
-            placeholder="+91 9999988888"
-            value={formValues.primaryMobile}
-            onChange={(e) => handleInputChange('primaryMobile', e.target.value)}
+          <Controller
+            name="bloodGroup"
+            control={control}
+            rules={{
+              required: 'Blood Group number is required',
+            }}
+            render={({ field }) => (
+              <TextField
+                variant="outlined"
+                label="Blood Group"
+                placeholder="Enter blood group here"
+                fullWidth
+                sx={{ my: 2, backgroundColor: '#FFF', borderRadius: 1 }}
+                {...field}
+                error={!!errors.bloodGroup}
+                helperText={errors.bloodGroup?.message}
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12}>
-          <FormInputField
-            label="Blood Group"
-            placeholder="Enter blood group here"
-            value={formValues.bloodGroup}
-            onChange={(e) => handleInputChange('bloodGroup', e.target.value)}
+          <Controller
+            name="city"
+            control={control}
+            rules={{
+              required: 'City is required',
+            }}
+            render={({ field }) => (
+              <TextField
+                variant="outlined"
+                label="City"
+                placeholder="e.g. Bangalore"
+                fullWidth
+                sx={{ my: 2, backgroundColor: '#FFF', borderRadius: 1 }}
+                {...field}
+                error={!!errors.city}
+                helperText={errors.city?.message}
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12}>
-          <FormInputField
-            label="City"
-            placeholder="e.g. Bangalore"
-            value={formValues.city}
-            onChange={(e) => handleInputChange('city', e.target.value)}
+          <Controller
+            name="address"
+            control={control}
+            rules={{
+              required: 'Address is required',
+            }}
+            render={({ field }) => (
+              <TextField
+                variant="outlined"
+                label="Address"
+                placeholder="Enter complete address here"
+                fullWidth
+                sx={{ my: 2, backgroundColor: '#FFF', borderRadius: 1 }}
+                {...field}
+                error={!!errors.address}
+                helperText={errors.address?.message}
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12}>
-          <FormInputField
-            label="Enter complete address here"
-            placeholder="Search address"
-            value={formValues.address}
-            onChange={(e) => handleInputChange('address', e.target.value)}
+          <Controller
+            name="avatar"
+            control={control}
+            rules={{
+              required: 'Avatar is required',
+            }}
+            render={({ field }) => (
+              <>
+                <ImageUpload
+                  image={field.value} // Watch for the avatar value
+                  label="Upload Profile Image"
+                  onUpload={handleUpload}
+                />
+                <p style={{ color: '#d32f2f', fontSize: '0.75rem' }}>{errors.avatar?.message}</p>
+              </>
+            )}
           />
         </Grid>
         <Grid item xs={12}>
-          <ImageUpload
-            image={formValues.avatar}
-            label="Upload Profile Image"
-            onUpload={(e) => handleUpload(e)}
-            key={'profile-pic'}
+          <Controller
+            name="referralCode"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                variant="outlined"
+                label="Referral Code (Optional)"
+                placeholder="Enter referral code"
+                fullWidth
+                sx={{ my: 2, backgroundColor: '#FFF', borderRadius: 1 }}
+                {...field}
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12}>
-          <FormInputField
-            label="Referral code (Optional)"
-            placeholder="Enter referral code"
-            value={formValues.referralCode}
-            onChange={(e) => handleInputChange('referralCode', e.target.value)}
-            optional
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <SubmitButton text="Submit" onClick={handleSubmit} />
+          <SubmitButton text="Submit" onClick={handleSubmit(onSubmit)} />
         </Grid>
       </Grid>
     </Box>
