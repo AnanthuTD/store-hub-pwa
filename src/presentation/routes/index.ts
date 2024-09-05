@@ -136,6 +136,22 @@ const routes: Routes = {
     title: 'Admin Sign In',
     icon: LoginIcon,
   },
+  [Pages.AdminPartnerList]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/admin/partnerAcceptance/PartnersListPage'),
+    ),
+    path: '/admin/partner/list',
+    title: 'Admin Sign In',
+    icon: LoginIcon,
+  },
+  [Pages.AdminPartnerValidationForm]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/admin/partnerAcceptance/AdminValidationPage'),
+    ),
+    path: '/admin/partner/validate',
+    title: 'Admin Sign In',
+    icon: LoginIcon,
+  },
 
   // SHOP OWNER
   [Pages.ShopSignUp]: {

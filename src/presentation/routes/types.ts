@@ -21,6 +21,8 @@ enum Pages {
   PartnerEmergencyInformation,
 
   AdminSignIn,
+  AdminPartnerValidationForm,
+  AdminPartnerList,
 
   ShopSignUp,
   ShopSignUpWithOTP,
