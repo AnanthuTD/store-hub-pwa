@@ -1,5 +1,5 @@
 import React from 'react';
-import DocumentItem from '@/presentation/components/Partner/Registration/DocumentItem';
+import DocumentItem from '@/presentation/pages/partner/signup/components/DocumentItem';
 import { Box, Typography, Grid, Button } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
@@ -173,7 +173,7 @@ const DocumentsPage: React.FC = () => {
     }
 
     try {
-      const response = await axiosInstance.post('/partner/signup', formData, {
+      const response = await axiosInstance.post('/partner/auth/signup', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

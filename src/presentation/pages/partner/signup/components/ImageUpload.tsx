@@ -4,7 +4,7 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 interface ImageUploadProps {
   label: string;
-  image: string | null;
+  image?: string | null;
   onUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 

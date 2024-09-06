@@ -47,6 +47,7 @@
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.11",
     "react-helmet-async": "^2.0.3",
+    "react-hook-form": "^7.53.0",
     "react-hotkeys-hook": "^4.4.1",
     "react-image-magnify": "^2.7.4",
     "react-redux": "^9.1.2",

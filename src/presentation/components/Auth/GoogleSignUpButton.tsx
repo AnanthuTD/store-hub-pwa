@@ -2,7 +2,7 @@ import { Button, Link } from '@mui/material';
 
 const GoogleSignUpButton = () => {
   return (
-    <Link href={`${import.meta.env.VITE_API_BASE_URL}/auth/google`}>
+    <Link href={`${import.meta.env.VITE_API_BASE_URL}/user/auth/google`}>
       <Button
         variant="outlined"
         startIcon={<img src={'/google-logo.svg'} />}
