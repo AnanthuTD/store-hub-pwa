@@ -6,7 +6,7 @@ import { login } from '@/infrastructure/redux/slices/partner/partnerSlice';
 import { fetchProfile } from '@/infrastructure/repositories/PartnerAuthRepository';
 
 function DeliveryPartnerLayout({ children }: { children: React.ReactNode }) {
-  const deliveryPartner = useSelector((state: RootState) => state.partner); // Adjust according to your Redux state
+  const deliveryPartner = useSelector<RootState>((state) => state.partner.data); // Adjust according to your Redux state
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -15,11 +15,12 @@ function DeliveryPartnerLayout({ children }: { children: React.ReactNode }) {
       try {
         // If no shopOwner data, attempt to fetch the profile
         if (!deliveryPartner) {
+          console.log('partner layout');
           const profile = await fetchProfile();
           console.log(profile);
 
           if (!profile) {
-            navigate('/partner/signin');
+            navigate('/partner/signup');
           } else {
             // Update Redux store with fetched profile data
             dispatch(login(profile));
@@ -27,7 +28,7 @@ function DeliveryPartnerLayout({ children }: { children: React.ReactNode }) {
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
-        navigate('/partner/signin'); // Navigate to sign-in if fetching profile fails
+        navigate('/partner/signup'); // Navigate to sign-in if fetching profile fails
       }
     };
 
@@ -35,7 +36,7 @@ function DeliveryPartnerLayout({ children }: { children: React.ReactNode }) {
   }, [deliveryPartner, dispatch, navigate]);
 
   // Prevent rendering if delivery partner data is missing
-  if (!deliveryPartner.data) {
+  if (!deliveryPartner) {
     return null; // You can return a loading spinner or any placeholder here
   }
 

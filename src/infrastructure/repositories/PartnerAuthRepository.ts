@@ -51,7 +51,7 @@ export async function verifyOTP(otp: string, phone: string) {
 
 export async function fetchProfile(): Promise<IDeliveryPartner | null> {
   try {
-    const response = await axiosInstance.get('partner/profile');
+    const response = await axiosInstance.get('/partner/profile');
 
     return response.data;
   } catch (err) {

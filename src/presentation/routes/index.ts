@@ -133,6 +133,7 @@ const routes: Routes = {
     path: '/partner/order',
     title: 'Partner Orders',
     icon: LoginIcon,
+    layoutType: 'deliveryPartner',
   },
 
   // ADMIN

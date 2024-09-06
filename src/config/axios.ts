@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(
       } else if (response.config.url.includes('/admin/')) {
         redirectPath = '/admin/signin';
       } else if (response.config.url.includes('/partner/')) {
-        redirectPath = '/partner/signin';
+        redirectPath = '/partner/signup';
       }
 
       if (redirectPath)
