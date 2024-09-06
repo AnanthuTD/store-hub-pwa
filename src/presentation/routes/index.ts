@@ -128,6 +128,12 @@ const routes: Routes = {
     title: 'Partner SignUp',
     icon: LoginIcon,
   },
+  [Pages.PartnerOrder]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/partner/order')),
+    path: '/partner/order',
+    title: 'Partner Orders',
+    icon: LoginIcon,
+  },
 
   // ADMIN
   [Pages.AdminSignIn]: {

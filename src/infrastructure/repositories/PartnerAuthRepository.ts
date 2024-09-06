@@ -1,4 +1,5 @@
 import axiosInstance from '@/config/axios';
+import { IDeliveryPartner } from '@/domain/entities/DeliveryPartner';
 import { OTPResponse } from '@/domain/models/AuthModels';
 import axios from 'axios';
 
@@ -45,5 +46,15 @@ export async function verifyOTP(otp: string, phone: string) {
     } else {
       return { error: 'Network error. Please check your connection.' };
     }
+  }
+}
+
+export async function fetchProfile(): Promise<IDeliveryPartner | null> {
+  try {
+    const response = await axiosInstance.get('partner/profile');
+
+    return response.data;
+  } catch (err) {
+    return null;
   }
 }

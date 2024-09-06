@@ -19,6 +19,7 @@ enum Pages {
   PartnerVehicleInformation,
   PartnerBankAccountInformation,
   PartnerEmergencyInformation,
+  PartnerOrder,
 
   AdminSignIn,
   AdminPartnerValidationForm,
