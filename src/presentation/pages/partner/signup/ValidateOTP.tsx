@@ -6,7 +6,7 @@ import { verifyOTP } from '@/infrastructure/repositories/PartnerAuthRepository';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '@/infrastructure/redux/store';
-import { storePartner } from '@/infrastructure/redux/slices/partner/partnerSlice';
+import { login, storePartner } from '@/infrastructure/redux/slices/partner/partnerSlice';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 const OtpVerification = () => {
@@ -39,13 +39,19 @@ const OtpVerification = () => {
       console.error('Error logging in:', response.error);
       setError(response.error);
     } else {
+      const { partner, documentStatus } = response;
+
       console.log(response);
-      // Store the delivery partner's contact information in the Redux store
-      dispatch(storePartner({ _id: response._id }));
 
-      console.log('OTP verfication successfull');
-
-      navigate('/partner/signup/profile');
+      if (partner && partner.isVerified) {
+        // Store the delivery partner's contact information in the Redux store
+        dispatch(login(partner));
+      } else if (documentStatus) {
+        navigate('/partner/signup/complete');
+      } else {
+        dispatch(storePartner(partner));
+        navigate('/partner/signup/profile');
+      }
     }
   };
 

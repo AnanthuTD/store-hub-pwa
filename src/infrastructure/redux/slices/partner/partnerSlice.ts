@@ -13,6 +13,12 @@ const partnerSlice = createSlice({
   name: 'partner',
   initialState,
   reducers: {
+    login: (state, action: PayloadAction<IDeliveryPartner | null>) => {
+      state.data = action.payload;
+    },
+    logout: (state) => {
+      state.data = null;
+    },
     storePartner: (state, action: PayloadAction<Partial<IDeliveryPartner>>) => {
       if (state.data) {
         state.data = { ...state.data, ...action.payload };
@@ -29,6 +35,6 @@ const partnerSlice = createSlice({
   },
 });
 
-export const { storePartner, setId } = partnerSlice.actions;
+export const { storePartner, setId, clearPartner, login, logout } = partnerSlice.actions;
 
 export default partnerSlice.reducer;
