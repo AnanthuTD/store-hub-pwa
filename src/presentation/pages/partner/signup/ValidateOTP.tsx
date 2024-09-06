@@ -46,6 +46,7 @@ const OtpVerification = () => {
       if (partner && partner.isVerified) {
         // Store the delivery partner's contact information in the Redux store
         dispatch(login(partner));
+        navigate('/partner/order');
       } else if (documentStatus) {
         navigate('/partner/signup/complete');
       } else {
