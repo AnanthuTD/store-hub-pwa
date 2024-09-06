@@ -15,14 +15,44 @@ import {
 import axiosInstance from '@/config/axios';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-// Admin page component for validating delivery partner data
+interface PartnerData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  city: string;
+  address: string;
+  bloodGroup: string;
+  dob: string;
+  isVerified: boolean;
+  availability: {
+    idAvailable: boolean;
+    lastUpdate: string;
+  };
+  ratings: {
+    averageRating: number;
+    reviewCount: number;
+  };
+  avatar: string;
+  createdAt: string;
+  updatedAt: string;
+  documents: { [key: string]: DocumentData };
+}
+
+interface DocumentData {
+  status: 'approved' | 'rejected';
+  [key: string]: any;
+}
+
 const AdminValidationPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [partnerData, setPartnerData] = useState<object | null>(null);
+  const [partnerData, setPartnerData] = useState<PartnerData | null>(null);
   const [message, setMessage] = useState<string>('');
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [documentStatus, setDocumentStatus] = useState<{ [key: string]: boolean }>({});
+  const [documentStatus, setDocumentStatus] = useState<{ [key: string]: 'approved' | 'rejected' }>(
+    {},
+  );
 
   const deliveryPartnerId = searchParams.get('id');
 
@@ -40,18 +70,19 @@ const AdminValidationPage: React.FC = () => {
     fetchDeliveryPartnerData();
   }, [deliveryPartnerId]);
 
-  const initializeDocumentStatus = (documents: any) => {
-    const initialStatus: { [key: string]: boolean } = {};
+  const initializeDocumentStatus = (documents: { [key: string]: DocumentData }) => {
+    const initialStatus: { [key: string]: 'approved' | 'rejected' } = {};
     Object.keys(documents).forEach((docType) => {
-      initialStatus[docType] = !!documents[docType].isVerified; // Initialize all documents as not accepted
+      initialStatus[docType] = documents[docType].status || 'rejected';
     });
+
     setDocumentStatus(initialStatus);
   };
 
   const handleDocumentStatusChange = (docType: string, isChecked: boolean) => {
     setDocumentStatus((prevStatus) => ({
       ...prevStatus,
-      [docType]: isChecked,
+      [docType]: isChecked ? 'approved' : 'rejected',
     }));
   };
 
@@ -61,7 +92,6 @@ const AdminValidationPage: React.FC = () => {
         documentStatus,
         message,
       };
-      console.log('Submitted data:', data);
       await axiosInstance.post(`/admin/partner/${deliveryPartnerId}/validateDocuments`, data);
       navigate('/admin/partner/list');
     } catch (error) {
@@ -70,11 +100,11 @@ const AdminValidationPage: React.FC = () => {
   };
 
   const handleImageClick = (imageUrl: string) => {
-    setPreviewImage(imageUrl); // Set the image for preview
+    setPreviewImage(imageUrl);
   };
 
   const handleClosePreview = () => {
-    setPreviewImage(null); // Close the image preview
+    setPreviewImage(null);
   };
 
   return (
@@ -85,7 +115,6 @@ const AdminValidationPage: React.FC = () => {
             Validate Delivery Partner: {partnerData.firstName} {partnerData.lastName}
           </Typography>
           <Grid container spacing={2} marginTop={2}>
-            {/* Partner Info */}
             <Grid item xs={12} md={6}>
               <Typography variant="subtitle1">Email: {partnerData.email}</Typography>
               <Typography variant="subtitle1">Phone: {partnerData.phone}</Typography>
@@ -130,14 +159,13 @@ const AdminValidationPage: React.FC = () => {
             <Typography variant="h6">Documents</Typography>
             <Divider sx={{ marginY: 1 }} />
 
-            {Object.entries(partnerData.documents).map(([docType, docData]: [string, any]) => (
+            {Object.entries(partnerData.documents).map(([docType, docData]) => (
               <Box key={docType} sx={{ marginBottom: 2 }}>
                 <Typography variant="subtitle1">{docType.toUpperCase()}</Typography>
                 <Grid container spacing={2}>
                   {Object.entries(docData).map(([key, value]) => (
                     <Grid item xs={12} md={6} key={key}>
                       {typeof value === 'string' && value.startsWith('http') ? (
-                        // Render image
                         <>
                           <Typography variant="body2">{key}:</Typography>
                           <img
@@ -154,7 +182,6 @@ const AdminValidationPage: React.FC = () => {
                           />
                         </>
                       ) : (
-                        // Render text field
                         <>
                           <Typography variant="body2">{key}:</Typography>
                           <TextField
@@ -174,7 +201,7 @@ const AdminValidationPage: React.FC = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          checked={documentStatus[docType] || false}
+                          checked={documentStatus[docType] === 'approved'}
                           onChange={(e) => handleDocumentStatusChange(docType, e.target.checked)}
                         />
                       }
