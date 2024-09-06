@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/infrastructure/redux/store';
 import { login } from '@/infrastructure/redux/slices/shopOwner/shopOwnerSlice';
+import CheckShopOwnerLoggedIn from '../components/CheckShopOwnerLoggedIn';
 
 function SignIn() {
   // const shopOwner = useSelector((state: RootState) => state.user.data);
@@ -39,150 +40,150 @@ function SignIn() {
     }
   };
 
-  const handleGoogleSignIn = () => {
-    alert('Signed In with Google');
-  };
-
   useEffect(() => {
     if (success) navigate('/shop/dashboard');
   }, [success, navigate]);
 
   return (
-    <Grid container component="main" sx={{ height: '100vh' }}>
-      {/* Left Side - Image */}
-      <Grid
-        item
-        xs={false}
-        sm={4}
-        md={7}
-        sx={{
-          backgroundImage: 'url("/admin-signin.png")',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <Box
+    <CheckShopOwnerLoggedIn>
+      <Grid container component="main" sx={{ height: '100vh' }}>
+        {/* Left Side - Image */}
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
           sx={{
-            height: '100%',
+            backgroundImage: 'url("/admin-signin.png")',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              color: 'white',
+              fontSize: 28,
+              fontWeight: 'bold',
+              background: 'rgba(0, 0, 0, 0.5)',
+              textAlign: 'center',
+              p: 3,
+            }}
+          >
+            INSPIRED BY THE FUTURE: <br /> THE VISION UI DASHBOARD
+          </Box>
+        </Grid>
+
+        {/* Right Side - Form */}
+        <Grid
+          item
+          xs={12}
+          sm={8}
+          md={5}
+          sx={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            color: 'white',
-            fontSize: 28,
-            fontWeight: 'bold',
-            background: 'rgba(0, 0, 0, 0.5)',
-            textAlign: 'center',
-            p: 3,
+            background: 'linear-gradient(0deg, #020515 100%, #090D2E 59%, #0F123B 0%)',
+            px: 3,
           }}
         >
-          INSPIRED BY THE FUTURE: <br /> THE VISION UI DASHBOARD
-        </Box>
-      </Grid>
-
-      {/* Right Side - Form */}
-      <Grid
-        item
-        xs={12}
-        sm={8}
-        md={5}
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          background: 'linear-gradient(0deg, #020515 100%, #090D2E 59%, #0F123B 0%)',
-          px: 3,
-        }}
-      >
-        <Box
-          sx={{
-            width: '100%',
-            maxWidth: 400,
-            p: 4,
-            borderRadius: 2,
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            boxShadow: '0 0 20px rgba(0, 0, 0, 0.2)',
-          }}
-        >
-          <Typography
-            component="h1"
-            variant="h5"
-            sx={{ color: 'white', mb: 2, textAlign: 'center' }}
+          <Box
+            sx={{
+              width: '100%',
+              maxWidth: 400,
+              p: 4,
+              borderRadius: 2,
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 0 20px rgba(0, 0, 0, 0.2)',
+            }}
           >
-            Sign In
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'white', textAlign: 'center', mb: 3 }}>
-            Welcome back! Please enter your details to sign in.
-          </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
-            <Input
-              label="Email"
-              name="email"
-              id="email"
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              required
-              autoComplete="email"
-              autoFocus
-            />
-            <Input
-              label="Password"
-              name="password"
-              id="password"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              required
-              autoComplete="current-password"
-            />
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 2,
-                mb: 2,
-                backgroundColor: '#3B82F6',
-                color: '#ffffff',
-                borderRadius: 2,
-                '&:hover': {
-                  backgroundColor: '#2A69F1',
-                },
-              }}
-              onClick={handleSignIn}
-              disabled={loading}
+            <Typography
+              component="h1"
+              variant="h5"
+              sx={{ color: 'white', mb: 2, textAlign: 'center' }}
             >
-              {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'SIGN IN'}
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={{
-                mb: 2,
-                color: 'white',
-                borderColor: '#3B82F6',
-              }}
-              onClick={handleGoogleSignIn}
-            >
-              Sign in with Google
-            </Button>
-            <Typography variant="body2" sx={{ color: 'white', textAlign: 'center' }}>
-              Don&apos;t have an account?{' '}
-              <Link href="#" sx={{ color: '#3B82F6', textDecoration: 'none' }}>
-                Sign up
-              </Link>
+              Sign In
             </Typography>
+            <Typography variant="body2" sx={{ color: 'white', textAlign: 'center', mb: 3 }}>
+              Welcome back! Please enter your details to sign in.
+            </Typography>
+            <Box component="form" noValidate sx={{ mt: 1 }}>
+              <Input
+                label="Email"
+                name="email"
+                id="email"
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                required
+                autoComplete="email"
+                autoFocus
+              />
+              <Input
+                label="Password"
+                name="password"
+                id="password"
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
+                required
+                autoComplete="current-password"
+              />
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 2,
+                  mb: 2,
+                  backgroundColor: '#3B82F6',
+                  color: '#ffffff',
+                  borderRadius: 2,
+                  '&:hover': {
+                    backgroundColor: '#2A69F1',
+                  },
+                }}
+                onClick={handleSignIn}
+                disabled={loading}
+              >
+                {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'SIGN IN'}
+              </Button>
+              <a href={`/api/shopOwner/auth/google`}>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  sx={{
+                    mb: 2,
+                    color: 'white',
+                    borderColor: '#3B82F6',
+                  }}
+                  // onClick={handleGoogleSignIn}
+                >
+                  Sign in with Google
+                </Button>
+              </a>
+              <Typography variant="body2" sx={{ color: 'white', textAlign: 'center' }}>
+                Don&apos;t have an account?{' '}
+                <Link href="/shop/signup" sx={{ color: '#3B82F6', textDecoration: 'none' }}>
+                  Sign up
+                </Link>
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-      </Grid>
+        </Grid>
 
-      {/* Snackbar for feedback */}
-      <Snackbar open={!!error || !!success} autoHideDuration={6000} onClose={clearFeedback}>
-        <Alert onClose={clearFeedback} severity={error ? 'error' : 'success'}>
-          {error || success}
-        </Alert>
-      </Snackbar>
-    </Grid>
+        {/* Snackbar for feedback */}
+        <Snackbar open={!!error || !!success} autoHideDuration={6000} onClose={clearFeedback}>
+          <Alert onClose={clearFeedback} severity={error ? 'error' : 'success'}>
+            {error || success}
+          </Alert>
+        </Snackbar>
+      </Grid>
+    </CheckShopOwnerLoggedIn>
   );
 }
 
