@@ -50,7 +50,7 @@ const OtpVerification = () => {
       } else if (documentStatus) {
         navigate('/partner/signup/complete');
       } else {
-        dispatch(storePartner(partner));
+        dispatch(storePartner({ _id: partner._id }));
         navigate('/partner/signup/profile');
       }
     }

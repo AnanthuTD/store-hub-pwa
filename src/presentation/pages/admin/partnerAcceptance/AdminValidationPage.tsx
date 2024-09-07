@@ -165,11 +165,11 @@ const AdminValidationPage: React.FC = () => {
                 <Grid container spacing={2}>
                   {Object.entries(docData).map(([key, value]) => (
                     <Grid item xs={12} md={6} key={key}>
-                      {typeof value === 'string' && value.startsWith('http') ? (
+                      {typeof value === 'string' && value.startsWith('uploads') ? (
                         <>
                           <Typography variant="body2">{key}:</Typography>
                           <img
-                            src={value}
+                            src={`/api/admin/partner/document/${value}`}
                             alt={key}
                             style={{
                               width: '100%',
@@ -178,7 +178,7 @@ const AdminValidationPage: React.FC = () => {
                               maxWidth: '300px',
                               maxHeight: '200px',
                             }}
-                            onClick={() => handleImageClick(value)}
+                            onClick={() => handleImageClick(`/api/admin/partner/document/${value}`)}
                           />
                         </>
                       ) : (
@@ -230,11 +230,17 @@ const AdminValidationPage: React.FC = () => {
           </Button>
 
           {/* Image Preview Dialog */}
-          <Dialog open={!!previewImage} onClose={handleClosePreview}>
+          <Dialog open={!!previewImage} onClose={handleClosePreview} fullWidth>
             <img
               src={previewImage as string}
               alt="Document Preview"
-              style={{ maxWidth: '100%', maxHeight: '100%' }}
+              style={{
+                width: '100%', // Scale image to fit the container
+                height: 'auto', // Maintain aspect ratio
+                maxWidth: '100%', // Prevent stretching beyond natural resolution
+                maxHeight: '100%', // Ensure it doesn't exceed the dialog height
+                objectFit: 'contain', // Ensure the image covers the area without losing clarity
+              }}
             />
           </Dialog>
         </>

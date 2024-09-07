@@ -14,6 +14,8 @@ const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
     <Box
       sx={{
         minHeight: '100vh',
+        overflowX: 'hidden',
+        overflowY: 'auto',
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',

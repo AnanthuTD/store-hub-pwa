@@ -143,6 +143,13 @@ const routes: Routes = {
     title: 'Admin Sign In',
     icon: LoginIcon,
   },
+  [Pages.AdminDashboard]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/admin/dashboard')),
+    path: '/admin/dashboard',
+    title: 'Admin Dashboard',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
   [Pages.AdminPartnerList]: {
     component: asyncComponentLoader(
       () => import('@/presentation/pages/admin/partnerAcceptance/PartnersListPage'),
@@ -150,6 +157,7 @@ const routes: Routes = {
     path: '/admin/partner/list',
     title: 'Admin Sign In',
     icon: LoginIcon,
+    layoutType: 'admin',
   },
   [Pages.AdminPartnerValidationForm]: {
     component: asyncComponentLoader(
@@ -158,6 +166,7 @@ const routes: Routes = {
     path: '/admin/partner/validate',
     title: 'Admin Sign In',
     icon: LoginIcon,
+    layoutType: 'admin',
   },
 
   // SHOP OWNER

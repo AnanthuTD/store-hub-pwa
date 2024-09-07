@@ -6,10 +6,10 @@ import { RootState } from '@/infrastructure/redux/store';
 import { IDeliveryPartner } from '@/domain/entities/DeliveryPartner';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '@/config/axios';
-import Compressor from 'compressorjs';
+// import Compressor from 'compressorjs';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
-async function compressImage(file: File) {
+/* async function compressImage(file: File) {
   return new Promise((resolve, reject) => {
     new Compressor(file, {
       quality: 0.6, // Adjust quality as needed
@@ -21,7 +21,7 @@ async function compressImage(file: File) {
       },
     });
   });
-}
+} */
 
 const baseUrl = '/partner/signup/document';
 
@@ -84,6 +84,7 @@ const DocumentsPage: React.FC = () => {
     const formData = new FormData();
 
     // Append basic fields
+    formData.append('_id', partner['_id']);
     if (storedPartnerInfo?.firstName) formData.append('firstName', storedPartnerInfo.firstName);
     if (storedPartnerInfo?.lastName) formData.append('lastName', storedPartnerInfo.lastName);
     if (storedPartnerInfo?.dob) formData.append('dob', storedPartnerInfo.dob.toISOString());
@@ -125,11 +126,11 @@ const DocumentsPage: React.FC = () => {
             `${doc}_back.png`,
           );
 
-          const compressedFrontImage = await compressImage(frontImageFile);
-          const compressedBackImage = await compressImage(backImageFile);
+          // const compressedFrontImage = await compressImage(frontImageFile);
+          // const compressedBackImage = await compressImage(backImageFile);
 
-          formData.append(`documents[${doc}][frontImage]`, compressedFrontImage);
-          formData.append(`documents[${doc}][backImage]`, compressedBackImage);
+          formData.append(`documents[${doc}][frontImage]`, frontImageFile);
+          formData.append(`documents[${doc}][backImage]`, backImageFile);
         }
       }
 

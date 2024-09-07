@@ -3,13 +3,12 @@ import { useForm, Controller } from 'react-hook-form';
 import { Box, TextField, Grid, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/infrastructure/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/infrastructure/redux/store';
 import { storePartner } from '@/infrastructure/redux/slices/partner/partnerSlice';
 import ImageUpload from '@/presentation/pages/partner/signup/components/ImageUpload';
 import SubmitButton from '@/presentation/pages/partner/signup/components/SubmitButton';
 import { useNavigate } from 'react-router-dom';
-import { IDeliveryPartner } from '@/domain/entities/DeliveryPartner';
 
 // Define type for form values
 type FormValues = {
@@ -34,6 +33,7 @@ const isAtLeast18YearsOld = (dob: Dayjs | null): boolean => {
 const UserProfileForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const partnerDetails = useSelector<RootState>((state) => state.partner.data);
 
   // Initialize react-hook-form with validation rules
   const {
@@ -70,6 +70,8 @@ const UserProfileForm: React.FC = () => {
 
   // Handle form submission
   const onSubmit = (data: FormValues) => {
+    console.log(data);
+
     if (!data.avatar) {
       alert('Please select a profile picture');
       return;
@@ -78,8 +80,8 @@ const UserProfileForm: React.FC = () => {
       return;
     }
     console.log('Form Values:', data);
-    dispatch(storePartner(data as unknown as Partial<IDeliveryPartner>));
-    navigate('/partner/signup/document/personal');
+    dispatch(storePartner({ _id: partnerDetails._id, ...data }));
+    navigate('/partner/signup/document');
   };
 
   return (

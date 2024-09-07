@@ -38,7 +38,7 @@ const Sidebar = ({
       sx={{
         width: 250,
         background: 'url("/side-bar.svg")',
-        height: '100vh',
+        height: 'fit-content',
         color: 'white',
         paddingTop: 2,
       }}
