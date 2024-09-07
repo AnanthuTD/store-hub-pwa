@@ -18,7 +18,7 @@ const StyledBox = styled(Box)`
   background-color: #1e1e1e; /* Dark background */
   padding: 24px;
   border-radius: 8px;
-  width: 100%; /* Set width to 100% */
+  width: 85%; /* Set width to 100% */
   max-width: 100%; /* Ensure it doesn't exceed 100% */
 `;
 

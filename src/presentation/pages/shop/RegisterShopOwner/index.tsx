@@ -42,7 +42,7 @@ function Index() {
   const shopOwner = useSelector((state: RootState) => state.shopOwner.data);
 
   function handleSubmit(shopOwner: ShopOwner) {
-    const response = axiosInstance.post('/shopOwner/register', shopOwner);
+    const response = axiosInstance.post('/shopOwner/auth/register', shopOwner);
     console.log(response);
   }
   return (

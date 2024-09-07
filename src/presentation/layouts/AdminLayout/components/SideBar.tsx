@@ -12,6 +12,12 @@ function SideBarAdmin() {
       href: '/admin/dashboard',
     },
     {
+      label: 'Un-verified Partner',
+      icon: <Home fontSize="small" />,
+      key: 'un-verified-partner',
+      href: '/admin/partner/list',
+    },
+    {
       label: 'User',
       icon: <Home fontSize="small" />,
       key: 'user',

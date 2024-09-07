@@ -15,7 +15,7 @@ const ShopOwnerForm: React.FC<IShopOwnerFormProps> = ({ onSubmit, initialData })
   // Initialize state with initialData? and handle null values
   const [firstName, setFirstName] = useState(initialData?.profile?.firstName || '');
   const [lastName, setLastName] = useState(initialData?.profile?.lastName || '');
-  const [email, setEmail] = useState(initialData?.email || '');
+  const [email, setEmail] = useState(initialData.email);
   const [phone, setPhone] = useState(initialData?.phone || '');
   const [street, setStreet] = useState(initialData?.profile?.address?.street || '');
   const [city, setCity] = useState(initialData?.profile?.address?.city || '');
