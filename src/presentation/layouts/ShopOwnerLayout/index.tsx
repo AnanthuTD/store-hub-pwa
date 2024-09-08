@@ -5,8 +5,10 @@ import SideBarShop from './components/SideBar';
 import BackgroundWrapper from '@/presentation/components/BackgroundWrapper';
 import { AppDispatch, RootState } from '@/infrastructure/redux/store';
 import { fetchProfile } from '@/infrastructure/repositories/shopOwnerRepository';
-import { login } from '@/infrastructure/redux/slices/shopOwner/shopOwnerSlice';
+import { login, logout } from '@/infrastructure/redux/slices/shopOwner/shopOwnerSlice';
 import Cookies from 'js-cookie'; // Make sure to install js-cookie
+import { Box, Button } from '@mui/material';
+import axiosInstance from '@/config/axios';
 
 function ShopOwnerLayout({ children }: { children: React.ReactNode }) {
   const shopOwner = useSelector((state: RootState) => state.shopOwner.data);
@@ -48,11 +50,30 @@ function ShopOwnerLayout({ children }: { children: React.ReactNode }) {
     return null; // Show a loading spinner or placeholder if necessary
   }
 
+  const handleLogout = () => {
+    dispatch(logout()); // Clear Redux store
+    navigate('/shop/signin'); // Navigate to sign-in page after logout
+    axiosInstance.get('/shopOwner/auth/logout');
+  };
+
   return (
     <BackgroundWrapper>
       <div style={{ display: 'flex' }}>
         <SideBarShop />
-        {children}
+        <Box width={'100%'}>
+          <Box
+            height={50}
+            sx={{ background: 'linear-gradient(to bottom, #060B28 74%, #0A0E23 71%)' }}
+            marginBottom={1}
+            display={'flex'}
+            flexDirection={'row-reverse'}
+          >
+            <Button size="small" onClick={handleLogout}>
+              Logout
+            </Button>
+          </Box>
+          {children}
+        </Box>
       </div>
     </BackgroundWrapper>
   );

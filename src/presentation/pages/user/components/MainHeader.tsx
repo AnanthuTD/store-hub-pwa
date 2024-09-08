@@ -1,15 +1,25 @@
 import React from 'react';
-import { Box, Toolbar, Typography, IconButton, InputBase, Stack } from '@mui/material';
+import { Box, Toolbar, Typography, IconButton, InputBase, Stack, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
+import axiosInstance from '@/config/axios';
+import { logout } from '@/infrastructure/redux/slices/user/userSlice';
 
 const MainHeader = () => {
   const user = useSelector<RootState>((state) => state.user.data);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout()); // Clear Redux store
+    navigate('/signin'); // Navigate to sign-in page after logout
+    axiosInstance.get('/user/auth/logout');
+  };
 
   return (
     <Toolbar
@@ -47,9 +57,9 @@ const MainHeader = () => {
       {/* Right Menu */}
       <Stack direction="row" spacing={2} alignItems="center">
         {user ? (
-          <Link to="#" style={{ textDecoration: 'none', color: '#23A6F0' }}>
-            Accounts
-          </Link>
+          <Button variant="outlined" onClick={handleLogout}>
+            Logout
+          </Button>
         ) : (
           <Link to="/signin" style={{ textDecoration: 'none', color: '#23A6F0' }}>
             Login / Register

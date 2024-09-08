@@ -14,7 +14,7 @@ const TopBar = () => {
       }}
     >
       <Typography variant="body2" color="textSecondary">
-        Welcome to worldwide Megamart!
+        ShopHub
       </Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
         {/* Delivery Information */}
