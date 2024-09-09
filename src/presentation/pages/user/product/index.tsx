@@ -1,27 +1,37 @@
-import ReactImageMagnify from 'react-image-magnify';
+import { SideBySideMagnifier } from 'react-image-magnifiers';
 import React from 'react';
-import './examples.css';
 
-import watchImg687 from './wristwatch_687.jpg';
-import watchImg1200 from './wristwatch_1200.jpg';
-
-export default function index() {
+function Index() {
+  const state = {
+    alwaysInPlace: false,
+    overlayOpacity: 0.6,
+    switchSides: false,
+    fillAvailableSpace: false,
+    fillAlignTop: false,
+    fillGapLeft: 0,
+    fillGapRight: 10,
+    fillGapTop: 10,
+    fillGapBottom: 10,
+  };
   return (
-    <div className="fluid__image-container">
-      <ReactImageMagnify
-        {...{
-          smallImage: {
-            alt: 'Wristwatch by Ted Baker London',
-            isFluidWidth: true,
-            src: watchImg687,
-          },
-          largeImage: {
-            src: watchImg1200,
-            width: 1200,
-            height: 1800,
-          },
-        }}
+    <div style={{ display: 'flex' }}>
+      <SideBySideMagnifier
+        imageSrc="/product/image.jpg"
+        imageAlt="Example"
+        largeImageSrc="/product/large-image.jpg"
+        style={{ order: state.switchSides ? '1' : '0', width: '30%', position: 'relative' }}
+        alwaysInPlace={state.alwaysInPlace}
+        fillAvailableSpace={state.fillAvailableSpace}
+        fillAlignTop={state.fillAlignTop}
+        fillGapTop={state.fillGapTop}
+        fillGapRight={state.fillGapRight}
+        fillGapBottom={state.fillGapBottom}
+        fillGapLeft={state.fillGapLeft}
+        zoomContainerBorder="1px solid #ccc"
+        zoomContainerBoxShadow="0 4px 8px rgba(0,0,0,.5)"
       />
     </div>
   );
 }
+
+export default Index;
