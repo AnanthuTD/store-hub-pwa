@@ -1,19 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import SideBarShop from './components/SideBar';
-import BackgroundWrapper from '@/presentation/components/BackgroundWrapper';
 import { AppDispatch, RootState } from '@/infrastructure/redux/store';
 import { fetchProfile } from '@/infrastructure/repositories/shopOwnerRepository';
-import { login, logout } from '@/infrastructure/redux/slices/shopOwner/shopOwnerSlice';
+import { login } from '@/infrastructure/redux/slices/shopOwner/shopOwnerSlice';
 import Cookies from 'js-cookie'; // Make sure to install js-cookie
-import { Box, Button } from '@mui/material';
-import axiosInstance from '@/config/axios';
+import { ConfigProvider, Layout, theme } from 'antd';
+import Sidebar from './components/SideBar';
+import HeaderBar from './components/HeaderBar';
+import ContentArea from './components/ContentArea';
 
-function ShopOwnerLayout({ children }: { children: React.ReactNode }) {
+const MainLayout = ({ children }: { children: React.ReactNode }) => {
+  const [collapsed, setCollapsed] = useState(false);
+
+  const toggleCollapsed = () => setCollapsed(!collapsed);
+
   const shopOwner = useSelector((state: RootState) => state.shopOwner.data);
-  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -31,7 +36,8 @@ function ShopOwnerLayout({ children }: { children: React.ReactNode }) {
         if (!shopOwner) {
           const profile = await fetchProfile();
           if (!profile) {
-            navigate('/shop/signin');
+            // TODO: Uncomment the following line
+            // navigate('/shop/signin');
           } else {
             // Update Redux store with fetched profile data
             dispatch(login(profile));
@@ -39,44 +45,32 @@ function ShopOwnerLayout({ children }: { children: React.ReactNode }) {
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
-        navigate('/shop/signin'); // Navigate to sign-in if fetching profile fails
+        // TODO: Uncomment the following line
+
+        // navigate('/shop/signin'); // Navigate to sign-in if fetching profile fails
       }
     };
 
     loadProfile();
   }, [shopOwner, dispatch, navigate, searchParams]);
 
-  if (!shopOwner) {
-    return null; // Show a loading spinner or placeholder if necessary
-  }
+  // TODO: Uncomment the following line to restrict access to specific routes based on admin role
 
-  const handleLogout = () => {
-    dispatch(logout()); // Clear Redux store
-    navigate('/shop/signin'); // Navigate to sign-in page after logout
-    axiosInstance.get('/shopOwner/auth/logout');
-  };
+  // if (!shopOwner) {
+  //   return null;
+  // }
 
   return (
-    <BackgroundWrapper>
-      <div style={{ display: 'flex' }}>
-        <SideBarShop />
-        <Box width={'100%'}>
-          <Box
-            height={50}
-            sx={{ background: 'linear-gradient(to bottom, #060B28 74%, #0A0E23 71%)' }}
-            marginBottom={1}
-            display={'flex'}
-            flexDirection={'row-reverse'}
-          >
-            <Button size="small" onClick={handleLogout}>
-              Logout
-            </Button>
-          </Box>
-          {children}
-        </Box>
-      </div>
-    </BackgroundWrapper>
+    <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
+      <Layout style={{ height: '100vh' }}>
+        <Sidebar collapsed={collapsed} />
+        <Layout>
+          <HeaderBar collapsed={collapsed} toggle={toggleCollapsed} />
+          <ContentArea>{children}</ContentArea>
+        </Layout>
+      </Layout>
+    </ConfigProvider>
   );
-}
+};
 
-export default ShopOwnerLayout;
+export default MainLayout;
