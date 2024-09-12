@@ -16,6 +16,8 @@ const ContentArea = ({ children }: { children: React.ReactNode }) => {
         minHeight: 280,
         background: colorBgContainer,
         borderRadius: borderRadiusLG,
+        overflow: 'hidden',
+        overflowY: 'scroll',
       }}
     >
       {children}
