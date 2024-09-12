@@ -181,21 +181,21 @@ const routes: Routes = {
   // SHOP OWNER
   [Pages.ShopSignUp]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/shop/authentication/SignUp'),
+      () => import('@/presentation/pages/vendor/authentication/SignUp'),
     ),
     path: '/shop/signup',
     title: 'Shop Sign Up',
     icon: LoginIcon,
   },
   [Pages.ShopHomePage]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/shop/Dashboard')),
+    component: asyncComponentLoader(() => import('@/presentation/pages/vendor/Dashboard')),
     path: '/shop/dashboard',
     title: 'Shop Home',
     icon: LoginIcon,
     layoutType: 'shopOwner',
   },
   [Pages.ShopOwnerRegister]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/shop/RegisterShopOwner')),
+    component: asyncComponentLoader(() => import('@/presentation/pages/vendor/RegisterShopOwner')),
     path: '/shop/owner/register',
     title: 'Shop Owner Register',
     icon: LoginIcon,
@@ -203,7 +203,7 @@ const routes: Routes = {
   },
   [Pages.ShopSignUpWithOTP]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/shop/authentication/SignIn'),
+      () => import('@/presentation/pages/vendor/authentication/SignIn'),
     ),
     path: '/shop/signin',
     title: 'Shop Owner Sign In',
