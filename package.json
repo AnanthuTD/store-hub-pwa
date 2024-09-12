@@ -27,6 +27,7 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.4.0",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@faker-js/faker": "^9.0.0",
@@ -37,6 +38,7 @@
     "@mui/utils": "^5.15.0",
     "@mui/x-date-pickers": "^7.12.1",
     "@reduxjs/toolkit": "^2.2.7",
+    "antd": "^5.20.6",
     "axios": "^1.7.3",
     "compressorjs": "^1.2.1",
     "dayjs": "^1.11.12",

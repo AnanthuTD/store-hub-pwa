@@ -1,7 +1,22 @@
 import React, { useState } from 'react';
-import { Box, Button, Checkbox, Grid, Typography, Alert } from '@mui/material';
-import Input from '@/presentation/components/Input';
+import {
+  Layout,
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  Typography,
+  Alert,
+  Divider,
+  Card,
+  Space,
+} from 'antd';
 import { useLogin } from '@/hooks/Admin/useLogin';
+import GoogleSignUpButton from '@/presentation/components/Auth/GoogleSignUpButton';
+import { passwordRules } from '@/presentation/components/passwordRules';
+
+const { Content } = Layout;
+const { Title, Text } = Typography;
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -15,8 +30,7 @@ const LoginPage: React.FC = () => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setPassword(e.target.value);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setLoading(true);
     setError(null);
 
@@ -31,117 +45,133 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <Grid container component="main" sx={{ height: '100vh' }}>
-      {/* Left Side - Image */}
-      <Grid
-        item
-        xs={false}
-        sm={4}
-        md={7}
-        sx={{
-          backgroundImage: 'url("/admin-signin.png")',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+    <Layout
+      style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #f0f2f5 0%, #ffffff 100%)',
+      }}
+    >
+      <Content
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '50px',
         }}
       >
-        <Box
-          sx={{
-            height: '100%',
+        {/* Left Side - SVG and Welcome Message */}
+        <div
+          style={{
+            flex: 1,
+            backgroundImage: 'url("/admin-signin.png")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            color: 'white',
-            fontSize: 28,
-            fontWeight: 'bold',
-            background: 'rgba(0, 0, 0, 0.5)',
-          }}
-        >
-          INSPIRED BY THE FUTURE: <br /> THE VISION UI DASHBOARD
-        </Box>
-      </Grid>
-
-      {/* Right Side - Form */}
-      <Grid item xs={12} sm={8} md={5}>
-        <Box
-          sx={{
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'linear-gradient(0deg, #020515 100%, #090D2E 59%, #0F123B 0%)',
-            px: 4,
+            color: '#ffffff',
+            padding: '40px',
+            borderRadius: '12px',
+            marginRight: '20px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+            height: '85vh',
           }}
         >
-          <Typography component="h1" variant="h5" sx={{ color: 'white', mb: 2 }}>
-            Nice to see you!
-          </Typography>
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
-          <Button
-            variant="contained"
-            sx={{
-              mt: 2,
-              mb: 2,
-              backgroundColor: '#ffffff',
-              color: '#000000',
-              borderRadius: 50,
-            }}
-            startIcon={<i className="fab fa-google" />} // Assuming FontAwesome is available
-            onClick={() => {
-              /* Handle Google Sign-In */
-            }}
-          >
-            Sign in with Google
-          </Button>
-          <Typography variant="body2" color="textSecondary" sx={{ color: 'white' }}>
-            or
-          </Typography>
-          <Box component="form" noValidate sx={{ mt: 1, width: '100%' }} onSubmit={handleSubmit}>
-            <Input
-              label="Email or Mobile"
-              name="email"
-              id="email"
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              required
-              autoComplete="email"
-              autoFocus
-            />
+          <div style={{ textAlign: 'center' }}>
+            <Title level={2} style={{ color: '#ffffff', marginBottom: '16px' }}>
+              Welcome to Admin Portal
+            </Title>
+            <Text style={{ fontSize: '16px', color: '#ffffff' }}>
+              Manage and oversee everything from here.
+            </Text>
+          </div>
+        </div>
 
-            <Input
-              label="Password"
-              name="password"
-              id="password"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              required
-              autoComplete="current-password"
-            />
-
-            <Box sx={{ display: 'flex', alignItems: 'center', color: 'white' }}>
-              <Checkbox value="remember" color="primary" />
-              <Typography variant="body2">Remember me</Typography>
-            </Box>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, backgroundColor: '#3B82F6', color: '#ffffff' }}
-              disabled={loading}
+        {/* Right Side - Login Form */}
+        <Card
+          style={{
+            width: '400px',
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+            backgroundColor: '#ffffff',
+          }}
+          bordered={false}
+        >
+          <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+            <Title level={3} style={{ textAlign: 'center', marginBottom: 0, color: '#3B3B3B' }}>
+              Sign In
+            </Title>
+            <Text
+              type="secondary"
+              style={{ display: 'block', textAlign: 'center', marginBottom: '24px', color: '#888' }}
             >
-              {loading ? 'Signing in...' : 'Sign In'}
-            </Button>
-          </Box>
-        </Box>
-      </Grid>
-    </Grid>
+              Welcome back! Please sign in to access the dashboard.
+            </Text>
+            {error && (
+              <Alert message={error} type="error" showIcon style={{ marginBottom: '16px' }} />
+            )}
+
+            <GoogleSignUpButton
+            /*  onClick={() => {
+              }} */
+            />
+
+            <Divider plain style={{ color: '#888' }}>
+              or
+            </Divider>
+
+            <Form layout="vertical" onFinish={handleSubmit}>
+              <Form.Item
+                label="Email or Mobile"
+                name="email"
+                rules={[
+                  { required: true, message: 'Please input your email or mobile!' },
+                  { type: 'email', message: 'The input is not a valid email!' },
+                ]}
+              >
+                <Input
+                  value={email}
+                  onChange={handleEmailChange}
+                  placeholder="Enter your email or mobile"
+                  autoComplete="email"
+                  autoFocus
+                  size="large"
+                />
+              </Form.Item>
+
+              <Form.Item label="Password" name="password" rules={passwordRules}>
+                <Input.Password
+                  value={password}
+                  onChange={handlePasswordChange}
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  size="large"
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <Checkbox style={{ color: '#888' }}>Remember me</Checkbox>
+              </Form.Item>
+
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                style={{
+                  width: '100%',
+                  borderRadius: '6px',
+                  backgroundColor: '#1890ff',
+                  borderColor: '#1890ff',
+                  boxShadow: '0 4px 12px rgba(24, 144, 255, 0.3)',
+                }}
+              >
+                {loading ? 'Signing in...' : 'Sign In'}
+              </Button>
+            </Form>
+          </Space>
+        </Card>
+      </Content>
+    </Layout>
   );
 };
 

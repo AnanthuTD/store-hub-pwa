@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, List, ListItem, ListItemText, Typography, Avatar, Divider } from '@mui/material';
+import { List, Avatar, Typography, Divider } from 'antd';
 import axiosInstance from '@/config/axios';
 import styled from '@emotion/styled';
 
@@ -14,32 +14,21 @@ interface PartnerSummary {
   isVerified: boolean;
 }
 
-const StyledBox = styled(Box)`
-  background-color: #1e1e1e; /* Dark background */
-  padding: 24px;
-  border-radius: 8px;
-  width: 85%; /* Set width to 100% */
-  max-width: 100%; /* Ensure it doesn't exceed 100% */
+// Styled Title for light theme
+const StyledTitle = styled(Typography.Title)`
+  color: #333333; /* Darker text for light theme */
 `;
 
-const StyledTypography = styled(Typography)`
-  color: #ffffff; /* White text for contrast */
-`;
-
-const StyledListItem = styled(ListItem)`
-  width: 100%; /* Set width to 100% */
+const StyledListItem = styled(List.Item)`
   &:hover {
-    background-color: #333333; /* Slightly lighter hover effect */
+    background-color: #f5f5f5; /* Light grey hover effect for light theme */
     transition: background-color 0.3s ease;
   }
 `;
 
-const StyledAvatar = styled(Avatar)`
-  border: 2px solid #4caf50; /* Green border for verified, dynamic color for non-verified */
-`;
-
+// Styled Divider for light theme
 const StyledDivider = styled(Divider)`
-  background-color: #444444; /* Subtle divider color */
+  background-color: #e0e0e0; /* Light grey divider */
 `;
 
 const PartnersListPage: React.FC = () => {
@@ -53,7 +42,7 @@ const PartnersListPage: React.FC = () => {
 
   const fetchPartners = async () => {
     try {
-      const response = await axiosInstance.get('/admin/partner/list/not-verified'); // Replace with your API endpoint
+      const response = await axiosInstance.get('/admin/partner/list/not-verified');
       setPartners(response.data);
     } catch (error) {
       console.error('Error fetching partners data', error);
@@ -65,33 +54,35 @@ const PartnersListPage: React.FC = () => {
   };
 
   return (
-    <StyledBox>
-      <StyledTypography variant="h4" gutterBottom>
-        Delivery Partners
-      </StyledTypography>
-      <List>
-        {partners.map((partner) => (
+    <>
+      <StyledTitle level={4}>Delivery Partners</StyledTitle>
+      <List
+        itemLayout="horizontal"
+        dataSource={partners}
+        renderItem={(partner) => (
           <React.Fragment key={partner._id}>
             <StyledListItem onClick={() => handlePartnerClick(partner._id)}>
-              <StyledAvatar
-                src={partner.avatar}
-                alt={`${partner.firstName} Avatar`}
-                style={{
-                  borderColor: partner.isVerified ? '#4caf50' : '#f44336',
-                }} /* Red border if not verified */
-              />
-              <ListItemText
-                primary={`${partner.firstName} ${partner.lastName}`}
-                secondary={`${partner.city} - ${partner.isVerified ? 'Verified' : 'Not Verified'}`}
-                primaryTypographyProps={{ color: '#ffffff' }} /* White text */
-                secondaryTypographyProps={{ color: '#cccccc' }} /* Light gray secondary text */
+              <List.Item.Meta
+                avatar={
+                  <Avatar
+                    src={partner.avatar}
+                    alt={`${partner.firstName} Avatar`}
+                    style={{
+                      border: `2px solid ${partner.isVerified ? '#4caf50' : '#f44336'}`,
+                    }} /* Green border if verified, red if not */
+                  />
+                }
+                title={`${partner.firstName} ${partner.lastName}`}
+                description={`${partner.city} - ${
+                  partner.isVerified ? 'Verified' : 'Not Verified'
+                }`}
               />
             </StyledListItem>
             <StyledDivider />
           </React.Fragment>
-        ))}
-      </List>
-    </StyledBox>
+        )}
+      />
+    </>
   );
 };
 

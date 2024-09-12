@@ -154,7 +154,7 @@ const routes: Routes = {
     component: asyncComponentLoader(
       () => import('@/presentation/pages/admin/partnerAcceptance/PartnersListPage'),
     ),
-    path: '/admin/partner/list',
+    path: '/admin/partner/list/pending',
     title: 'Admin Sign In',
     icon: LoginIcon,
     layoutType: 'admin',
@@ -164,6 +164,15 @@ const routes: Routes = {
       () => import('@/presentation/pages/admin/partnerAcceptance/AdminValidationPage'),
     ),
     path: '/admin/partner/validate',
+    title: 'Admin Sign In',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
+  [Pages.AdminShopOwnerVerificationPendingList]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/admin/shopOwner/verification/pending'),
+    ),
+    path: '/admin/shopOwner/verification/pending',
     title: 'Admin Sign In',
     icon: LoginIcon,
     layoutType: 'admin',
