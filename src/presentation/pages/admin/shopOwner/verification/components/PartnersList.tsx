@@ -1,7 +1,7 @@
 import React from 'react';
 import { List, Divider } from 'antd';
 import styled from '@emotion/styled';
-import PartnerCard from './PartnerCard';
+import PartnerCard, { PartnerSummary } from './PartnerCard';
 
 // Styled Divider for light theme
 const StyledDivider = styled(Divider)`
@@ -11,16 +11,6 @@ const StyledDivider = styled(Divider)`
 interface PartnersListProps {
   partners: PartnerSummary[];
   onPartnerClick: (id: string) => void;
-}
-
-// Define type for a minimal version of Delivery Partner
-interface PartnerSummary {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  avatar: string;
-  city: string;
-  isVerified: boolean;
 }
 
 const PartnersList: React.FC<PartnersListProps> = ({ partners, onPartnerClick }) => (

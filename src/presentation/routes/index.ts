@@ -177,6 +177,15 @@ const routes: Routes = {
     icon: LoginIcon,
     layoutType: 'admin',
   },
+  [Pages.AdminVendorVerify]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/admin/shopOwner/verification/VendorValidationPage'),
+    ),
+    path: '/admin/vendor/verify',
+    title: 'Admin Sign In',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
 
   // SHOP OWNER
   [Pages.ShopSignUp]: {

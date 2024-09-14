@@ -26,6 +26,7 @@ enum Pages {
   AdminPartnerList,
   AdminDashboard,
   AdminShopOwnerVerificationPendingList,
+  AdminVendorVerify,
 
   ShopSignUp,
   ShopSignUpWithOTP,

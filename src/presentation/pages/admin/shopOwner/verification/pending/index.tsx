@@ -4,16 +4,7 @@ import axiosInstance from '@/config/axios';
 import styled from '@emotion/styled';
 import { Typography } from 'antd';
 import PartnersList from '../components/PartnersList';
-
-// Define type for a minimal version of Delivery Partner
-interface PartnerSummary {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  avatar: string;
-  city: string;
-  isVerified: boolean;
-}
+import { PartnerSummary } from '../components/PartnerCard';
 
 // Styled Title for light theme
 const StyledTitle = styled(Typography.Title)`
@@ -31,7 +22,7 @@ const PartnersListPage: React.FC = () => {
 
   const fetchPartners = async () => {
     try {
-      const response = await axiosInstance.get('/admin/partner/list/not-verified');
+      const response = await axiosInstance.get('/admin/vendor/list/pending');
       setPartners(response.data);
     } catch (error) {
       console.error('Error fetching partners data', error);
@@ -39,7 +30,7 @@ const PartnersListPage: React.FC = () => {
   };
 
   const handlePartnerClick = (id: string) => {
-    navigate(`/admin/partner/validate?id=${id}`);
+    navigate(`/admin/vendor/verify?id=${id}`);
   };
 
   return (

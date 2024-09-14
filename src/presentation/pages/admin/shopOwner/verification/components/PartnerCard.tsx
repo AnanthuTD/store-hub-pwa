@@ -3,13 +3,24 @@ import { Avatar, List } from 'antd';
 import styled from '@emotion/styled';
 
 // Define type for a minimal version of Delivery Partner
-interface PartnerCardProps {
+export interface PartnerSummary {
   _id: string;
-  firstName: string;
-  lastName: string;
-  avatar: string;
-  city: string;
-  isVerified: boolean;
+  profile: {
+    firstName: string;
+    lastName: string;
+    avatar: string;
+    isVerified: boolean;
+    address: {
+      city: string;
+      state: string;
+      postalCode: string;
+      country: string;
+    };
+  };
+}
+
+// Define type for a minimal version of Delivery Partner
+interface PartnerCardProps extends PartnerSummary {
   onClick: (id: string) => void;
 }
 
@@ -23,11 +34,13 @@ const StyledListItem = styled(List.Item)`
 
 const PartnerCard: React.FC<PartnerCardProps> = ({
   _id,
-  firstName,
-  lastName,
-  avatar,
-  city,
-  isVerified,
+  profile: {
+    firstName,
+    lastName,
+    avatar,
+    isVerified,
+    address: { city },
+  },
   onClick,
 }) => (
   <StyledListItem onClick={() => onClick(_id)}>
