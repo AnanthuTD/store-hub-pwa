@@ -186,6 +186,20 @@ const routes: Routes = {
     icon: LoginIcon,
     layoutType: 'admin',
   },
+  [Pages.AddCategory]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/admin/category/create')),
+    path: '/admin/category/add',
+    title: 'Admin Sign In',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
+  [Pages.ViewCategory]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/admin/category/view')),
+    path: '/admin/category/view',
+    title: 'Admin Sign In',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
 
   // SHOP OWNER
   [Pages.ShopSignUp]: {
@@ -215,6 +229,12 @@ const routes: Routes = {
       () => import('@/presentation/pages/vendor/authentication/SignIn'),
     ),
     path: '/shop/signin',
+    title: 'Shop Owner Sign In',
+    icon: LoginIcon,
+  },
+  [Pages.VendorProductCreation]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/vendor/products/creation')),
+    path: '/vendor/products/create',
     title: 'Shop Owner Sign In',
     icon: LoginIcon,
   },

@@ -27,12 +27,15 @@ enum Pages {
   AdminDashboard,
   AdminShopOwnerVerificationPendingList,
   AdminVendorVerify,
+  AddCategory,
+  ViewCategory,
 
   ShopSignUp,
   ShopSignUpWithOTP,
   ShopSignIn,
   ShopHomePage,
   ShopOwnerRegister,
+  VendorProductCreation,
 
   TokenVerificationStatus,
 

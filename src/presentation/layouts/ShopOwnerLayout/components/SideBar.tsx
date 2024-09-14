@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   HomeOutlined,
   ProfileOutlined,
@@ -10,100 +10,66 @@ import {
   BellOutlined,
   CreditCardOutlined,
   UserOutlined,
+  PlusOutlined,
+  EditOutlined,
 } from '@ant-design/icons';
-import { Menu, Layout, Divider, MenuProps, Typography } from 'antd';
+import { Menu, Layout, Divider, Typography, MenuProps } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { ItemType, MenuItemType } from 'antd/es/menu/interface';
 
 const { Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-function getItem(
+// Helper function to generate menu items
+const getItem = (
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
-): MenuItem {
-  return {
+): MenuItem =>
+  ({
     key,
     icon,
     children,
     label,
-  } as MenuItem;
-}
+  }) as MenuItem;
 
-// Provided Tabs Data with Adjusted Icons
-const tabs = [
-  { label: 'Dashboard', icon: <HomeOutlined />, key: 'dashboard', href: '/shop/dashboard' },
-  { label: 'Register', icon: <ProfileOutlined />, key: 'register', href: '/shop/owner/register' },
-  {
-    label: 'New Orders',
-    icon: <ShoppingCartOutlined />,
-    key: 'newOrders',
-    href: '/shop/new-orders',
-  },
-  { label: 'Products', icon: <AppstoreOutlined />, key: 'products', href: '/shop/products' },
-  { label: 'Offers', icon: <PercentageOutlined />, key: 'offers', href: '/shop/offers' },
-  {
-    label: 'Payment Overview',
-    icon: <DollarCircleOutlined />,
-    key: 'paymentOverview',
-    href: '/shop/payment-overview',
-  },
-  { label: 'Reports', icon: <FileTextOutlined />, key: 'reports', href: '/shop/reports' },
-  {
-    label: 'Notifications',
-    icon: <BellOutlined />,
-    key: 'notification',
-    href: '/shop/notifications',
-  },
-  {
-    label: 'Profile',
-    icon: <UserOutlined />,
-    key: 'profile',
-    href: '/shop/profile',
-    section: 'accounts',
-  },
-  {
-    label: 'Subscription',
-    icon: <CreditCardOutlined />,
-    key: 'subscription',
-    href: '/shop/subscription',
-    section: 'accounts',
-  },
+// Tabs Data with Adjusted Icons
+const mainMenuItems = [
+  getItem('Dashboard', '/shop/dashboard', <HomeOutlined />),
+  getItem('Register', '/shop/owner/register', <ProfileOutlined />),
+  getItem('New Orders', '/shop/new-orders', <ShoppingCartOutlined />),
+  getItem('Products', '/shop/products', <AppstoreOutlined />, [
+    getItem('Create Product', '/vendor/products/create', <PlusOutlined />),
+    getItem('Edit Product', '/shop/products/edit', <EditOutlined />),
+  ]),
+  getItem('Offers', '/shop/offers', <PercentageOutlined />),
+  getItem('Payment Overview', '/shop/payment-overview', <DollarCircleOutlined />),
+  getItem('Reports', '/shop/reports', <FileTextOutlined />),
+  getItem('Notifications', '/shop/notifications', <BellOutlined />),
+  getItem('Subscription', '/shop/subscription', <CreditCardOutlined />, undefined, 'accounts'),
 ];
 
-// Main menu items (not in accounts section)
-const items: MenuItem[] = tabs
-  .filter((tab) => !tab.section)
-  .map((tab) => getItem(tab.label, tab.href, tab.icon));
-
 // Account section items
-const accountMenuItems: MenuItem[] = tabs
-  .filter((tab) => tab.section === 'accounts')
-  .map((tab) => getItem(tab.label, tab.href, tab.icon));
+const accountMenuItems: ItemType<MenuItemType>[] = [
+  getItem('Profile', '/shop/profile', <UserOutlined />),
+  getItem('Subscription', '/shop/subscription', <CreditCardOutlined />),
+];
 
 const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
   const navigate = useNavigate();
-  const pathname = useLocation().pathname;
+  const { pathname } = useLocation();
 
-  const [activeMenu, setMenu] = useState(pathname); // Default the active key to the current path
-
-  useEffect(() => {
-    const routeMapping = {};
-    if (activeMenu && routeMapping[activeMenu]) {
-      navigate(routeMapping[activeMenu]);
-    }
-  }, [activeMenu, navigate]);
-
+  // Default selected key based on pathname
   const getSelectedKey = () => {
-    if (pathname.startsWith('/shop/partner')) return '/shop/partner';
-    return '/shop/dashboard'; // Default selected key
+    const matchingTab = mainMenuItems.find((tab) => pathname.startsWith(tab.key));
+    return matchingTab?.key || '/shop/dashboard';
   };
 
-  const handleMenuItemClick = (e: any) => {
-    setMenu(e.key); // Set the active menu to the clicked key
-    navigate(e.key); // Navigate to the clicked menu item
+  // Handle menu item click
+  const handleMenuItemClick = (e: { key: string }) => {
+    navigate(e.key);
   };
 
   return (
@@ -114,16 +80,16 @@ const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
       {/* Main Menu */}
       <Menu
         mode="inline"
-        selectedKeys={[activeMenu]} // Ensure only one key is selected at a time
-        defaultOpenKeys={[getSelectedKey()]} // Open based on the current path
-        items={items}
-        onClick={handleMenuItemClick} // Handle menu clicks
+        selectedKeys={[getSelectedKey()]}
+        defaultOpenKeys={[getSelectedKey()]}
+        items={mainMenuItems}
+        onClick={handleMenuItemClick}
       />
       <Divider>Accounts</Divider>
       {/* Account Menu */}
       <Menu
         mode="inline"
-        selectedKeys={[activeMenu]} // Ensure only one key is selected at a time
+        selectedKeys={[getSelectedKey()]}
         items={accountMenuItems}
         onClick={handleMenuItemClick}
       />

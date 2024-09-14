@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import { useLogin } from '@/hooks/Admin/useLogin';
 import GoogleSignUpButton from '@/presentation/components/Auth/GoogleSignUpButton';
-import { passwordRules } from '@/presentation/components/passwordRules';
+// import { passwordRules } from '@/presentation/components/passwordRules';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -139,7 +139,7 @@ const LoginPage: React.FC = () => {
                 />
               </Form.Item>
 
-              <Form.Item label="Password" name="password" rules={passwordRules}>
+              <Form.Item label="Password" name="password" /* rules={passwordRules} */>
                 <Input.Password
                   value={password}
                   onChange={handlePasswordChange}
