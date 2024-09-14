@@ -35,7 +35,7 @@ enum Pages {
   ShopSignIn,
   ShopHomePage,
   ShopOwnerRegister,
-  VendorProductCreation,
+  VendorAddProducts,
 
   TokenVerificationStatus,
 

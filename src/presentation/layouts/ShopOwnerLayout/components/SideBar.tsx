@@ -41,7 +41,7 @@ const mainMenuItems = [
   getItem('Register', '/shop/owner/register', <ProfileOutlined />),
   getItem('New Orders', '/shop/new-orders', <ShoppingCartOutlined />),
   getItem('Products', '/shop/products', <AppstoreOutlined />, [
-    getItem('Create Product', '/vendor/products/create', <PlusOutlined />),
+    getItem('Add Product', '/vendor/products/add', <PlusOutlined />),
     getItem('Edit Product', '/shop/products/edit', <EditOutlined />),
   ]),
   getItem('Offers', '/shop/offers', <PercentageOutlined />),

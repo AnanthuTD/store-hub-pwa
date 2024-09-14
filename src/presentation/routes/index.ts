@@ -232,11 +232,12 @@ const routes: Routes = {
     title: 'Shop Owner Sign In',
     icon: LoginIcon,
   },
-  [Pages.VendorProductCreation]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/vendor/products/creation')),
-    path: '/vendor/products/create',
+  [Pages.VendorAddProducts]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/vendor/products/add')),
+    path: '/vendor/products/add',
     title: 'Shop Owner Sign In',
     icon: LoginIcon,
+    layoutType: 'shopOwner',
   },
 
   // status
