@@ -239,6 +239,13 @@ const routes: Routes = {
     icon: LoginIcon,
     layoutType: 'shopOwner',
   },
+  [Pages.VendorEditProducts]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/vendor/products/manage')),
+    path: '/vendor/products/manage',
+    title: 'Shop Owner Sign In',
+    icon: LoginIcon,
+    layoutType: 'shopOwner',
+  },
 
   // status
   [Pages.TokenVerificationStatus]: {

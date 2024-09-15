@@ -15,12 +15,11 @@ const DynamicFormFields: React.FC<DynamicFormFieldsProps> = ({ name, label }) =>
           <div className="form-list-header">
             <strong>{label}</strong>
           </div>
-          {fields.map(({ key, name, fieldKey, ...restField }) => (
+          {fields.map(({ key, name, ...restField }) => (
             <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
               <Form.Item
                 {...restField}
                 name={[name, 'key']}
-                fieldKey={[fieldKey, 'key']}
                 rules={[{ required: true, message: 'Missing key' }]}
               >
                 <Input placeholder="Key" />
@@ -28,7 +27,6 @@ const DynamicFormFields: React.FC<DynamicFormFieldsProps> = ({ name, label }) =>
               <Form.Item
                 {...restField}
                 name={[name, 'value']}
-                fieldKey={[fieldKey, 'value']}
                 rules={[{ required: true, message: 'Missing value' }]}
               >
                 <Input placeholder="Value" />

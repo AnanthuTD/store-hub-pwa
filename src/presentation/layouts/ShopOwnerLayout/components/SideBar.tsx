@@ -42,7 +42,7 @@ const mainMenuItems = [
   getItem('New Orders', '/shop/new-orders', <ShoppingCartOutlined />),
   getItem('Products', '/shop/products', <AppstoreOutlined />, [
     getItem('Add Product', '/vendor/products/add', <PlusOutlined />),
-    getItem('Edit Product', '/shop/products/edit', <EditOutlined />),
+    getItem('Edit Product', '/vendor/products/manage', <EditOutlined />),
   ]),
   getItem('Offers', '/shop/offers', <PercentageOutlined />),
   getItem('Payment Overview', '/shop/payment-overview', <DollarCircleOutlined />),
