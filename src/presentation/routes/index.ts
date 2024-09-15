@@ -5,6 +5,12 @@ import asyncComponentLoader from '@/utils/loader';
 import { Pages, Routes } from './types';
 
 const routes: Routes = {
+  [Pages.landingPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/landing')),
+    path: '/',
+    title: 'StoreHub',
+    icon: LoginIcon,
+  },
   [Pages.SignUp]: {
     component: asyncComponentLoader(
       () => import('@/presentation/pages/user/authentication/SignUp'),
