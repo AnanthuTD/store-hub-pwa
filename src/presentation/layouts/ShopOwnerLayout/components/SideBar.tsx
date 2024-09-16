@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   HomeOutlined,
   ProfileOutlined,
@@ -8,68 +8,71 @@ import {
   DollarCircleOutlined,
   FileTextOutlined,
   BellOutlined,
-  CreditCardOutlined,
-  UserOutlined,
   PlusOutlined,
   EditOutlined,
+  CreditCardOutlined,
 } from '@ant-design/icons';
-import { Menu, Layout, Divider, Typography, MenuProps } from 'antd';
+import { Menu, Layout, Divider, Typography } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ItemType, MenuItemType } from 'antd/es/menu/interface';
+import { ItemType } from 'antd/es/menu/interface';
 
 const { Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
+type MenuItem = {
+  label: React.ReactNode;
+  key: React.Key;
+  icon?: React.ReactNode;
+  children?: MenuItem[];
+};
 
-// Helper function to generate menu items
-const getItem = (
+function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
-): MenuItem =>
-  ({
+): MenuItem {
+  return {
     key,
     icon,
     children,
     label,
-  }) as MenuItem;
+  };
+}
 
-// Tabs Data with Adjusted Icons
-const mainMenuItems = [
+// Main menu items
+const items: MenuItem[] = [
   getItem('Dashboard', '/shop/dashboard', <HomeOutlined />),
   getItem('Register', '/shop/owner/register', <ProfileOutlined />),
   getItem('New Orders', '/shop/new-orders', <ShoppingCartOutlined />),
   getItem('Products', '/shop/products', <AppstoreOutlined />, [
     getItem('Add Product', '/vendor/products/add', <PlusOutlined />),
-    getItem('Edit Product', '/vendor/products/manage', <EditOutlined />),
+    getItem('Manage Products', '/vendor/products/manage', <EditOutlined />),
   ]),
   getItem('Offers', '/shop/offers', <PercentageOutlined />),
   getItem('Payment Overview', '/shop/payment-overview', <DollarCircleOutlined />),
   getItem('Reports', '/shop/reports', <FileTextOutlined />),
   getItem('Notifications', '/shop/notifications', <BellOutlined />),
-  getItem('Subscription', '/shop/subscription', <CreditCardOutlined />, undefined, 'accounts'),
 ];
 
 // Account section items
-const accountMenuItems: ItemType<MenuItemType>[] = [
-  getItem('Profile', '/shop/profile', <UserOutlined />),
+const accountMenuItems: ItemType[] = [
+  getItem('Profile', '/admin/profile', <ProfileOutlined />),
   getItem('Subscription', '/shop/subscription', <CreditCardOutlined />),
 ];
 
 const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const location = useLocation();
 
-  // Default selected key based on pathname
-  const getSelectedKey = () => {
-    const matchingTab = mainMenuItems.find((tab) => pathname.startsWith(tab.key));
-    return matchingTab?.key || '/shop/dashboard';
-  };
+  const [activeMenu, setActiveMenu] = useState(location.pathname); // Set default to current path
 
-  // Handle menu item click
+  useEffect(() => {
+    setActiveMenu(location.pathname); // Update active menu when the route changes
+  }, [location.pathname]);
+
   const handleMenuItemClick = (e: { key: string }) => {
-    navigate(e.key);
+    setActiveMenu(e.key); // Update the active menu key
+    navigate(e.key); // Navigate to the selected route
   };
 
   return (
@@ -80,16 +83,15 @@ const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
       {/* Main Menu */}
       <Menu
         mode="inline"
-        selectedKeys={[getSelectedKey()]}
-        defaultOpenKeys={[getSelectedKey()]}
-        items={mainMenuItems}
-        onClick={handleMenuItemClick}
+        selectedKeys={[activeMenu]} // Ensure only one key is selected at a time
+        items={items}
+        onClick={handleMenuItemClick} // Handle menu clicks
       />
       <Divider>Accounts</Divider>
       {/* Account Menu */}
       <Menu
         mode="inline"
-        selectedKeys={[getSelectedKey()]}
+        selectedKeys={[activeMenu]} // Ensure only one key is selected at a time
         items={accountMenuItems}
         onClick={handleMenuItemClick}
       />
