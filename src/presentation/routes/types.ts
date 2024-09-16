@@ -39,6 +39,7 @@ enum Pages {
   ShopOwnerRegister,
   VendorAddProducts,
   VendorEditProducts,
+  RegisterShop,
 
   TokenVerificationStatus,
 

@@ -252,6 +252,15 @@ const routes: Routes = {
     icon: LoginIcon,
     layoutType: 'shopOwner',
   },
+  [Pages.RegisterShop]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/vendor/shop/components/ShopRegistrationForm'),
+    ),
+    path: '/vendor/shop/registration',
+    title: 'Shop Registration',
+    icon: LoginIcon,
+    layoutType: 'shopOwner',
+  },
 
   // status
   [Pages.TokenVerificationStatus]: {
