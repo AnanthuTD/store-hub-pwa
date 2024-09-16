@@ -4,13 +4,9 @@ import { styled } from '@mui/system';
 
 // Define product type
 interface Product {
-  image: string;
+  images: string[];
   name: string;
-  department: string;
-  oldPrice: string;
-  newPrice: string;
-  rating: number;
-  availableColors: string[];
+  price: string;
 }
 
 // Styles
@@ -28,50 +24,16 @@ const ProductImage = styled('img')({
   marginBottom: '10px',
 });
 
-const ColorOptions = styled(Box)({
-  display: 'flex',
-  justifyContent: 'center',
-  marginTop: '5px',
-});
-
-const ColorCircle = styled(Box)(({ color }: { color: string }) => ({
-  width: '10px',
-  height: '10px',
-  borderRadius: '50%',
-  backgroundColor: color,
-  margin: '0 3px',
-}));
-
-const ProductCard: React.FC<Product> = ({
-  image,
-  name,
-  department,
-  oldPrice,
-  newPrice,
-  rating,
-  availableColors,
-}) => {
+const ProductCard: React.FC<Product> = ({ images, name, price }) => {
   return (
     <CardContainer>
-      <ProductImage src={image} alt={name} />
+      <ProductImage src={images[0]} alt={name} />
       <Typography variant="h6" fontWeight="bold">
         {name}
       </Typography>
-      <Typography variant="body2" color="textSecondary">
-        {department}
-      </Typography>
-      <Typography variant="body2" style={{ textDecoration: 'line-through' }}>
-        {oldPrice}
-      </Typography>
       <Typography variant="body1" color="primary" fontWeight="bold">
-        {newPrice}
+        {price}
       </Typography>
-      <Typography variant="body2">Rating: {rating}</Typography>
-      <ColorOptions>
-        {availableColors.map((color, index) => (
-          <ColorCircle key={index} color={color} />
-        ))}
-      </ColorOptions>
     </CardContainer>
   );
 };

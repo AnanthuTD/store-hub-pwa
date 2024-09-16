@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Toolbar, Typography, IconButton, InputBase, Stack, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import MenuIcon from '@mui/icons-material/Menu';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
@@ -11,6 +10,7 @@ import axiosInstance from '@/config/axios';
 import { logout } from '@/infrastructure/redux/slices/user/userSlice';
 
 const MainHeader = () => {
+  const [searchQuery, setSearchQuery] = useState('');
   const user = useSelector<RootState>((state) => state.user.data);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,6 +19,13 @@ const MainHeader = () => {
     dispatch(logout()); // Clear Redux store
     navigate('/signin'); // Navigate to sign-in page after logout
     axiosInstance.get('/user/auth/logout');
+  };
+
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/products/list?query=${encodeURIComponent(searchQuery)}`);
+    }
   };
 
   return (
@@ -36,6 +43,8 @@ const MainHeader = () => {
 
       {/* Search Box */}
       <Box
+        component="form"
+        onSubmit={handleSearch}
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -46,12 +55,16 @@ const MainHeader = () => {
           boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
         }}
       >
-        <SearchIcon color="userPrimary" />
+        <SearchIcon color="action" />
         <InputBase
-          placeholder="Search essentials, groceries and more..."
+          placeholder="Search essentials, groceries, and more..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           sx={{ ml: 1, flex: 1, color: '#6e7a84' }}
         />
-        <MenuIcon color="userPrimary" />
+        <IconButton type="submit" sx={{ p: 1 }}>
+          <SearchIcon color="action" />
+        </IconButton>
       </Box>
 
       {/* Right Menu */}
@@ -66,10 +79,10 @@ const MainHeader = () => {
           </Link>
         )}
         <IconButton>
-          <LocalMallOutlinedIcon color="userPrimary" />
+          <LocalMallOutlinedIcon color="action" />
         </IconButton>
         <IconButton>
-          <FavoriteBorderOutlinedIcon color="userPrimary" />
+          <FavoriteBorderOutlinedIcon color="action" />
         </IconButton>
       </Stack>
     </Toolbar>
