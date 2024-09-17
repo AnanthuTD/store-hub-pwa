@@ -4,7 +4,6 @@ import ShopFormFields from './ShopFormFields';
 import dayjs, { Dayjs } from 'dayjs';
 import axiosInstance from '@/config/axios';
 
-// Define the interface for operating hours
 interface OperatingHours {
   monday: string;
   tuesday: string;
@@ -15,8 +14,8 @@ interface OperatingHours {
   sunday: string;
 }
 
-// Define the interface for the shop data from the backend
 interface ShopData {
+  _id: string;
   name: string;
   averageRating: number;
   description: string;
@@ -35,7 +34,6 @@ interface ShopData {
   operatingHours: OperatingHours;
 }
 
-// Define the form data interface for the fields
 interface FormData {
   name: string;
   averageRating: number;
@@ -55,16 +53,14 @@ interface FormData {
   friday?: Dayjs;
   saturday?: Dayjs;
   sunday?: Dayjs;
-  [key: string]: any; // To allow for dynamic form fields (like time pickers)
+  [key: string]: any;
 }
 
-// Helper to convert time string to Dayjs object
 const convertTimeToDayjs = (timeStr: string): Dayjs => {
   const [hour, minute] = timeStr.split(':').map((t) => parseInt(t, 10));
   return dayjs().set('hour', hour).set('minute', minute);
 };
 
-// Formatting the operating hours from backend data
 const formatBack = (operatingHours: OperatingHours): Record<string, any> => {
   const formatDay = (day: keyof OperatingHours) => {
     if (operatingHours[day].toLowerCase() === 'closed') {
@@ -90,7 +86,6 @@ const formatBack = (operatingHours: OperatingHours): Record<string, any> => {
   };
 };
 
-// Formatting the operating hours for displaying in the form
 const formatOperatingHours = (data: FormData): OperatingHours => {
   const formatTimeRange = (start?: Dayjs, end?: Dayjs) => {
     if (!start || !end) return 'Closed';
@@ -108,7 +103,6 @@ const formatOperatingHours = (data: FormData): OperatingHours => {
   };
 };
 
-// Formatting the data to send to the backend
 const formatData = (data: FormData) => {
   return {
     name: data.name,
@@ -141,6 +135,7 @@ const formatData = (data: FormData) => {
 const ShopRegistrationForm: React.FC = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState<FormData | null>(null);
+  const [shopId, setShopId] = useState<string | null>(null); // Track shop ID for updates
 
   useEffect(() => {
     axiosInstance
@@ -149,8 +144,8 @@ const ShopRegistrationForm: React.FC = () => {
         if (shopData && shopData.length > 0) {
           const shop = shopData[0]; // Assuming the first shop data is what we need
 
-          // Destructure all nested objects (like address, contactInfo, operatingHours)
           const {
+            _id,
             name,
             averageRating,
             description,
@@ -159,10 +154,8 @@ const ShopRegistrationForm: React.FC = () => {
             operatingHours,
           } = shop;
 
-          // Format the operating hours from the backend data
           const formattedOperatingHours = formatBack(operatingHours);
 
-          // Construct the final object with destructured values
           const formattedData = {
             name,
             averageRating,
@@ -178,8 +171,9 @@ const ShopRegistrationForm: React.FC = () => {
             ...formattedOperatingHours,
           };
 
-          form.setFieldsValue(formattedData); // Set the form fields with the fetched data
+          form.setFieldsValue(formattedData);
           setData(formattedData);
+          setShopId(_id);
         }
       })
       .catch((error) => {
@@ -188,17 +182,33 @@ const ShopRegistrationForm: React.FC = () => {
   }, [form]);
 
   const handleFinish = (values: FormData) => {
+    console.log(values);
     const formData = formatData(values);
-    axiosInstance
-      .post('/vendor/shop/register', formData)
-      .then(() => {
-        message.success('Shop Registered Successfully!');
-        form.resetFields();
-      })
-      .catch((error) => {
-        message.error('Failed to register shop.');
-        console.error(error);
-      });
+
+    if (shopId) {
+      // Use PUT for updates if shop data exists
+      axiosInstance
+        .put(`/vendor/shop/${shopId}`, formData)
+        .then(() => {
+          message.success('Shop Updated Successfully!');
+        })
+        .catch((error) => {
+          message.error('Failed to update shop.');
+          console.error(error);
+        });
+    } else {
+      // Use POST for new shop registration
+      axiosInstance
+        .post('/vendor/shop/register', formData)
+        .then(() => {
+          message.success('Shop Registered Successfully!');
+          form.resetFields();
+        })
+        .catch((error) => {
+          message.error('Failed to register shop.');
+          console.error(error);
+        });
+    }
   };
 
   return (
@@ -206,7 +216,7 @@ const ShopRegistrationForm: React.FC = () => {
       <ShopFormFields data={data} />
       <Form.Item>
         <Button type="primary" htmlType="submit">
-          Register Shop
+          {data ? 'Update Shop Info' : 'Register Shop'}
         </Button>
       </Form.Item>
     </Form>
