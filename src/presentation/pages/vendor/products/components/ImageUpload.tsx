@@ -41,7 +41,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imageFiles, setImageFiles }) 
         onChange={onChange}
         onPreview={onPreview}
         maxCount={4}
-        beforeUpload={() => false} // Prevent auto upload
       >
         {imageFiles.length < 4 && (
           <div>
