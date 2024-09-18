@@ -10,11 +10,11 @@ import {
   Alert,
 } from '@mui/material';
 import Input from '@/presentation/components/Input';
-import useShopOwnerSignIn from '@/hooks/ShopOwner/useLogin';
+import useShopOwnerSignIn from '@/hooks/vendor/useLogin';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/infrastructure/redux/store';
-import { login } from '@/infrastructure/redux/slices/shopOwner/shopOwnerSlice';
+import { login } from '@/infrastructure/redux/slices/vendor/vendorSlice';
 import CheckShopOwnerLoggedIn from '../components/CheckShopOwnerLoggedIn';
 
 function SignIn() {
@@ -41,7 +41,7 @@ function SignIn() {
   };
 
   useEffect(() => {
-    if (success) navigate('/shop/dashboard');
+    if (success) navigate('/vendor/dashboard');
   }, [success, navigate]);
 
   return (
@@ -152,7 +152,7 @@ function SignIn() {
               >
                 {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'SIGN IN'}
               </Button>
-              <a href={`/api/shopOwner/auth/google`}>
+              <a href={`/api/vendor/auth/google`}>
                 <Button
                   fullWidth
                   variant="outlined"
@@ -168,7 +168,7 @@ function SignIn() {
               </a>
               <Typography variant="body2" sx={{ color: 'white', textAlign: 'center' }}>
                 Don&apos;t have an account?{' '}
-                <Link href="/shop/signup" sx={{ color: '#3B82F6', textDecoration: 'none' }}>
+                <Link href="/vendor/signup" sx={{ color: '#3B82F6', textDecoration: 'none' }}>
                   Sign up
                 </Link>
               </Typography>

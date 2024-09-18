@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 
-const ShopOwnerForm: React.FC<{
+const VendorForm: React.FC<{
   onSubmit: (formData: any) => void;
   initialValues: any;
 }> = ({ onSubmit, initialValues }) => {
@@ -148,4 +148,4 @@ const ShopOwnerForm: React.FC<{
   );
 };
 
-export default ShopOwnerForm;
+export default VendorForm;

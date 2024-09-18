@@ -1,6 +1,6 @@
 import React from 'react';
 import ProductCard from './components/ProductCard';
-import ShopSlider from '../components/ShopSlider';
+import ShopSlider from '../components/vendorslider';
 import { Box } from '@mui/material';
 import ProductDescription from './components/ProductDescription';
 import Footer from '../components/Footer';

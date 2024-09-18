@@ -1,4 +1,4 @@
-import { clearShopOwner } from '@/infrastructure/redux/slices/shopOwner/shopOwnerSlice';
+import { clearShopOwner } from '@/infrastructure/redux/slices/vendor/vendorSlice';
 import { store } from '@/infrastructure/redux/store';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
@@ -24,8 +24,8 @@ axiosInstance.interceptors.response.use(
 
       // Determine where to redirect
       let redirectPath = '';
-      if (response.config.url.includes('/shopOwner/')) {
-        redirectPath = '/shop/signin';
+      if (response.config.url.includes('/vendor/')) {
+        redirectPath = '/vendor/signin';
       } else if (response.config.url.includes('/admin/')) {
         redirectPath = '/admin/signin';
       } else if (response.config.url.includes('/partner/')) {

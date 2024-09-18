@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { authService } from '@/infrastructure/services/ShopOwner/AuthService';
+import { authService } from '@/infrastructure/services/vendor/AuthService';
 
 interface SignInParams {
   email: string;

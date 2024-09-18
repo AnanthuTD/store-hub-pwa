@@ -6,7 +6,7 @@ import { getPageHeight } from './utils';
 import AdminLayout from '@/presentation/layouts/AdminLayout';
 import UserLayout from '@/presentation/layouts/UserLayout';
 import DeliveryPartnerLayout from '@/presentation/layouts/DeliveryPartnerLayout';
-import ShopOwnerLayout from '@/presentation/layouts/ShopOwnerLayout';
+import VendorLayout from '@/presentation/layouts/vendorLayout';
 import type { LayoutType } from '../types';
 
 function Pages() {
@@ -18,8 +18,8 @@ function Pages() {
         return UserLayout;
       case 'deliveryPartner':
         return DeliveryPartnerLayout;
-      case 'shopOwner':
-        return ShopOwnerLayout;
+      case 'vendor':
+        return VendorLayout;
       default:
         return React.Fragment;
     }

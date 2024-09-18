@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Layout, theme } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import axiosInstance from '@/config/axios';
-import { logout } from '@/infrastructure/redux/slices/shopOwner/shopOwnerSlice';
+import { logout } from '@/infrastructure/redux/slices/vendor/vendorSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AppDispatch } from '@/infrastructure/redux/store';
@@ -25,8 +25,8 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggle }) => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/shop/signin');
-    axiosInstance.get('/shopOwner/auth/logout');
+    navigate('/vendor/signin');
+    axiosInstance.get('/vendor/auth/logout');
   };
 
   return (

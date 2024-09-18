@@ -188,7 +188,7 @@ const ShopRegistrationForm: React.FC = () => {
     if (shopId) {
       // Use PUT for updates if shop data exists
       axiosInstance
-        .put(`/vendor/shop/${shopId}`, formData)
+        .put(`/vendor/vendor/${shopId}`, formData)
         .then(() => {
           message.success('Shop Updated Successfully!');
         })
@@ -199,7 +199,7 @@ const ShopRegistrationForm: React.FC = () => {
     } else {
       // Use POST for new shop registration
       axiosInstance
-        .post('/vendor/shop/register', formData)
+        .post('/vendor/vendor/register', formData)
         .then(() => {
           message.success('Shop Registered Successfully!');
           form.resetFields();

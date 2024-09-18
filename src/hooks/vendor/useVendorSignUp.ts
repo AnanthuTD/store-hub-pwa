@@ -1,4 +1,4 @@
-import { authService } from '@/infrastructure/services/ShopOwner/AuthService';
+import { authService } from '@/infrastructure/services/vendor/AuthService';
 import { useState } from 'react';
 
 interface SignUpParams {
@@ -6,7 +6,7 @@ interface SignUpParams {
   password: string;
 }
 
-function useShopOwnerSignUp() {
+function useVendorSignUp() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -47,4 +47,4 @@ function useShopOwnerSignUp() {
   };
 }
 
-export default useShopOwnerSignUp;
+export default useVendorSignUp;

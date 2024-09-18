@@ -174,18 +174,18 @@ const routes: Routes = {
     icon: LoginIcon,
     layoutType: 'admin',
   },
-  [Pages.AdminShopOwnerVerificationPendingList]: {
+  [Pages.AdminVendorVerificationPendingList]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/admin/shopOwner/verification/pending'),
+      () => import('@/presentation/pages/admin/vendor/verification/pending'),
     ),
-    path: '/admin/shopOwner/verification/pending',
+    path: '/admin/vendor/verification/pending',
     title: 'Admin Sign In',
     icon: LoginIcon,
     layoutType: 'admin',
   },
   [Pages.AdminVendorVerify]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/admin/shopOwner/verification/VendorValidationPage'),
+      () => import('@/presentation/pages/admin/vendor/verification/VendorValidationPage'),
     ),
     path: '/admin/vendor/verify',
     title: 'Admin Sign In',
@@ -212,29 +212,29 @@ const routes: Routes = {
     component: asyncComponentLoader(
       () => import('@/presentation/pages/vendor/authentication/SignUp'),
     ),
-    path: '/shop/signup',
+    path: '/vendor/signup',
     title: 'Shop Sign Up',
     icon: LoginIcon,
   },
   [Pages.ShopHomePage]: {
     component: asyncComponentLoader(() => import('@/presentation/pages/vendor/Dashboard')),
-    path: '/shop/dashboard',
+    path: '/vendor/dashboard',
     title: 'Shop Home',
     icon: LoginIcon,
-    layoutType: 'shopOwner',
+    layoutType: 'vendor',
   },
-  [Pages.ShopOwnerRegister]: {
+  [Pages.VendorRegister]: {
     component: asyncComponentLoader(() => import('@/presentation/pages/vendor/RegisterShopOwner')),
-    path: '/shop/owner/register',
+    path: '/vendor/owner/register',
     title: 'Shop Owner Register',
     icon: LoginIcon,
-    layoutType: 'shopOwner',
+    layoutType: 'vendor',
   },
-  [Pages.ShopSignUpWithOTP]: {
+  [Pages.VendorSignUpWithOTP]: {
     component: asyncComponentLoader(
       () => import('@/presentation/pages/vendor/authentication/SignIn'),
     ),
-    path: '/shop/signin',
+    path: '/vendor/signin',
     title: 'Shop Owner Sign In',
     icon: LoginIcon,
   },
@@ -243,23 +243,23 @@ const routes: Routes = {
     path: '/vendor/products/add',
     title: 'Shop Owner Sign In',
     icon: LoginIcon,
-    layoutType: 'shopOwner',
+    layoutType: 'vendor',
   },
   [Pages.VendorEditProducts]: {
     component: asyncComponentLoader(() => import('@/presentation/pages/vendor/products/manage')),
     path: '/vendor/products/manage',
     title: 'Shop Owner Sign In',
     icon: LoginIcon,
-    layoutType: 'shopOwner',
+    layoutType: 'vendor',
   },
   [Pages.RegisterShop]: {
     component: asyncComponentLoader(
       () => import('@/presentation/pages/vendor/shop/components/ShopRegistrationForm'),
     ),
-    path: '/vendor/shop/registration',
+    path: '/vendor/vendor/registration',
     title: 'Shop Registration',
     icon: LoginIcon,
-    layoutType: 'shopOwner',
+    layoutType: 'vendor',
   },
 
   // status

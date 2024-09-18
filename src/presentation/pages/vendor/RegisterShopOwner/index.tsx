@@ -1,6 +1,6 @@
 import axiosInstance from '@/config/axios';
-import ShopOwnerForm from './ShopOwnerForm';
-import { IShopOwner } from '@/domain/entities/IShopOwner';
+import VendorForm from './VendorForm';
+import { IVendor } from '@/domain/entities/IVendor';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
 import { useState } from 'react';
@@ -10,7 +10,7 @@ import { AxiosError } from 'axios';
 
 const { Step } = Steps;
 
-type ShopOwner = Omit<IShopOwner, '_id'>;
+type ShopOwner = Omit<IVendor, '_id'>;
 
 // const shopOwnerData = {
 //   email: 'shopOwner@gmail.com',
@@ -37,7 +37,7 @@ type ShopOwner = Omit<IShopOwner, '_id'>;
 // };
 
 function Index() {
-  const shopOwner = useSelector((state: RootState) => state.shopOwner.data);
+  const shopOwner = useSelector((state: RootState) => state.vendor.data);
 
   const [step, setStep] = useState(0); // Step 1 for form, Step 2 for file upload
 
@@ -49,7 +49,7 @@ function Index() {
 
   async function handleFormSubmit(shopOwner: ShopOwner) {
     try {
-      const response = await axiosInstance.post('/shopOwner/register', shopOwner); // Await the response from axios
+      const response = await axiosInstance.post('/vendor/register', shopOwner); // Await the response from axios
       console.log(response);
       setStep(1); // Assuming setStep is defined in your component or context
     } catch (err) {
@@ -71,7 +71,7 @@ function Index() {
         <Step title="Completed" />
       </Steps>
 
-      {step === 0 && <ShopOwnerForm onSubmit={handleFormSubmit} initialValues={shopOwner || {}} />}
+      {step === 0 && <VendorForm onSubmit={handleFormSubmit} initialValues={shopOwner || {}} />}
       {step === 1 && <DocumentUpload onComplete={handleUploadComplete} />}
       {step === 2 && <div>Registration completed! Thank you for submitting your details.</div>}
     </>

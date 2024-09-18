@@ -119,7 +119,7 @@ const VendorValidationPage: React.FC = () => {
         message,
       };
       await axiosInstance.post(`/admin/vendor/${shopOwnerId}/validateDocuments`, data);
-      navigate('/admin/shopOwner/verification/pending');
+      navigate('/admin/vendor/verification/pending');
     } catch (error) {
       console.error('Error submitting validation data', error);
     }

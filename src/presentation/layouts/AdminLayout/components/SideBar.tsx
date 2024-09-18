@@ -41,14 +41,14 @@ const items: MenuItem[] = [
       getItem('Pending Partner', '/admin/partner/list/pending', <UserOutlined />),
       getItem('Rejected Partner', '/admin/partner/list/rejected', <UserOutlined />),
     ]),
-    getItem('ShopOwner', '/admin/shopOwner', <UserOutlined />, [
-      getItem('Verified Partner', '/admin/shopOwner/verification/verified', <UserOutlined />),
-      getItem('Pending Partner', '/admin/shopOwner/verification/pending', <UserOutlined />),
-      getItem('Rejected Partner', '/admin/shopOwner/verification/rejected', <UserOutlined />),
+    getItem('Vendor', '/admin/vendor', <UserOutlined />, [
+      getItem('Verified Partner', '/admin/vendor/verification/verified', <UserOutlined />),
+      getItem('Pending Partner', '/admin/vendor/verification/pending', <UserOutlined />),
+      getItem('Rejected Partner', '/admin/vendor/verification/rejected', <UserOutlined />),
     ]),
   ]),
   getItem('User', '/admin/user', <UserOutlined />),
-  getItem('Shops', '/admin/shops', <ShopOutlined />),
+  getItem('Shops', '/admin/vendors', <ShopOutlined />),
   getItem('Products', '/admin/products', <AppstoreOutlined />),
   getItem('Offers', '/admin/offers', <TagOutlined />),
   getItem('Coupons', '/admin/coupons', <TagOutlined />),
@@ -80,11 +80,11 @@ const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
       '/admin/partner/list/verified': '/admin/partner/list/verified',
       '/admin/partner/list/pending': '/admin/partner/list/pending',
       '/admin/partner/list/rejected': '/admin/partner/list/rejected',
-      '/admin/shopOwner/verification/verified': '/admin/shopOwner/verification/verified',
-      '/admin/shopOwner/verification/pending': '/admin/shopOwner/verification/pending',
-      '/admin/shopOwner/verification/rejected': '/admin/shopOwner/verification/rejected',
+      '/admin/vendor/verification/verified': '/admin/vendor/verification/verified',
+      '/admin/vendor/verification/pending': '/admin/vendor/verification/pending',
+      '/admin/vendor/verification/rejected': '/admin/vendor/verification/rejected',
       '/admin/user': '/admin/user',
-      '/admin/shops': '/admin/shops',
+      '/admin/vendors': '/admin/vendors',
       '/admin/products': '/admin/products',
       '/admin/offers': '/admin/offers',
       '/admin/coupons': '/admin/coupons',
@@ -105,7 +105,7 @@ const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
   const getSelectedKey = () => {
     if (pathname.startsWith('/admin/partner')) return '/admin/partner';
     if (pathname.startsWith('/admin/user')) return '/admin/user';
-    if (pathname.startsWith('/admin/shops')) return '/admin/shops';
+    if (pathname.startsWith('/admin/vendors')) return '/admin/vendors';
     if (pathname.startsWith('/admin/products')) return '/admin/products';
     if (pathname.startsWith('/admin/offers')) return '/admin/offers';
     if (pathname.startsWith('/admin/coupons')) return '/admin/coupons';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Grid, Typography, Link, Switch, Alert } from '@mui/material';
-import useShopOwnerSignUp from '@/hooks/ShopOwner/useShopOwnerSignUp';
+import useVendorSignUp from '@/hooks/vendor/useVendorSignUp';
 import Input from '@/presentation/components/Input';
 import CheckShopOwnerLoggedIn from '../components/CheckShopOwnerLoggedIn';
 
@@ -8,7 +8,7 @@ function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { signUp, loading, error, success, clearFeedback } = useShopOwnerSignUp();
+  const { signUp, loading, error, success, clearFeedback } = useVendorSignUp();
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -162,7 +162,7 @@ function SignUpPage() {
               </Button>
               <Typography variant="body2" sx={{ color: 'white', textAlign: 'center' }}>
                 Already have an account?{' '}
-                <Link href="/shop/signin" sx={{ color: '#3B82F6', textDecoration: 'none' }}>
+                <Link href="/vendor/signin" sx={{ color: '#3B82F6', textDecoration: 'none' }}>
                   Sign in
                 </Link>
               </Typography>

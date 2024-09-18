@@ -90,7 +90,7 @@ const LandingPage: React.FC = () => (
                 Get Started as a User
               </Button>
             </Link>
-            <Link to="/shop/signup">
+            <Link to="/vendor/signup">
               <Button
                 type="default"
                 size="large"

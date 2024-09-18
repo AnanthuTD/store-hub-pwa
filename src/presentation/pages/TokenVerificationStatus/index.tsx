@@ -13,9 +13,7 @@ const TokenVerificationPage: React.FC = () => {
     title: 'Token Verification Failed',
     message: message as string,
     nextSteps: 'Please request a new verification email or contact support.',
-    requestNewTokenUrl: `${
-      import.meta.env.VITE_API_BASE_URL
-    }/shopOwner/resend-token?email=${email}`,
+    requestNewTokenUrl: `${import.meta.env.VITE_API_BASE_URL}/vendor/resend-token?email=${email}`,
     supportUrl: '/contact-support',
   };
 

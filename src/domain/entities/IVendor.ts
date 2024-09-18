@@ -1,4 +1,4 @@
-export interface IShopOwner {
+export interface IVendor {
   _id: string;
   bankDetails: {
     accountHolderName: string | null;

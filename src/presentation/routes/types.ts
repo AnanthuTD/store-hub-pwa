@@ -27,16 +27,16 @@ enum Pages {
   AdminPartnerValidationForm,
   AdminPartnerList,
   AdminDashboard,
-  AdminShopOwnerVerificationPendingList,
+  AdminVendorVerificationPendingList,
   AdminVendorVerify,
   AddCategory,
   ViewCategory,
 
-  ShopSignUp,
-  ShopSignUpWithOTP,
-  ShopSignIn,
-  ShopHomePage,
-  ShopOwnerRegister,
+  VendorSignUp,
+  VendorSignUpWithOTP,
+  VendorSignIn,
+  VendorHomePage,
+  VendorRegister,
   VendorAddProducts,
   VendorEditProducts,
   RegisterShop,
@@ -52,7 +52,7 @@ type PathRouteCustomProps = {
   title?: string;
   component: FC;
   icon?: FC<SvgIconProps>;
-  layoutType?: 'user' | 'admin' | 'shopOwner' | 'deliveryPartner';
+  layoutType?: 'user' | 'admin' | 'vendor' | 'deliveryPartner';
 };
 
 type Routes = Record<Pages, PathRouteProps & PathRouteCustomProps>;

@@ -43,7 +43,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ onComplete }) => {
     formData.append('drivingLicenseBack', drivingLicenseBack.file);
 
     try {
-      const response = await axiosInstance.post('/shopOwner/documents/upload', formData, {
+      const response = await axiosInstance.post('/vendor/documents/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -46,7 +46,7 @@ const login = async ({
     const response: AxiosResponse<ShopOwnerResponseDTO> = await axiosInstance.post<
       any,
       AxiosResponse<ShopOwnerResponseDTO>
-    >('/shopOwner/auth/signin', { email, password });
+    >('/vendor/auth/signin', { email, password });
 
     return response.data; // Return the response data
   } catch (error: any) {
@@ -72,7 +72,7 @@ interface SignUpResponse {
 const signUp = async ({ email, password }: SignUpParams): Promise<SignUpResponse> => {
   try {
     const response = await axiosInstance.post<any, AxiosResponse<SignUpResponse>>(
-      '/shopOwner/auth/signup',
+      '/vendor/auth/signup',
       {
         email,
         password,

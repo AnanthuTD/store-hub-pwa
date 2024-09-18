@@ -41,23 +41,23 @@ function getItem(
 
 // Main menu items
 const items: MenuItem[] = [
-  getItem('Dashboard', '/shop/dashboard', <HomeOutlined />),
-  getItem('Register', '/shop/owner/register', <ProfileOutlined />),
-  getItem('New Orders', '/shop/new-orders', <ShoppingCartOutlined />),
-  getItem('Products', '/shop/products', <AppstoreOutlined />, [
+  getItem('Dashboard', '/vendor/dashboard', <HomeOutlined />),
+  getItem('Register', '/vendor/owner/register', <ProfileOutlined />),
+  getItem('New Orders', '/vendor/new-orders', <ShoppingCartOutlined />),
+  getItem('Products', '/vendor/products', <AppstoreOutlined />, [
     getItem('Add Product', '/vendor/products/add', <PlusOutlined />),
     getItem('Manage Products', '/vendor/products/manage', <EditOutlined />),
   ]),
-  getItem('Offers', '/shop/offers', <PercentageOutlined />),
-  getItem('Payment Overview', '/shop/payment-overview', <DollarCircleOutlined />),
-  getItem('Reports', '/shop/reports', <FileTextOutlined />),
-  getItem('Notifications', '/shop/notifications', <BellOutlined />),
+  getItem('Offers', '/vendor/offers', <PercentageOutlined />),
+  getItem('Payment Overview', '/vendor/payment-overview', <DollarCircleOutlined />),
+  getItem('Reports', '/vendor/reports', <FileTextOutlined />),
+  getItem('Notifications', '/vendor/notifications', <BellOutlined />),
 ];
 
 // Account section items
 const accountMenuItems: ItemType[] = [
   getItem('Profile', '/admin/profile', <ProfileOutlined />),
-  getItem('Subscription', '/shop/subscription', <CreditCardOutlined />),
+  getItem('Subscription', '/vendor/subscription', <CreditCardOutlined />),
 ];
 
 const Sidebar = ({ collapsed }: { collapsed: boolean }) => {

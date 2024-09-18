@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppDispatch, RootState } from '@/infrastructure/redux/store';
-import { fetchProfile } from '@/infrastructure/repositories/shopOwnerRepository';
-import { login } from '@/infrastructure/redux/slices/shopOwner/shopOwnerSlice';
+import { fetchProfile } from '@/infrastructure/repositories/VendorRepository';
+import { login } from '@/infrastructure/redux/slices/vendor/vendorSlice';
 import Cookies from 'js-cookie'; // Make sure to install js-cookie
 import { ConfigProvider, Layout, theme } from 'antd';
 import Sidebar from './components/SideBar';
@@ -15,7 +15,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
 
   const toggleCollapsed = () => setCollapsed(!collapsed);
 
-  const shopOwner = useSelector((state: RootState) => state.shopOwner.data);
+  const shopOwner = useSelector((state: RootState) => state.vendor.data);
   const dispatch = useDispatch<AppDispatch>();
 
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
           const profile = await fetchProfile();
           if (!profile) {
             // TODO: Uncomment the following line
-            // navigate('/shop/signin');
+            // navigate('/vendor/signin');
           } else {
             // Update Redux store with fetched profile data
             dispatch(login(profile));
@@ -47,7 +47,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         console.error('Error fetching profile:', error);
         // TODO: Uncomment the following line
 
-        // navigate('/shop/signin'); // Navigate to sign-in if fetching profile fails
+        // navigate('/vendor/signin'); // Navigate to sign-in if fetching profile fails
       }
     };
 
