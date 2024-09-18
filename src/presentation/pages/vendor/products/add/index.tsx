@@ -1,36 +1,37 @@
 import React, { useState } from 'react';
 import { Form, Button, UploadFile, notification } from 'antd';
-import ProductFormFields from './ProductFormFields';
+import ProductFormFields, { SelectOption } from './ProductFormFields';
 import axiosInstance from '@/config/axios';
 import ImageUpload from '../components/ImageUpload';
 import DynamicFormFields from './DynamicFormFields';
 
 const AddProductForm: React.FC = () => {
   const [imageFiles, setImageFiles] = useState<UploadFile[]>([]);
+  const [productForm] = Form.useForm(); // Hook for controlling the form
+  const selectedProduct = { name: '', _id: '' };
 
-  // Sample initial values for testing
+  // Clear initial values
   const initialValues = {
-    name: 'Test Product',
-    category: 'electronics',
-    brand: 'Test Brand',
-    storeId: '12345',
-    sku: 'TEST123',
-    stock: 50,
-    price: 1000,
-    description: 'This is a sample description.',
-    attributes: [
-      { key: 'color', value: 'black' },
-      { key: 'size', value: 'M' },
-    ], // Example attributes
-    specifications: [
-      { key: 'material', value: 'cotton' },
-      { key: 'weight', value: '500g' },
-    ], // Example specifications
-    variants: [{ key: 'Color', value: 'Black, White' }], // Example variants
-    status: 'active',
+    name: [],
+    category: '',
+    brand: '',
+    storeId: '',
+    sku: '',
+    stock: 0,
+    price: 0,
+    description: '',
+    attributes: [],
+    specifications: [],
+    variants: [],
+    status: '',
   };
 
+  // Function to handle form submission
   const handleSubmit = async (values: any) => {
+    console.log('Submitted values:', values);
+    console.log('Submitted values:', selectedProduct);
+
+    // Ensure at least one image is uploaded
     if (imageFiles.length < 1) {
       notification.error({ message: 'Please upload at least 1 image.' });
       return;
@@ -38,7 +39,7 @@ const AddProductForm: React.FC = () => {
 
     try {
       const formData = new FormData();
-      formData.append('name', values.name);
+      formData.append('name', 'name'); // Use selectedProduct.name instead of values.name
       formData.append('category', values.category);
       formData.append('brand', values.brand);
       formData.append('storeId', values.storeId || '66e5d5e94ec847f4a2383e94');
@@ -46,9 +47,9 @@ const AddProductForm: React.FC = () => {
       formData.append('stock', values.stock);
       formData.append('price', values.price);
       formData.append('description', values.description);
-      formData.append('attributes', JSON.stringify(values.attributes)); // Convert attributes to string
-      formData.append('specifications', JSON.stringify(values.specifications)); // Convert specs to string
-      formData.append('variants', JSON.stringify(values.variants)); // Convert variants to string
+      formData.append('attributes', JSON.stringify(values.attributes));
+      formData.append('specifications', JSON.stringify(values.specifications));
+      formData.append('variants', JSON.stringify(values.variants));
       formData.append('status', values.status || 'active');
 
       // Append images to formData
@@ -70,10 +71,52 @@ const AddProductForm: React.FC = () => {
     }
   };
 
+  // Function to handle product selection
+  async function onSelectProduct(product: SelectOption) {
+    selectedProduct.name = product.label;
+    selectedProduct._id = product.value;
+
+    if (selectedProduct._id) {
+      try {
+        const { data } = await axiosInstance.get(`/vendor/products/${selectedProduct._id}`);
+
+        if (Object.keys(data.product).length > 0) {
+          // Set form values using fetched product data
+          productForm.setFieldsValue({
+            name: [data.product.name],
+            category: data.product.category,
+            brand: data.product.brand,
+            sku: data.product.sku,
+            stock: data.product.stock,
+            price: data.product.price,
+            description: data.product.description,
+            attributes: data.product.attributes || [],
+            specifications: data.product.specifications || [],
+            variants: data.product.variants || [],
+            status: data.product.status || 'active',
+          });
+        } else {
+          productForm.resetFields(); // Reset form if no product data is available
+        }
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      }
+    } else {
+      console.log('resetting product');
+
+      productForm.resetFields(); // Reset form if no product is selected
+    }
+  }
+
   return (
-    <Form layout="vertical" initialValues={initialValues} onFinish={handleSubmit}>
+    <Form
+      layout="vertical"
+      initialValues={initialValues}
+      onFinish={handleSubmit}
+      form={productForm} // Control the form
+    >
       {/* Modularized Form Fields */}
-      <ProductFormFields />
+      <ProductFormFields onSelectProduct={onSelectProduct} />
 
       {/* Dynamic Form Fields for attributes, specifications, and variants */}
       <DynamicFormFields name="attributes" label="Attributes" />
