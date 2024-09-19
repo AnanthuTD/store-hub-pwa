@@ -8,7 +8,7 @@ import DynamicFormFields from './DynamicFormFields';
 const AddProductForm: React.FC = () => {
   const [imageFiles, setImageFiles] = useState<UploadFile[]>([]);
   const [productForm] = Form.useForm(); // Hook for controlling the form
-  const selectedProduct = { name: '', _id: '' };
+  const [selectedProduct, setSelectedProduct] = useState({ name: '', _id: '' });
 
   // Clear initial values
   const initialValues = {
@@ -39,7 +39,8 @@ const AddProductForm: React.FC = () => {
 
     try {
       const formData = new FormData();
-      formData.append('name', 'name'); // Use selectedProduct.name instead of values.name
+      formData.append('name', selectedProduct.name);
+      formData.append('productId', selectedProduct._id);
       formData.append('category', values.category);
       formData.append('brand', values.brand);
       formData.append('storeId', values.storeId || '66e5d5e94ec847f4a2383e94');
@@ -73,8 +74,10 @@ const AddProductForm: React.FC = () => {
 
   // Function to handle product selection
   async function onSelectProduct(product: SelectOption) {
-    selectedProduct.name = product.label;
-    selectedProduct._id = product.value;
+    setSelectedProduct({
+      name: product.label,
+      _id: product.value,
+    });
 
     if (selectedProduct._id) {
       try {
@@ -95,16 +98,17 @@ const AddProductForm: React.FC = () => {
             variants: data.product.variants || [],
             status: data.product.status || 'active',
           });
+
+          setImageFiles(data.product.images.map((url) => ({ url })));
         } else {
-          productForm.resetFields(); // Reset form if no product data is available
+          productForm.resetFields();
         }
       } catch (error) {
         console.error('Error fetching product:', error);
       }
     } else {
-      console.log('resetting product');
-
-      productForm.resetFields(); // Reset form if no product is selected
+      console.log('resetting form');
+      productForm.resetFields();
     }
   }
 
