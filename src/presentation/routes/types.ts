@@ -17,7 +17,7 @@ enum UserPages {
 
 // Partner Pages Enum
 enum PartnerPages {
-  PartnerSignUpPage,
+  PartnerSignUpPage = 100,
   PartnerOTPVerificationPage,
   PartnerProfileFormPage,
   PartnerDocumentSubmissionPage,
@@ -31,7 +31,7 @@ enum PartnerPages {
 
 // Admin Pages Enum
 enum AdminPages {
-  AdminSignInPage,
+  AdminSignInPage = 200,
   AdminDashboardPage,
   AdminPartnerListPage,
   AdminPartnerValidationFormPage,
@@ -43,7 +43,7 @@ enum AdminPages {
 
 // Vendor Pages Enum
 enum VendorPages {
-  VendorSignUpPage,
+  VendorSignUpPage = 300,
   VendorSignInPage,
   VendorHomePage,
   VendorRegisterPage,
@@ -54,7 +54,7 @@ enum VendorPages {
 
 // Common Pages Enum
 enum CommonPages {
-  TokenVerificationStatusPage,
+  TokenVerificationStatusPage = 400,
 }
 
 // Custom Path Route Props
