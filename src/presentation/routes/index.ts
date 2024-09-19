@@ -10,11 +10,4 @@ const routes = {
   ...vendorRoutes,
 };
 
-console.log({
-  ...userRoutes,
-  ...partnerRoutes,
-  ...adminRoutes,
-  ...vendorRoutes,
-});
-
 export default routes;

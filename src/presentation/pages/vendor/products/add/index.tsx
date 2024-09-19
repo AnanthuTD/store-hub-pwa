@@ -16,14 +16,11 @@ const AddProductForm: React.FC = () => {
     category: '',
     brand: '',
     storeId: '',
-    sku: '',
-    stock: 0,
-    price: 0,
     description: '',
     attributes: [],
     specifications: [],
-    variants: [],
     status: '',
+    variants: [{}],
   };
 
   // Function to handle form submission
@@ -44,21 +41,22 @@ const AddProductForm: React.FC = () => {
       formData.append('category', values.category);
       formData.append('brand', values.brand);
       formData.append('storeId', values.storeId || '66e5d5e94ec847f4a2383e94');
-      formData.append('sku', values.sku);
-      formData.append('stock', values.stock);
-      formData.append('price', values.price);
       formData.append('description', values.description);
-      formData.append('attributes', JSON.stringify(values.attributes));
-      formData.append('specifications', JSON.stringify(values.specifications));
       formData.append('variants', JSON.stringify(values.variants));
       formData.append('status', values.status || 'active');
 
-      // Append images to formData
+      const existingImages: string[] = [];
+
+      // Append new images
       imageFiles.forEach((file, index) => {
-        if (file.originFileObj) {
-          formData.append(`image_${index}`, file.originFileObj);
+        if (file.url) {
+          existingImages.push(file.url);
+          return;
         }
+        if (file.originFileObj) formData.append(`image_${index}`, file.originFileObj);
       });
+
+      formData.append(`existingImages`, JSON.stringify(existingImages));
 
       await axiosInstance.post('/vendor/products', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -83,6 +81,8 @@ const AddProductForm: React.FC = () => {
       try {
         const { data } = await axiosInstance.get(`/vendor/products/${selectedProduct._id}`);
 
+        console.log('Selected Product: ', data);
+
         if (Object.keys(data.product).length > 0) {
           // Set form values using fetched product data
           productForm.setFieldsValue({
@@ -93,9 +93,7 @@ const AddProductForm: React.FC = () => {
             stock: data.product.stock,
             price: data.product.price,
             description: data.product.description,
-            attributes: data.product.attributes || [],
-            specifications: data.product.specifications || [],
-            variants: data.product.variants || [],
+            variants: data.product.variants || [{}],
             status: data.product.status || 'active',
           });
 
@@ -123,14 +121,12 @@ const AddProductForm: React.FC = () => {
       <ProductFormFields onSelectProduct={onSelectProduct} />
 
       {/* Dynamic Form Fields for attributes, specifications, and variants */}
-      <DynamicFormFields name="attributes" label="Attributes" />
-      <DynamicFormFields name="specifications" label="Specifications" />
       <DynamicFormFields name="variants" label="Variants" />
 
       {/* Modularized Image Upload */}
       <ImageUpload imageFiles={imageFiles} setImageFiles={setImageFiles} />
 
-      <Form.Item>
+      <Form.Item style={{ marginTop: '20px' }}>
         <Button type="primary" htmlType="submit">
           Add Product
         </Button>

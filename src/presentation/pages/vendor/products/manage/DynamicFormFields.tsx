@@ -1,6 +1,6 @@
 import React from 'react';
-import { Form, Input, Button, Space, Divider, InputNumber } from 'antd';
-import { MinusCircleOutlined, PlusOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Space, Divider, InputNumber, Switch } from 'antd';
+import { PlusOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 interface DynamicVariantFormProps {
   name: string;
@@ -27,7 +27,7 @@ const DynamicVariantForm: React.FC<DynamicVariantFormProps> = ({ name, label }) 
 
               {/* Variant Options - At least one type and value is required */}
               <Form.List name={[name, 'options']} initialValue={[{ key: '', value: '' }]}>
-                {(optionFields, { add: addOption, remove: removeOption }) => (
+                {(optionFields) => (
                   <>
                     {optionFields.map(
                       ({ key: optionKey, name: optionName, ...optionRestField }) => (
@@ -41,24 +41,18 @@ const DynamicVariantForm: React.FC<DynamicVariantFormProps> = ({ name, label }) 
                             name={[optionName, 'key']}
                             rules={[{ required: true, message: 'Please input variant type' }]}
                           >
-                            <Input placeholder="Variant Type" />
+                            <Input placeholder="Variant Type" readOnly />
                           </Form.Item>
                           <Form.Item
                             {...optionRestField}
                             name={[optionName, 'value']}
                             rules={[{ required: true, message: 'Please input variant value' }]}
                           >
-                            <Input placeholder="Variant Value" />
+                            <Input placeholder="Variant Value" readOnly />
                           </Form.Item>
-                          <MinusCircleOutlined onClick={() => removeOption(optionName)} />
                         </Space>
                       ),
                     )}
-                    <Form.Item>
-                      <Button type="dashed" onClick={() => addOption()} icon={<PlusOutlined />}>
-                        Add Variant Option
-                      </Button>
-                    </Form.Item>
                   </>
                 )}
               </Form.List>
@@ -89,13 +83,23 @@ const DynamicVariantForm: React.FC<DynamicVariantFormProps> = ({ name, label }) 
                 >
                   <InputNumber min={0} placeholder="Stock" style={{ width: 100 }} />
                 </Form.Item>
+
+                {/* isActive switch */}
+                <Form.Item
+                  {...restField}
+                  name={[name, 'isActive']}
+                  valuePropName="checked"
+                  initialValue={true} // Default to true if the variant is active
+                >
+                  <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
+                </Form.Item>
               </Space>
 
               <Divider plain>Optional Specifications</Divider>
 
               {/* Specifications Form */}
               <Form.List name={[name, 'specifications']}>
-                {(specFields, { add: addSpec, remove: removeSpec }) => (
+                {(specFields) => (
                   <>
                     {specFields.map(({ key: specKey, name: specName, ...specRestField }) => (
                       <Space
@@ -108,23 +112,17 @@ const DynamicVariantForm: React.FC<DynamicVariantFormProps> = ({ name, label }) 
                           name={[specName, 'specKey']}
                           rules={[{ required: true, message: 'Missing specification key' }]}
                         >
-                          <Input placeholder="Specification Key" />
+                          <Input placeholder="Specification Key" readOnly />
                         </Form.Item>
                         <Form.Item
                           {...specRestField}
                           name={[specName, 'specValue']}
                           rules={[{ required: true, message: 'Missing specification value' }]}
                         >
-                          <Input placeholder="Specification Value" />
+                          <Input placeholder="Specification Value" readOnly />
                         </Form.Item>
-                        <MinusCircleOutlined onClick={() => removeSpec(specName)} />
                       </Space>
                     ))}
-                    <Form.Item>
-                      <Button type="dashed" onClick={() => addSpec()} icon={<PlusOutlined />}>
-                        Add Specification
-                      </Button>
-                    </Form.Item>
                   </>
                 )}
               </Form.List>

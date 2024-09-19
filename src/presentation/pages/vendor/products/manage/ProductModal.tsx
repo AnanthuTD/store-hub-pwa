@@ -31,6 +31,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
       open={visible}
       onOk={() => onOk(form.getFieldsValue())}
       onCancel={onCancel}
+      width={1000}
     >
       {product && (
         <>

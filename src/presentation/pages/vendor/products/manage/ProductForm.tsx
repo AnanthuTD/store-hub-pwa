@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Select, Divider, FormInstance } from 'antd';
 import { Product } from './types';
-import DynamicFormFields from '../add/DynamicFormFields';
+import DynamicFormFields from './DynamicFormFields';
 import useFetchCategories from '@/hooks/useFetchCategories';
 
 const { Option } = Select;
@@ -22,12 +22,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, form }) => {
         name: product.name,
         category: product.category._id,
         brand: product.brand,
-        sku: product.sku,
-        price: product.price,
-        stock: product.stock,
         status: product.status,
-        attributes: product.attributes,
-        specifications: product.specifications,
         variants: product.variants,
       }}
     >
@@ -55,32 +50,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, form }) => {
         <Input value={product.brand} />
       </Form.Item>
 
-      <Form.Item label="SKU" name="sku">
-        <Input readOnly value={product.sku} />
-      </Form.Item>
-
-      <Form.Item label="Price" name="price">
-        <Input readOnly value={product.price} />
-      </Form.Item>
-
-      <Form.Item label="Stock" name="stock">
-        <Input value={product.stock} />
-      </Form.Item>
-
       <Form.Item label="Status" name="status">
         <Select value={product.status}>
           <Option value="active">Active</Option>
           <Option value="inactive">Inactive</Option>
         </Select>
       </Form.Item>
-
-      {/* Attributes Section */}
-      <Divider>Attributes</Divider>
-      <DynamicFormFields name="attributes" label="Attribute" />
-
-      {/* Specifications Section */}
-      <Divider>Specifications</Divider>
-      <DynamicFormFields name="specifications" label="Specification" />
 
       {/* Variants Section */}
       <Divider>Variants</Divider>

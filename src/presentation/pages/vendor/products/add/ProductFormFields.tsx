@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Alert, Form, Input, InputNumber, Select } from 'antd';
+import { Alert, Form, Input, Select } from 'antd';
 import useFetchCategories from '@/hooks/useFetchCategories';
 import useFetchProductNames from './useFetchProductNames';
 import debounce from 'lodash/debounce'; // Import debounce from lodash
@@ -92,18 +92,6 @@ const ProductFormFields: React.FC<ProductFormFieldsProps> = ({ onSelectProduct }
 
       <Form.Item name="brand" label="Brand" rules={[{ required: true }]}>
         <Input />
-      </Form.Item>
-
-      <Form.Item name="sku" label="SKU" rules={[{ required: true }]}>
-        <Input />
-      </Form.Item>
-
-      <Form.Item name="stock" label="Stock" rules={[{ required: true }]}>
-        <InputNumber min={1} />
-      </Form.Item>
-
-      <Form.Item name="price" label="Price" rules={[{ required: true }]}>
-        <InputNumber min={0.01} step={0.01} />
       </Form.Item>
 
       <Form.Item name="description" label="Description" rules={[{ required: true }]}>

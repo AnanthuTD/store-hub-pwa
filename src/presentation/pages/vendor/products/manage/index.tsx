@@ -13,7 +13,7 @@ const ProductManager: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imageFiles, setImageFiles] = useState<any[]>([]); // Use appropriate type for image files
 
-  const storeId = '66e5d5e94ec847f4a2383e94';
+  const storeId = '66e8362b99d8b460761d0a04';
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -48,6 +48,9 @@ const ProductManager: React.FC = () => {
           formData.append(key, JSON.stringify(values[key]));
         }
       });
+
+      formData.append('productId', selectedProduct.productId);
+      formData.append('description', selectedProduct?.description);
 
       const existingImages: string[] = [];
 
