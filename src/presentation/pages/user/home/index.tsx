@@ -1,5 +1,5 @@
 import Carousel from '../components/Carousel';
-import ShopSlider from '../components/vendorslider';
+import ShopSlider from '../components/ShopSlider';
 import ProductGrid from '../components/ProductSlide';
 import OfferSlider from '../components/OfferSlider';
 import CouponSlider from '../components/CouponSlider';

@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import { Box, Toolbar, Typography, IconButton, InputBase, Stack, Button } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import React from 'react';
+import { Toolbar, Typography, Stack, Button, IconButton } from '@mui/material';
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
-import axiosInstance from '@/config/axios';
 import { logout } from '@/infrastructure/redux/slices/user/userSlice';
+import SearchAutocomplete from './SearchAutoComplete'; // Import the new component
+import axiosInstance from '@/config/axios';
 
 const MainHeader = () => {
-  const [searchQuery, setSearchQuery] = useState('');
   const user = useSelector<RootState>((state) => state.user.data);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,13 +18,6 @@ const MainHeader = () => {
     dispatch(logout()); // Clear Redux store
     navigate('/signin'); // Navigate to sign-in page after logout
     axiosInstance.get('/user/auth/logout');
-  };
-
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/products/list?query=${encodeURIComponent(searchQuery)}`);
-    }
   };
 
   return (
@@ -42,30 +34,8 @@ const MainHeader = () => {
       </Typography>
 
       {/* Search Box */}
-      <Box
-        component="form"
-        onSubmit={handleSearch}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          backgroundColor: '#f1f8fc',
-          borderRadius: '20px',
-          padding: '5px 15px',
-          width: '50%',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-        }}
-      >
-        <SearchIcon color="action" />
-        <InputBase
-          placeholder="Search essentials, groceries, and more..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          sx={{ ml: 1, flex: 1, color: '#6e7a84' }}
-        />
-        <IconButton type="submit" sx={{ p: 1 }}>
-          <SearchIcon color="action" />
-        </IconButton>
-      </Box>
+
+      <SearchAutocomplete />
 
       {/* Right Menu */}
       <Stack direction="row" spacing={2} alignItems="center">
