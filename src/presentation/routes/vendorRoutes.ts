@@ -49,9 +49,9 @@ const vendorRoutes: VendorRoutes = {
   },
   [VendorPages.VendorShopRegistrationPage]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/vendor/shop/components/ShopRegistrationForm'),
+      () => import('@/presentation/pages/vendor/shop/register/ShopRegistrationForm'),
     ),
-    path: '/vendor/shop/registration',
+    path: '/vendor/shop/register',
     title: 'Shop Registration',
     icon: LoginIcon,
     layoutType: 'vendor',
