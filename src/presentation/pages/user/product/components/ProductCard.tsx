@@ -1,171 +1,204 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Card, CardContent, Typography, Button, IconButton, Rating } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  IconButton,
+  Rating,
+  Divider,
+  Chip,
+} from '@mui/material';
 import { FavoriteBorder, ShoppingCartOutlined, VisibilityOutlined } from '@mui/icons-material';
 import { SideBySideMagnifier } from 'react-image-magnifiers';
+import ProductVariantSelector, { Variant } from './ProductVariantSelector';
+import { IProduct } from '@/domain/entities/IProduct';
 
-const ProductCard = () => {
-  const [selectedImage, setSelectedImage] = useState(0); // Track the selected image index
-  const [selectedColor, setSelectedColor] = useState('blue'); // Track the selected color
-  const [inCart, setInCart] = useState(false); // Track cart state
+interface ProductCardProps {
+  product: IProduct;
+}
 
-  const images = ['/product/image.jpg', '/product/image.jpg', '/product/image.jpg'];
-  const largeImages = [
-    '/product/large-image.jpg',
-    '/product/large-image.jpg',
-    '/product/large-image.jpg',
-  ];
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [inCart, setInCart] = useState(false);
+  // const { loading, product, error } = useProductDetails(productId);
+  const [variant, setVariant] = useState<Variant | null>(null);
+
+  useEffect(() => {
+    if (product && product.variants) setVariant(product.variants[0]);
+  }, [product]);
 
   const handlePrevImage = () => {
-    setSelectedImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setSelectedImage((prev) => (prev === 0 ? product?.images.length - 1 : prev - 1));
   };
 
   const handleNextImage = () => {
-    setSelectedImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
-
-  const handleColorSelect = (color: string) => {
-    setSelectedColor(color);
+    setSelectedImage((prev) => (prev === product?.images.length - 1 ? 0 : prev + 1));
   };
 
   const handleAddToCart = () => {
     setInCart((prev) => !prev);
   };
 
-  useEffect(() => {
-    // Select the image using its alt attribute and apply the styles
-    const imageElement = document.querySelector('img[alt="Product Image"]');
-    if (imageElement) {
-      imageElement.style.display = 'block';
-      imageElement.style.cursor = 'crosshair';
-      imageElement.style.height = '450px';
-      imageElement.style.width = 'auto';
+  /*   if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
 
-      const parentElement = imageElement.parentElement;
-      if (parentElement) {
-        parentElement.style.display = 'flex';
-        parentElement.style.justifyContent = 'center';
-      }
-    }
-  }, [selectedImage]); // Re-run this effect whenever the selected image changes
+  if (error) {
+    return <Typography color="error">Error loading product details: {error}</Typography>;
+  }
+
+  if (!product) {
+    return <Typography>No product found</Typography>;
+  } */
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" sx={{ padding: 2 }}>
-      <Card sx={{ display: 'flex', width: '100%', maxWidth: 900 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
-          <SideBySideMagnifier
-            imageSrc={images[selectedImage]} // Display selected image
-            largeImageSrc={largeImages[selectedImage]} // Display corresponding large image
-            imageAlt="Product Image" // Important for query selection
-            alwaysInPlace={false}
-            fillAvailableSpace={false}
-            fillAlignTop={false}
-            fillGapTop={10}
-            fillGapRight={10}
-            fillGapBottom={10}
-            fillGapLeft={0}
-            zoomContainerBorder="1px solid #ccc"
-            zoomContainerBoxShadow="0 4px 8px rgba(0,0,0,.5)"
-          />
-          <Box display="flex" justifyContent="center" alignItems="center" sx={{ padding: 1 }}>
-            <IconButton aria-label="Previous Image" onClick={handlePrevImage}>
-              <Typography>{'<'}</Typography>
-            </IconButton>
-            {images.map((img, index) => (
-              <Box
-                key={index}
-                component="img"
-                src={img}
-                alt={`Thumbnail ${index + 1}`}
-                sx={{
-                  width: 80,
-                  height: 80,
-                  margin: 1,
-                  border: selectedImage === index ? '2px solid black' : 'none',
-                  cursor: 'pointer',
-                }}
-                onClick={() => setSelectedImage(index)} // Set image on thumbnail click
+    <Box sx={{ padding: 2 }}>
+      <Box display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ padding: 2 }}>
+        <Card sx={{ display: 'flex', width: '100%', maxWidth: 900, boxShadow: 3, borderRadius: 2 }}>
+          {/* Left Side: Image & Image Navigation */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%', padding: 2 }}>
+            <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
+              <SideBySideMagnifier
+                imageSrc={product.images[selectedImage]}
+                largeImageSrc={product.images[selectedImage]}
+                imageAlt="Product Image"
+                alwaysInPlace={false}
+                zoomContainerBorder="1px solid #ccc"
+                zoomContainerBoxShadow="0 4px 8px rgba(0,0,0,.3)"
               />
-            ))}
-            <IconButton aria-label="Next Image" onClick={handleNextImage}>
-              <Typography>{'>'}</Typography>
-            </IconButton>
-          </Box>
-        </Box>
-
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            width: '50%',
-          }}
-        >
-          <CardContent>
-            <Typography variant="h5" gutterBottom>
-              Floating Phone
-            </Typography>
-            <Box display="flex" alignItems="center">
-              <Rating value={4} readOnly />
-              <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                (10 Reviews)
-              </Typography>
             </Box>
-            <Typography variant="h4" color="primary" sx={{ marginTop: 2 }}>
-              $1,139.33
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Availability:{' '}
-              <Typography component="span" color="success.main">
-                In Stock
-              </Typography>
-            </Typography>
-            <Typography variant="body2" sx={{ marginTop: 2 }}>
-              Met minim Mollie non desert Alamo est sit cliquey dolor do met sent. RELIT official
-              consequent door ENIM RELIT Mollie. Excitation venial consequent sent nostrum met.
-            </Typography>
-            <Box display="flex" sx={{ marginTop: 2 }}>
-              {['blue', 'green', 'orange', 'black'].map((color) => (
+            <Box display="flex" justifyContent="center" alignItems="center" sx={{ padding: 1 }}>
+              <IconButton onClick={handlePrevImage}>
+                <Typography>{'<'}</Typography>
+              </IconButton>
+              {product.images.map((img, index) => (
                 <Box
-                  key={color}
+                  key={index}
+                  component="img"
+                  src={img}
+                  alt={`Thumbnail ${index + 1}`}
                   sx={{
-                    backgroundColor: color,
-                    borderRadius: '50%',
-                    width: 25,
-                    height: 25,
-                    marginRight: 1,
+                    width: 60,
+                    height: 60,
+                    margin: 1,
+                    border: selectedImage === index ? '2px solid #1976d2' : '1px solid #ccc',
+                    borderRadius: 1,
                     cursor: 'pointer',
-                    border: selectedColor === color ? '2px solid black' : 'none',
                   }}
-                  onClick={() => handleColorSelect(color)} // Handle color selection
+                  onClick={() => setSelectedImage(index)}
                 />
               ))}
-            </Box>
-          </CardContent>
-
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ padding: 2 }}
-          >
-            <Button variant="contained" color="primary" onClick={() => alert('Shop Now Clicked!')}>
-              Shop Now
-            </Button>
-            <Box display="flex" alignItems="center">
-              <IconButton aria-label="Add to Wishlist" onClick={() => alert('Added to Wishlist!')}>
-                <FavoriteBorder />
-              </IconButton>
-              <IconButton aria-label="Add to Cart" onClick={handleAddToCart}>
-                {inCart ? <ShoppingCartOutlined color="success" /> : <ShoppingCartOutlined />}
-              </IconButton>
-              <IconButton aria-label="View" onClick={() => alert('View Product!')}>
-                <VisibilityOutlined />
+              <IconButton onClick={handleNextImage}>
+                <Typography>{'>'}</Typography>
               </IconButton>
             </Box>
           </Box>
-        </Box>
-      </Card>
+
+          {/* Right Side: Product Details */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              width: '50%',
+              padding: 2,
+            }}
+          >
+            <CardContent>
+              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                {product.name}
+              </Typography>
+
+              <Box display="flex" alignItems="center" sx={{ marginTop: 1 }}>
+                <Rating value={product.rating || 4.5} precision={0.5} readOnly />
+                <Typography variant="body2" sx={{ marginLeft: 1, color: 'text.secondary' }}>
+                  ({product.reviewsCount} Reviews)
+                </Typography>
+              </Box>
+
+              <Typography variant="body2" sx={{ marginTop: 2, color: 'text.secondary' }}>
+                {product.description}
+              </Typography>
+
+              <Divider sx={{ marginY: 2 }}>
+                <Chip label="Variants" color="primary" />
+              </Divider>
+
+              {variant ? <VariantDetails variant={variant} /> : null}
+            </CardContent>
+
+            {/* Buttons */}
+            <Box sx={{ padding: 2, display: 'flex', justifyContent: 'space-between' }}>
+              <Button variant="contained" color="primary" size="large">
+                Shop Now
+              </Button>
+              <Box display="flex" gap={1}>
+                <IconButton onClick={() => alert('Added to Wishlist!')}>
+                  <FavoriteBorder />
+                </IconButton>
+                <IconButton onClick={handleAddToCart}>
+                  {inCart ? <ShoppingCartOutlined color="success" /> : <ShoppingCartOutlined />}
+                </IconButton>
+                <IconButton onClick={() => alert('View Product!')}>
+                  <VisibilityOutlined />
+                </IconButton>
+              </Box>
+            </Box>
+          </Box>
+        </Card>
+      </Box>
+
+      {variant && (
+        <ProductVariantSelector
+          product={product}
+          selectedVariant={variant}
+          setSelectedVariant={setVariant}
+        />
+      )}
     </Box>
+  );
+};
+
+interface VariantDetailsProps {
+  variant: Variant;
+}
+
+const VariantDetails: React.FC<VariantDetailsProps> = ({ variant }) => {
+  if (!variant.price) {
+    return <Typography color="error">This product is not available</Typography>;
+  }
+
+  return (
+    <Card variant="outlined" sx={{ padding: 2, marginTop: 2 }}>
+      <Typography variant="body1">
+        Price:{' '}
+        <Typography component="span" color="primary">
+          ${variant.discountedPrice}
+        </Typography>{' '}
+        <Typography
+          component="span"
+          sx={{ textDecoration: 'line-through', color: 'text.secondary' }}
+        >
+          ${variant.price}
+        </Typography>
+      </Typography>
+      <Typography variant="body1">Stock: {variant.stock}</Typography>
+      <Typography variant="h6" sx={{ marginTop: 1 }}>
+        Specifications:
+      </Typography>
+      <ul>
+        {variant.specifications.map((spec) => (
+          <li key={spec.specKey}>
+            <Typography component="span" color="text.primary">
+              {spec.specKey}
+            </Typography>
+            : {spec.specValue}
+          </li>
+        ))}
+      </ul>
+    </Card>
   );
 };
 

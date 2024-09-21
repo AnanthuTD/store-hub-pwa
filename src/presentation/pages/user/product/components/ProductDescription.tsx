@@ -12,8 +12,13 @@ import {
   Tab,
 } from '@mui/material';
 import { AddShoppingCart, FavoriteBorder, ExpandMore, ExpandLess } from '@mui/icons-material';
+import { IProduct } from '@/domain/entities/IProduct';
 
-const ProductDescription = () => {
+interface ProductDescriptionProps {
+  product: IProduct;
+}
+
+const ProductDescription: React.FC<ProductDescriptionProps> = ({ product }) => {
   const [expanded, setExpanded] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
@@ -94,8 +99,7 @@ const ProductDescription = () => {
                 </Box>
               </Box>
               <Typography variant="body1" gutterBottom>
-                Met minim Mollie non desert Alamo est sit cliquey dolor do met sent. RELIT official
-                consequent door ENIM RELIT Mollie. Excitation venial consequent sent nostrum met.
+                {product.description || 'No description available'}
               </Typography>
 
               {/* Expandable Section */}
