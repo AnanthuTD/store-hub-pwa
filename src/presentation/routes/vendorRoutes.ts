@@ -56,6 +56,15 @@ const vendorRoutes: VendorRoutes = {
     icon: LoginIcon,
     layoutType: 'vendor',
   },
+  307: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/vendor/shop/register/LocationMap'),
+    ),
+    path: '/vendor/shop/location',
+    title: 'Shop Registration',
+    icon: LoginIcon,
+    layoutType: 'vendor',
+  },
 };
 
 export default vendorRoutes;

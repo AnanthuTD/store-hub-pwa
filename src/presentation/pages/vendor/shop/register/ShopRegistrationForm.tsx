@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Button, message } from 'antd';
+import { Form, Button, message, Modal, Card } from 'antd';
 import ShopFormFields from './ShopFormFields';
 import dayjs, { Dayjs } from 'dayjs';
 import axiosInstance from '@/config/axios';
+import LocationMap from './LocationMap';
 
 interface OperatingHours {
   monday: string;
@@ -32,6 +33,10 @@ interface ShopData {
     website: string;
   };
   operatingHours: OperatingHours;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
 }
 
 interface FormData {
@@ -106,10 +111,9 @@ const formatOperatingHours = (data: FormData): OperatingHours => {
 const formatData = (data: FormData) => {
   return {
     name: data.name,
-    location: {
-      coordinates: null,
-      type: null,
-    },
+    location: data.location
+      ? { latitude: data.location?.lat, longitude: data.location?.lng }
+      : null,
     products: [],
     ownerId: null,
     averageRating: data.averageRating,
@@ -132,10 +136,16 @@ const formatData = (data: FormData) => {
   };
 };
 
+interface LocationData {
+  lat: number;
+  lng: number;
+}
+
 const ShopRegistrationForm: React.FC = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState<FormData | null>(null);
   const [shopId, setShopId] = useState<string | null>(null); // Track shop ID for updates
+  const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(null);
 
   useEffect(() => {
     axiosInstance
@@ -152,7 +162,10 @@ const ShopRegistrationForm: React.FC = () => {
             address: { city, country, postalCode, state, street },
             contactInfo: { email, phone, website },
             operatingHours,
+            location,
           } = shop;
+
+          setSelectedLocation({ lat: location.latitude, lng: location.longitude });
 
           const formattedOperatingHours = formatBack(operatingHours);
 
@@ -183,12 +196,16 @@ const ShopRegistrationForm: React.FC = () => {
 
   const handleFinish = (values: FormData) => {
     console.log(values);
-    const formData = formatData(values);
+    console.log(selectedLocation);
+
+    const formData = formatData({ ...values, location: selectedLocation });
+
+    console.log(formData);
 
     if (shopId) {
       // Use PUT for updates if shop data exists
       axiosInstance
-        .put(`/vendor/vendor/${shopId}`, formData)
+        .put(`/vendor/shop/${shopId}`, formData)
         .then(() => {
           message.success('Shop Updated Successfully!');
         })
@@ -199,7 +216,7 @@ const ShopRegistrationForm: React.FC = () => {
     } else {
       // Use POST for new shop registration
       axiosInstance
-        .post('/vendor/vendor/register', formData)
+        .post('/vendor/shop/register', formData)
         .then(() => {
           message.success('Shop Registered Successfully!');
           form.resetFields();
@@ -211,14 +228,76 @@ const ShopRegistrationForm: React.FC = () => {
     }
   };
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
+
+  // When a location is selected in the map modal
+  const handleLocationSelect = (location) => {
+    setSelectedLocation(location);
+    // setIsModalVisible(false);
+  };
+
   return (
     <Form form={form} layout="vertical" onFinish={handleFinish} initialValues={data || {}}>
       <ShopFormFields data={data} />
+
+      {/* Location Preview Section */}
+      <Form.Item label="Shop Location">
+        {selectedLocation ? (
+          <Card
+            hoverable
+            cover={
+              <div style={{ width: '100%', height: '200px' }}>
+                <iframe
+                  width="100%"
+                  height="100%"
+                  loading="lazy"
+                  allowFullScreen
+                  title="Selected Location Preview"
+                  src={`https://www.google.com/maps/embed/v1/place?key=${
+                    import.meta.env.VITE_MAP_API_KEY
+                  }&q=${selectedLocation.lat},${selectedLocation.lng}&center=${
+                    selectedLocation.lat
+                  },${selectedLocation.lng}&zoom=14`}
+                />
+              </div>
+            }
+            onClick={handleOpenModal} // Open the modal on click
+          >
+            <p>
+              <strong>Selected Coordinates:</strong> Latitude: {selectedLocation.lat}, Longitude:{' '}
+              {selectedLocation.lng}
+            </p>
+          </Card>
+        ) : (
+          <Button onClick={handleOpenModal}>Select Location</Button>
+        )}
+      </Form.Item>
+
+      {/* Submit Button */}
       <Form.Item>
         <Button type="primary" htmlType="submit">
           {data ? 'Update Shop Info' : 'Register Shop'}
         </Button>
       </Form.Item>
+
+      {/* Modal for Map Selection */}
+      <Modal
+        title="Select Shop Location"
+        open={isModalVisible}
+        onCancel={handleCloseModal}
+        footer={null}
+        width={800}
+      >
+        <LocationMap onLocationSelect={handleLocationSelect} selectedLocation={selectedLocation} />
+      </Modal>
     </Form>
   );
 };
