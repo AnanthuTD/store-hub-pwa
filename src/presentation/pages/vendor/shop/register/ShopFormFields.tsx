@@ -2,30 +2,13 @@ import React, { useState } from 'react';
 import { Form, Input, Select, TimePicker } from 'antd';
 import { validationRules } from '../utils/validationRules';
 import TextArea from 'antd/es/input/TextArea';
+import { FormData } from './types';
 
 const { Option } = Select;
 const timeFormat = 'HH:mm';
 
 interface ShopFormFieldsProps {
-  data?: {
-    name?: string;
-    email?: string;
-    phone?: string;
-    website?: string;
-    street?: string;
-    city?: string;
-    state?: string;
-    country?: string;
-    postalCode?: string;
-    description?: string;
-    monday?: string;
-    tuesday?: string;
-    wednesday?: string;
-    thursday?: string;
-    friday?: string;
-    saturday?: string;
-    sunday?: string;
-  };
+  data: FormData | null;
 }
 
 interface ClosedDaysState {

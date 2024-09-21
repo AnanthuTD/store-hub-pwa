@@ -1,6 +1,12 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { GoogleMap, Marker, Autocomplete, useJsApiLoader } from '@react-google-maps/api';
-import { Button, Input, notification } from 'antd';
+import {
+  GoogleMap,
+  MarkerF,
+  Autocomplete,
+  useJsApiLoader,
+  Libraries,
+} from '@react-google-maps/api';
+import { Button, Input, InputRef, notification } from 'antd';
 
 const containerStyle = {
   width: '100%',
@@ -12,16 +18,18 @@ const defaultCenter = {
   lng: 78.9629, // Default to India's lng
 };
 
+const libraries: Libraries = ['places'];
+
 interface MyComponentProps {
   onLocationSelect: (location: { lat: number; lng: number }) => void;
-  selectedLocation?: { lat: number; lng: number };
+  selectedLocation: { lat: number; lng: number } | null;
 }
 
 function MyComponent({ onLocationSelect, selectedLocation }: MyComponentProps) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: import.meta.env.VITE_MAP_API_KEY, // Replace with your Google Maps API key
-    libraries: ['places'], // Required for Places Autocomplete
+    libraries: libraries, // Required for Places Autocomplete
   });
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -32,7 +40,7 @@ function MyComponent({ onLocationSelect, selectedLocation }: MyComponentProps) {
     selectedLocation,
   );
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchInputRef = useRef<InputRef | null>(null);
 
   useEffect(() => {
     if (markerPosition) onLocationSelect(markerPosition);
@@ -146,7 +154,7 @@ function MyComponent({ onLocationSelect, selectedLocation }: MyComponentProps) {
         onUnmount={onUnmount}
         onClick={handleMapClick}
       >
-        {markerPosition && <Marker position={markerPosition} />}
+        {markerPosition && <MarkerF position={markerPosition} />}
       </GoogleMap>
 
       {markerPosition && (
