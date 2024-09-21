@@ -1,6 +1,6 @@
 import React from 'react';
 import { Toolbar, Typography, Stack, Button, IconButton } from '@mui/material';
-import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -48,9 +48,11 @@ const MainHeader = () => {
             Login / Register
           </Link>
         )}
-        <IconButton>
-          <LocalMallOutlinedIcon color="action" />
-        </IconButton>
+        <Link to={'/cart'}>
+          <IconButton>
+            <ShoppingCartIcon color="action" />
+          </IconButton>
+        </Link>
         <IconButton>
           <FavoriteBorderOutlinedIcon color="action" />
         </IconButton>

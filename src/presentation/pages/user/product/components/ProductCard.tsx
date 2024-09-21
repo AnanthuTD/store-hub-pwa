@@ -14,20 +14,49 @@ import { FavoriteBorder, ShoppingCartOutlined, VisibilityOutlined } from '@mui/i
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 import ProductVariantSelector, { Variant } from './ProductVariantSelector';
 import { IProduct } from '@/domain/entities/IProduct';
+import axiosInstance from '@/config/axios';
 
 interface ProductCardProps {
   product: IProduct;
 }
 
+const checkItemInCart = async (productId: string, variantId: string): Promise<boolean> => {
+  if (!productId || !variantId) return false;
+
+  try {
+    const response = await axiosInstance.get(`/user/cart/check`, {
+      params: {
+        productId,
+        variantId,
+      },
+    });
+
+    // Assuming the response contains a boolean `inCart`
+    return response.data.inCart;
+  } catch (error) {
+    console.error('Error checking item in cart:', error);
+    return false;
+  }
+};
+
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [inCart, setInCart] = useState(false);
-  // const { loading, product, error } = useProductDetails(productId);
   const [variant, setVariant] = useState<Variant | null>(null);
 
+  // set the first variant as the selected variant
   useEffect(() => {
-    if (product && product.variants) setVariant(product.variants[0]);
+    if (product && product.variants) {
+      setVariant(product.variants[0]);
+    }
   }, [product]);
+
+  // Check if the selected variant is in the user's cart when the variant changes
+  useEffect(() => {
+    if (variant) {
+      checkItemInCart(product._id, variant?._id).then((inCart) => setInCart(inCart));
+    }
+  }, [variant, product]);
 
   const handlePrevImage = () => {
     setSelectedImage((prev) => (prev === 0 ? product?.images.length - 1 : prev - 1));
@@ -37,21 +66,31 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setSelectedImage((prev) => (prev === product?.images.length - 1 ? 0 : prev + 1));
   };
 
-  const handleAddToCart = () => {
-    setInCart((prev) => !prev);
+  const handleAddToCart = async (productId: string, variantId: string) => {
+    if (inCart) {
+      // If item is already in cart, remove it
+      try {
+        await axiosInstance.delete('/user/cart/remove', {
+          data: { productId, variantId },
+        });
+        setInCart(false); // Update UI state to reflect item is no longer in cart
+      } catch (error) {
+        console.error('Failed to remove product from cart:', error);
+      }
+    } else {
+      // If item is not in cart, add it
+      try {
+        await axiosInstance.post('/user/cart/add', {
+          productId,
+          variantId,
+          quantity: 1, // Start with a quantity of 1
+        });
+        setInCart(true); // Update UI state to reflect item is now in cart
+      } catch (error) {
+        console.error('Failed to add product to cart:', error);
+      }
+    }
   };
-
-  /*   if (loading) {
-    return <Typography>Loading...</Typography>;
-  }
-
-  if (error) {
-    return <Typography color="error">Error loading product details: {error}</Typography>;
-  }
-
-  if (!product) {
-    return <Typography>No product found</Typography>;
-  } */
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -138,7 +177,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 <IconButton onClick={() => alert('Added to Wishlist!')}>
                   <FavoriteBorder />
                 </IconButton>
-                <IconButton onClick={handleAddToCart}>
+                <IconButton onClick={() => handleAddToCart(product._id, variant._id)}>
                   {inCart ? <ShoppingCartOutlined color="success" /> : <ShoppingCartOutlined />}
                 </IconButton>
                 <IconButton onClick={() => alert('View Product!')}>
