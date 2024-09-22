@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Layout,
   Form,
@@ -6,41 +6,50 @@ import {
   Button,
   Checkbox,
   Typography,
-  Alert,
   Divider,
   Card,
   Space,
+  notification,
 } from 'antd';
 import { useLogin } from '@/hooks/Admin/useLogin';
 import GoogleSignUpButton from '@/presentation/components/Auth/GoogleSignUpButton';
-// import { passwordRules } from '@/presentation/components/passwordRules';
+import { passwordRules } from '@/presentation/components/passwordRules';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
   const { login } = useLogin(); // Custom hook for login logic
+  const [rememberMe, setRememberMe] = useState(false);
+  const [form] = Form.useForm();
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setPassword(e.target.value);
+  useEffect(() => {
+    // Check local storage for saved email
+    const savedEmail = localStorage.getItem('adminEmail');
+    if (savedEmail) {
+      form.setFieldValue('email', savedEmail);
+      setRememberMe(true); // Check the checkbox if an email is found
+    }
+  }, [form]);
 
-  const handleSubmit = async () => {
-    setLoading(true);
-    setError(null);
-
+  const handleSubmit = async (values: { email: string; password: string }) => {
     try {
-      await login({ email, password });
+      await login(values);
+
+      // Save email to local storage if "Remember Me" is checked
+      if (rememberMe) {
+        localStorage.setItem('adminEmail', values.email);
+      } else {
+        localStorage.removeItem('adminEmail'); // Clear if unchecked
+      }
+
       // Redirect or show success message here
     } catch (err) {
-      setError((err as Error).message || 'Failed to sign in. Please try again.');
-    } finally {
-      setLoading(false);
+      notification.error({
+        message: 'Login Failed',
+        description: (err as Error).message || 'Failed to sign in. Please try again.',
+        placement: 'topRight', // Position of the notification
+      });
     }
   };
 
@@ -63,7 +72,7 @@ const LoginPage: React.FC = () => {
         <div
           style={{
             flex: 1,
-            backgroundImage: 'url("/admin-signin.png")',
+            backgroundImage: 'url("/admin/banner.png")',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             display: 'flex',
@@ -77,23 +86,17 @@ const LoginPage: React.FC = () => {
             height: '85vh',
           }}
         >
-          <div style={{ textAlign: 'center' }}>
-            <Title level={2} style={{ color: '#ffffff', marginBottom: '16px' }}>
-              Welcome to Admin Portal
-            </Title>
-            <Text style={{ fontSize: '16px', color: '#ffffff' }}>
-              Manage and oversee everything from here.
-            </Text>
-          </div>
+          {/* You can add content here if needed */}
         </div>
 
         {/* Right Side - Login Form */}
         <Card
           style={{
-            width: '400px',
+            width: '450px',
             borderRadius: '12px',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
             backgroundColor: '#ffffff',
+            height: '85vh',
           }}
           bordered={false}
         >
@@ -107,20 +110,14 @@ const LoginPage: React.FC = () => {
             >
               Welcome back! Please sign in to access the dashboard.
             </Text>
-            {error && (
-              <Alert message={error} type="error" showIcon style={{ marginBottom: '16px' }} />
-            )}
 
-            <GoogleSignUpButton
-            /*  onClick={() => {
-              }} */
-            />
+            <GoogleSignUpButton api="admin/auth/google" />
 
             <Divider plain style={{ color: '#888' }}>
               or
             </Divider>
 
-            <Form layout="vertical" onFinish={handleSubmit}>
+            <Form layout="vertical" onFinish={handleSubmit} form={form}>
               <Form.Item
                 label="Email or Mobile"
                 name="email"
@@ -130,8 +127,6 @@ const LoginPage: React.FC = () => {
                 ]}
               >
                 <Input
-                  value={email}
-                  onChange={handleEmailChange}
                   placeholder="Enter your email or mobile"
                   autoComplete="email"
                   autoFocus
@@ -139,10 +134,8 @@ const LoginPage: React.FC = () => {
                 />
               </Form.Item>
 
-              <Form.Item label="Password" name="password" /* rules={passwordRules} */>
+              <Form.Item label="Password" name="password" rules={passwordRules}>
                 <Input.Password
-                  value={password}
-                  onChange={handlePasswordChange}
                   placeholder="Enter your password"
                   autoComplete="current-password"
                   size="large"
@@ -150,13 +143,18 @@ const LoginPage: React.FC = () => {
               </Form.Item>
 
               <Form.Item>
-                <Checkbox style={{ color: '#888' }}>Remember me</Checkbox>
+                <Checkbox
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  style={{ color: '#888' }}
+                >
+                  Remember me
+                </Checkbox>
               </Form.Item>
 
               <Button
                 type="primary"
                 htmlType="submit"
-                loading={loading}
                 style={{
                   width: '100%',
                   borderRadius: '6px',
@@ -165,7 +163,7 @@ const LoginPage: React.FC = () => {
                   boxShadow: '0 4px 12px rgba(24, 144, 255, 0.3)',
                 }}
               >
-                {loading ? 'Signing in...' : 'Sign In'}
+                Sign In
               </Button>
             </Form>
           </Space>

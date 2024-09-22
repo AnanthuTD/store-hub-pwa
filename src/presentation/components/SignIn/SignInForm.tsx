@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Tabs, Tab, FormControl } from '@mui/material';
 import OTPInput from '../Auth/OTP';
 import PhoneForm, { MobileNumberObject } from '../SignUp/PhoneForm';
@@ -7,6 +7,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/infrastructure/redux/store';
 import { login } from '@/infrastructure/redux/slices/user/userSlice';
+import PasswordField from '../PasswordField';
 
 const SignInForm = () => {
   const user = useSelector((state: RootState) => state.user.data);
@@ -22,6 +23,16 @@ const SignInForm = () => {
   const [otp, setOtp] = useState('');
   const [signInMethod, setSignInMethod] = useState<'credentials' | 'otp'>('credentials');
   const [error, setError] = useState<string | null>(null);
+  const [passwordStrength, setPasswordStrength] = useState(0);
+
+  // New states for OTP timer and button disabling
+  const [otpTimer, setOtpTimer] = useState(30);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  const handlePasswordChange = (newPassword: string, strength: number) => {
+    setPassword(newPassword);
+    setPasswordStrength(strength);
+  };
 
   const handleSignIn = async () => {
     const authRepo = new AuthRepositoryImpl();
@@ -72,6 +83,10 @@ const SignInForm = () => {
 
       if (response.status !== 'pending' && response.status !== 'approved') {
         setError('Failed to send OTP: ' + response.status);
+      } else {
+        // Start OTP timer and disable button
+        setIsButtonDisabled(true);
+        setOtpTimer(30); // Reset the timer to 30 seconds
       }
     } catch (error) {
       if (error instanceof Error) setError('Failed to send OTP: ' + error.message);
@@ -80,6 +95,20 @@ const SignInForm = () => {
       }
     }
   }
+
+  // Timer logic
+  useEffect(() => {
+    let interval: number;
+    if (isButtonDisabled && otpTimer > 0) {
+      interval = setInterval(() => {
+        setOtpTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (otpTimer === 0) {
+      setIsButtonDisabled(false);
+    }
+
+    return () => clearInterval(interval);
+  }, [isButtonDisabled, otpTimer]);
 
   if (user?.id) {
     return <Navigate to={'/home'} />;
@@ -116,16 +145,17 @@ const SignInForm = () => {
             onChange={(e) => setEmailOrMobile(e.target.value)}
             size="small"
           />
-          <TextField
-            label="Password"
-            variant="outlined"
+
+          {/* Password */}
+          <PasswordField value={password} onChange={handlePasswordChange} />
+
+          <Button
+            variant="contained"
+            color="primary"
             fullWidth
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            size="small"
-          />
-          <Button variant="contained" color="primary" fullWidth onClick={handleSignIn}>
+            onClick={handleSignIn}
+            disabled={passwordStrength < 2}
+          >
             Sign In with Credentials
           </Button>
         </Box>
@@ -134,8 +164,15 @@ const SignInForm = () => {
       {signInMethod === 'otp' && (
         <Box mt={2} display="flex" flexDirection="column" rowGap={2}>
           <PhoneForm onChange={(mobileNumber) => setMobileNumber(mobileNumber)} />
-          <Button variant="contained" color="slateBlue" fullWidth onClick={sendOTP} size="small">
-            Send OTP
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={sendOTP}
+            size="small"
+            disabled={isButtonDisabled}
+          >
+            {isButtonDisabled ? `Resend OTP in ${otpTimer}s` : 'Send OTP'}
           </Button>
           <OTPInput onChange={setOtp} />
           <Button variant="contained" color="primary" fullWidth onClick={handleSignIn}>

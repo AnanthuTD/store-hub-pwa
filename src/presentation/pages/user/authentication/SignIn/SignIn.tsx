@@ -35,11 +35,17 @@ const SignIn = () => {
             >
               Discover the Best Local Deals and Stores Near You
             </Typography>
-            <GoogleSignUpButton />
+
+            {/* Google sign in button */}
+            <GoogleSignUpButton api="user/auth/google" />
+
             <Box my={2} width="100%">
               <Divider>OR</Divider>
             </Box>
+
+            {/* Sign in form */}
             <SignInForm />
+
             <Box marginTop="16px">
               <Typography variant="body2">
                 By signing up, you agree to the{' '}

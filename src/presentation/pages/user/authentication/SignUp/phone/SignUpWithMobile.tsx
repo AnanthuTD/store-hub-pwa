@@ -2,9 +2,10 @@ import { Box, TextField, Button, Typography, Link } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2';
 import Header from '../../components/Header';
 import AuthThemeProvider from '../../components/AuthThemeProvider';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { AuthRepositoryImpl } from '@/infrastructure/repositories/UserAuthRepository';
+import PasswordField from '@/presentation/components/PasswordField';
 
 const SignUpWithMobile = () => {
   const [error, setError] = useState<string | null>(null);
@@ -12,10 +13,26 @@ const SignUpWithMobile = () => {
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [passwordStrength, setPasswordStrength] = useState(0);
   const [searchParams] = useSearchParams();
   const mobileNumber = searchParams.get('mobileNumber');
   const countryCode = searchParams.get('countryCode') || ''; // Assuming countryCode is also passed in query params
   const navigate = useNavigate();
+
+  // State for OTP resend timer
+  const [timer, setTimer] = useState<number>(30);
+  const [canResend, setCanResend] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setCanResend(true);
+    }
+  }, [timer]);
 
   const handleSubmit = async () => {
     if (!otp || !firstName || !lastName || !password || !countryCode || !mobileNumber) {
@@ -45,6 +62,29 @@ const SignUpWithMobile = () => {
     } catch (error) {
       console.error('An error occurred during sign up:', error);
       setError('An error occurred. Please try again later.');
+    }
+  };
+
+  const handlePasswordChange = (newPassword: string, strength: number) => {
+    setPassword(newPassword);
+    setPasswordStrength(strength);
+  };
+
+  const handleResendOTP = async () => {
+    try {
+      if (!mobileNumber || !countryCode) {
+        throw new Error('No country code or mobile number provided!');
+      }
+
+      const authRepo = new AuthRepositoryImpl();
+      await authRepo.sendOTP(countryCode, mobileNumber); // Assuming this method exists
+
+      setTimer(30); // Reset timer to 30 seconds
+      setCanResend(false); // Disable button until timer runs out
+      setError(null); // Clear any previous error
+    } catch (error) {
+      console.error('Failed to resend OTP:', error);
+      setError('Failed to resend OTP. Please try again later.');
     }
   };
 
@@ -98,6 +138,9 @@ const SignUpWithMobile = () => {
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
               />
+              <Button variant="text" onClick={handleResendOTP} disabled={!canResend}>
+                Resend OTP {timer > 0 && `(${timer}s)`}
+              </Button>
               <TextField
                 label="First Name"
                 variant="outlined"
@@ -116,22 +159,22 @@ const SignUpWithMobile = () => {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
               />
-              <TextField
-                label="Password"
-                variant="outlined"
-                fullWidth
-                margin="none"
-                size="small"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+
+              {/* password */}
+              <PasswordField value={password} onChange={handlePasswordChange} />
+
               {error && (
                 <Typography color="error" variant="body2">
                   {error}
                 </Typography>
               )}
-              <Button variant="contained" color="primary" fullWidth onClick={handleSubmit}>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={handleSubmit}
+                disabled={passwordStrength < 2}
+              >
                 Sign up
               </Button>
             </Box>
