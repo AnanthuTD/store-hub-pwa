@@ -29,6 +29,8 @@ const ProductManager: React.FC = () => {
   }, []);
 
   const handleEdit = (product: Product) => {
+    console.log(product);
+
     setSelectedProduct(product);
     setImageFiles(product.images.map((url) => ({ url }))); // Convert image URLs to file objects
     setIsModalVisible(true);
@@ -82,14 +84,17 @@ const ProductManager: React.FC = () => {
   return (
     <div>
       <ProductTable products={products} onEdit={handleEdit} />
-      <ProductModal
-        visible={isModalVisible}
-        product={selectedProduct}
-        imageFiles={imageFiles}
-        setImageFiles={setImageFiles}
-        onOk={handleSave}
-        onCancel={() => setIsModalVisible(false)}
-      />
+      {selectedProduct ? (
+        <ProductModal
+          visible={isModalVisible}
+          product={selectedProduct}
+          imageFiles={imageFiles}
+          setImageFiles={setImageFiles}
+          onOk={handleSave}
+          onCancel={() => setIsModalVisible(false)}
+          key={selectedProduct._id}
+        />
+      ) : null}
     </div>
   );
 };

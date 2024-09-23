@@ -109,14 +109,14 @@ const DynamicVariantForm: React.FC<DynamicVariantFormProps> = ({ name, label }) 
                       >
                         <Form.Item
                           {...specRestField}
-                          name={[specName, 'specKey']}
+                          name={[specName, 'key']}
                           rules={[{ required: true, message: 'Missing specification key' }]}
                         >
                           <Input placeholder="Specification Key" readOnly />
                         </Form.Item>
                         <Form.Item
                           {...specRestField}
-                          name={[specName, 'specValue']}
+                          name={[specName, 'value']}
                           rules={[{ required: true, message: 'Missing specification value' }]}
                         >
                           <Input placeholder="Specification Value" readOnly />

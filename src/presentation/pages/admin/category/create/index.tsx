@@ -10,6 +10,7 @@ const AddCategory = () => {
   const [parentCategories, setParentCategories] = useState([]);
   const [imageUrl, setImageUrl] = useState('');
   const [file, setFile] = useState(null);
+  const [refetch, setRefetch] = useState(true);
 
   useEffect(() => {
     // Fetch parent categories from API
@@ -22,7 +23,7 @@ const AddCategory = () => {
       }
     };
     fetchParentCategories();
-  }, []);
+  }, [refetch]);
 
   const handleFinish = async (values) => {
     try {
@@ -44,6 +45,7 @@ const AddCategory = () => {
       });
 
       message.success('Category added successfully');
+      setRefetch((prev) => !prev);
       form.resetFields();
       setImageUrl('');
       setFile(null);
