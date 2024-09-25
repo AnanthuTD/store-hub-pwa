@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Autocomplete, TextField, CircularProgress, IconButton, Box } from '@mui/material';
 import debounce from 'lodash/debounce';
 import axiosInstance from '@/config/axios';
@@ -11,13 +11,13 @@ const SearchAutocomplete = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const fetchSuggestions = useCallback(
+  const fetchSuggestions = useMemo(
     () =>
       debounce(async (query: string) => {
         if (query.trim()) {
           setLoading(true);
           try {
-            const response = await axiosInstance.get(`/user/products/suggest`, {
+            const response = await axiosInstance.get('/user/products/suggest', {
               params: { query },
             });
             setOptions(response.data); // Assuming response.data is an array of product names
@@ -29,12 +29,11 @@ const SearchAutocomplete = () => {
         } else {
           setOptions([]);
         }
-      }, 300),
+      }, 300), // debounce delay
     [],
   );
 
   const handleInputChange = (event: React.SyntheticEvent, value: string) => {
-    // setSearchQuery(value);
     fetchSuggestions(value);
   };
 

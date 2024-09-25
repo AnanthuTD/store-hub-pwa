@@ -205,25 +205,25 @@ interface VariantDetailsProps {
 }
 
 const VariantDetails: React.FC<VariantDetailsProps> = ({ variant }) => {
-  if (!variant.price) {
+  if (!variant.averagePrice) {
     return <Typography color="error">This product is not available</Typography>;
   }
 
   return (
     <Card variant="outlined" sx={{ padding: 2, marginTop: 2 }}>
       <Typography variant="body1">
-        Price:{' '}
+        Average Price:{' '}
         <Typography component="span" color="primary">
-          ${variant.discountedPrice}
+          ${variant.averagePrice}
         </Typography>{' '}
-        <Typography
+        {/*  <Typography
           component="span"
           sx={{ textDecoration: 'line-through', color: 'text.secondary' }}
         >
-          ${variant.price}
-        </Typography>
+          ${variant.averagePrice}
+        </Typography> */}
       </Typography>
-      <Typography variant="body1">Stock: {variant.stock}</Typography>
+      {/* <Typography variant="body1">Stock: {variant.stock}</Typography> */}
       <Typography variant="h6" sx={{ marginTop: 1 }}>
         Specifications:
       </Typography>
@@ -231,9 +231,9 @@ const VariantDetails: React.FC<VariantDetailsProps> = ({ variant }) => {
         {variant.specifications.map((spec) => (
           <li key={spec.specKey}>
             <Typography component="span" color="text.primary">
-              {spec.specKey}
+              {spec.key}
             </Typography>
-            : {spec.specValue}
+            : {spec.value}
           </li>
         ))}
       </ul>

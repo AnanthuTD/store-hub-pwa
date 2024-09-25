@@ -29,9 +29,11 @@ const MainHeader = () => {
       }}
     >
       {/* Logo */}
-      <Typography variant="h5" sx={{ color: '#1a202c', fontWeight: 700 }}>
-        StoreHub
-      </Typography>
+      <Link to={'/home'}>
+        <Typography variant="h5" sx={{ color: '#1a202c', fontWeight: 700 }}>
+          StoreHub
+        </Typography>
+      </Link>
 
       {/* Search Box */}
 

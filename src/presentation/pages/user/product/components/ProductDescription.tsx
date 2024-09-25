@@ -62,7 +62,7 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({ product }) => {
             onMouseLeave={handleHoverLeave}
           >
             <img
-              src="/product/image.jpg"
+              src={product.images[0]}
               alt="Product"
               style={{ height: '100%', display: 'block' }}
             />

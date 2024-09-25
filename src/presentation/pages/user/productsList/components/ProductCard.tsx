@@ -24,9 +24,9 @@ const ProductImage = styled('img')({
   marginBottom: '10px',
 });
 
-const ProductCard: React.FC<Product> = ({ images, name, price }) => {
+const ProductCard: React.FC<Product> = ({ images, name, variants: [{ price }], _id }) => {
   return (
-    <CardContainer>
+    <CardContainer onClick={() => window.open(`/product?productId=${_id}`)}>
       <ProductImage src={images[0]} alt={name} />
       <Typography variant="h6" fontWeight="bold">
         {name}

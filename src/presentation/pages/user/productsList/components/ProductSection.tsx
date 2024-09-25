@@ -18,9 +18,15 @@ interface Product {
 
 interface ProductSectionProps {
   sortOption: string;
+  setSelectedCategoryId: (categoryId: string) => void;
+  priceRange: number[];
 }
 
-const ProductSection: React.FC<ProductSectionProps> = ({ sortOption }) => {
+const ProductSection: React.FC<ProductSectionProps> = ({
+  sortOption,
+  setSelectedCategoryId,
+  priceRange,
+}) => {
   const [searchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState<Product[]>([]);
@@ -30,10 +36,11 @@ const ProductSection: React.FC<ProductSectionProps> = ({ sortOption }) => {
 
   const itemsPerPage = 16;
 
-  // Fetch products on page change or search query change
   useEffect(() => {
-    // Fetch products from the backend
-    const fetchProducts = async (page: number, query: string) => {
+    const query = searchParams.get('query');
+    const categoryId = searchParams.get('categoryId');
+
+    const fetchProductsByQuery = async (page: number, query: string) => {
       setLoading(true);
       setError(null);
 
@@ -44,19 +51,53 @@ const ProductSection: React.FC<ProductSectionProps> = ({ sortOption }) => {
             q: query,
             limit: itemsPerPage,
             sortBy: sortOption,
+            minPrice: priceRange[0],
+            maxPrice: priceRange[1],
           },
         });
-
-        setProducts(response.data || []);
-        setTotalPages(response.data.totalPages || 1);
+        setProducts(response.data.products || []);
+        setTotalPages(Math.ceil(response.data.totalPages) || 1);
       } catch (err) {
-        setError('Failed to fetch products.');
+        setError('Failed to fetch products by search query.');
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts(currentPage, searchParams.get('query') || '');
-  }, [currentPage, searchParams, sortOption]);
+
+    const fetchProductsByCategory = async (page: number, categoryId: string) => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await axiosInstance.get(`/user/products/category/${categoryId}`, {
+          params: {
+            page,
+            limit: itemsPerPage,
+            sortBy: sortOption,
+            minPrice: priceRange[0],
+            maxPrice: priceRange[1],
+          },
+        });
+        setProducts(response.data.products || []);
+        setTotalPages(Math.ceil(response.data.totalPages) || 1);
+      } catch (err) {
+        setError('Failed to fetch products by category.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Determine which API to call based on query or categoryId
+    if (query) {
+      fetchProductsByQuery(currentPage, query);
+    } else if (categoryId) {
+      setSelectedCategoryId(categoryId);
+      fetchProductsByCategory(currentPage, categoryId);
+    } else {
+      setProducts([]); // Reset products if neither query nor categoryId is present
+      setTotalPages(1);
+    }
+  }, [currentPage, searchParams, sortOption, priceRange, setSelectedCategoryId]);
 
   // Pagination change handler
   const handlePageChange = (page: number) => {

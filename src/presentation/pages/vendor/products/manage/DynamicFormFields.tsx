@@ -41,14 +41,14 @@ const DynamicVariantForm: React.FC<DynamicVariantFormProps> = ({ name, label }) 
                             name={[optionName, 'key']}
                             rules={[{ required: true, message: 'Please input variant type' }]}
                           >
-                            <Input placeholder="Variant Type" readOnly />
+                            <Input placeholder="Variant Type" />
                           </Form.Item>
                           <Form.Item
                             {...optionRestField}
                             name={[optionName, 'value']}
                             rules={[{ required: true, message: 'Please input variant value' }]}
                           >
-                            <Input placeholder="Variant Value" readOnly />
+                            <Input placeholder="Variant Value" />
                           </Form.Item>
                         </Space>
                       ),
