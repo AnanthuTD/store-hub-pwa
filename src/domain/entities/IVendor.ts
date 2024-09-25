@@ -6,6 +6,11 @@ export interface IVendor {
     bankName: string | null;
     ifscCode: string | null;
   };
+  documents?: {
+    imageUrl: string[] | null;
+    type: string | null;
+    status: 'pending' | 'approved' | 'rejected';
+  }[];
   createdAt: string | null;
   email: string | null;
   phone: string | null;
@@ -20,5 +25,9 @@ export interface IVendor {
     };
     firstName: string;
     lastName: string;
+    avatar: string;
   } | null;
+  message?: string;
+  emailVerified?: boolean;
+  isVerified: boolean;
 }

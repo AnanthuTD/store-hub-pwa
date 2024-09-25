@@ -72,27 +72,22 @@ const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
   }, [location.pathname]);
 
   const handleMenuItemClick = (e: { key: string }) => {
-    setActiveMenu(e.key); // Update the active menu key
-    navigate(e.key); // Navigate to the selected route
+    setActiveMenu(e.key);
+    navigate(e.key);
   };
 
   return (
-    <Sider theme="light" trigger={null} collapsible collapsed={collapsed}>
+    <Sider theme="light" trigger={null} collapsible collapsed={collapsed} width={250}>
       <Typography.Title style={{ paddingLeft: 3 }} level={3}>
         ShopHub Vendor
       </Typography.Title>
       {/* Main Menu */}
-      <Menu
-        mode="inline"
-        selectedKeys={[activeMenu]} // Ensure only one key is selected at a time
-        items={items}
-        onClick={handleMenuItemClick} // Handle menu clicks
-      />
+      <Menu mode="inline" selectedKeys={[activeMenu]} items={items} onClick={handleMenuItemClick} />
       <Divider>Accounts</Divider>
       {/* Account Menu */}
       <Menu
         mode="inline"
-        selectedKeys={[activeMenu]} // Ensure only one key is selected at a time
+        selectedKeys={[activeMenu]}
         items={accountMenuItems}
         onClick={handleMenuItemClick}
       />

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axiosInstance from '@/config/axios';
 import styled from '@emotion/styled';
 import { Typography } from 'antd';
 import PartnersList from '../components/PartnersList';
 import { PartnerSummary } from '../components/PartnerCard';
+import { useNavigate } from 'react-router-dom';
 
 // Styled Title for light theme
 const StyledTitle = styled(Typography.Title)`

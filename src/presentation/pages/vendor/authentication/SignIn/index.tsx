@@ -19,9 +19,9 @@ function SignIn() {
 
   const handleSignIn = async (values: { email: string; password: string }) => {
     clearFeedback();
-    const shopOwner = await signIn(values);
-    if (shopOwner) {
-      dispatch(login(shopOwner));
+    const vendor = await signIn(values);
+    if (vendor) {
+      dispatch(login(vendor));
     }
   };
 

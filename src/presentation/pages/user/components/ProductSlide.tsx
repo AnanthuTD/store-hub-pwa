@@ -7,6 +7,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import 'swiper/css/navigation';
 import axiosInstance from '@/config/axios';
+import { StarFilled } from '@ant-design/icons';
 
 // Styled component for the container of the card slider
 const CardContainer = styled(Box)({
@@ -84,7 +85,7 @@ const ProductCard = ({ images, name, variants, rating, _id }: Product) => {
 
           {/* Product Rating */}
           <Typography variant="body2" color="green">
-            {rating}
+            {rating} <StarFilled />
           </Typography>
         </Box>
       </CardContent>

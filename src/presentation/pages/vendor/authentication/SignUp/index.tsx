@@ -38,15 +38,16 @@ const SignUpPage: React.FC = () => {
         message: `Email send to ${form.getFieldValue('email')}`,
         description: 'Verify your email address to continue...',
         onClose: clearFeedback,
-        duration: 3,
+        duration: 0,
       });
+      form.resetFields();
     }
     if (error) {
       notification.error({
         message: 'Sign-up in failed!',
         description: error,
         onClose: clearFeedback,
-        duration: 3,
+        duration: 5,
       });
     }
   }, [success, error, clearFeedback, form]);
@@ -67,6 +68,7 @@ const SignUpPage: React.FC = () => {
         message: 'Sign Up Failed',
         description: (err as Error).message || 'Failed to sign up. Please try again.',
         placement: 'topRight',
+        duration: 5,
       });
     }
   };

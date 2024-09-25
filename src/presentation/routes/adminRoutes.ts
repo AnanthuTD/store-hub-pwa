@@ -47,7 +47,7 @@ const adminRoutes: AdminRoutes = {
   },
   [AdminPages.AdminVendorVerificationPage]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/admin/vendor/verification/VendorValidationPage'),
+      () => import('@/presentation/pages/admin/vendor/vendorDetails/VendorValidationPage'),
     ),
     path: '/admin/vendor/verify',
     title: 'Verify Vendor',

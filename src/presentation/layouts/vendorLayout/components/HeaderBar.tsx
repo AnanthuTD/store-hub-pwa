@@ -25,8 +25,8 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggle }) => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/vendor/signin');
     axiosInstance.get('/vendor/auth/logout');
+    navigate('/vendor/signin');
   };
 
   return (

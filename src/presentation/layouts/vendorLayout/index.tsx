@@ -36,18 +36,15 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         if (!shopOwner) {
           const profile = await fetchProfile();
           if (!profile) {
-            // TODO: Uncomment the following line
-            // navigate('/vendor/signin');
+            navigate('/vendor/signin');
           } else {
-            // Update Redux store with fetched profile data
             dispatch(login(profile));
           }
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
-        // TODO: Uncomment the following line
 
-        // navigate('/vendor/signin'); // Navigate to sign-in if fetching profile fails
+        navigate('/vendor/signin');
       }
     };
 
