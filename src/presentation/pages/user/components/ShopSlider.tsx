@@ -8,6 +8,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Divider from '@mui/material/Divider';
 import 'swiper/css/navigation';
+import { formatDistance } from '@/infrastructure/utils/formatDistance';
 
 // Container for the whole card slider
 const CardContainer = styled(Box)({
@@ -33,6 +34,7 @@ const CustomCard = styled(Card)({
     transform: 'translateY(-10px)',
     boxShadow: '0 12px 24px rgba(0, 0, 0, 0.2)',
   },
+  aspectRatio: '1/1',
 });
 
 // Custom Typography for the shop name
@@ -51,26 +53,26 @@ const LocationText = styled(Typography)({
 });
 
 // Custom ShopCard component
-const ShopCard = ({ name, location, rating, distance }) => {
+const ShopCard = ({ name, city, rating, distance }) => {
   return (
     <CustomCard>
       <StorefrontIcon style={{ fontSize: 80, color: '#0071e3', margin: '10px 0' }} />
       <CardContent>
         <ShopName>{name}</ShopName>
-        <LocationText>{location}</LocationText>
+        <LocationText>{city}</LocationText>
         <Box display="flex" justifyContent="center" alignItems="center">
           <Rating name="read-only" value={rating} readOnly precision={0.5} />
           <Typography style={{ marginLeft: '8px' }}>{rating}</Typography>
         </Box>
         <Typography color="primary" style={{ marginTop: '5px', fontWeight: 'bold' }}>
-          {distance} KM
+          {distance}
         </Typography>
       </CardContent>
     </CustomCard>
   );
 };
 
-const ShopSlider = ({ shops }) => {
+const ShopSlider = ({ shops, city }) => {
   const sliderRef = useRef<SwiperRef>(null);
   const [isEnd, setIsEnd] = useState<boolean>(false);
   const [isBeginning, setIsBeginning] = useState<boolean>(true);
@@ -99,7 +101,7 @@ const ShopSlider = ({ shops }) => {
     <CardContainer>
       <Box display={'flex'} justifyContent={'space-between'} padding={2}>
         <Typography variant="h5" fontWeight="bold" gutterBottom color={'#252B42'}>
-          TOP SHOP CHAINS IN ERNAKULAM
+          TOP SHOP CHAINS {city ? 'IN' : ''} {(city as string).toUpperCase()}
         </Typography>
         <Box display="flex" justifyContent="space-between" alignItems="center" gap={2}>
           <Box
@@ -148,16 +150,17 @@ const ShopSlider = ({ shops }) => {
         style={{ paddingBlock: '15px' }}
         onSlideChange={handleSlideChange}
       >
-        {shops.map((shop, index) => (
-          <SwiperSlide key={index}>
-            <ShopCard
-              name={shop.name}
-              location={shop.location}
-              rating={shop.rating}
-              distance={shop.distance}
-            />
-          </SwiperSlide>
-        ))}
+        {shops &&
+          shops.map((shop, index) => (
+            <SwiperSlide key={index}>
+              <ShopCard
+                name={shop.name}
+                city={shop?.city}
+                rating={shop.rating}
+                distance={formatDistance(shop.distance)}
+              />
+            </SwiperSlide>
+          ))}
       </Swiper>
     </CardContainer>
   );
