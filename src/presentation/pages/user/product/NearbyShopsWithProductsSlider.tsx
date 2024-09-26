@@ -6,6 +6,7 @@ import ShopCard from './ShopCard';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import 'swiper/css/navigation';
 import 'swiper/css';
+import { formatDistance } from '@/infrastructure/utils/formatDistance';
 
 const CardContainer = styled(Box)({
   maxWidth: '100%',
@@ -44,13 +45,6 @@ const NearbyShopsWithProductsSlider = ({ shops, productName }) => {
     const swiper = sliderRef.current.swiper;
     setIsEnd(swiper.isEnd);
   }, []);
-
-  const calculateDistance = (distance: number) => {
-    distance = Number(distance.toFixed(2));
-    if (distance > 0 && distance <= 999) return `${distance} meters`;
-    else if (distance >= 1000 && distance <= 99999) return `${(distance / 1000).toFixed(1)} KM`;
-    else return 'you are here';
-  };
 
   return (
     <CardContainer>
@@ -110,7 +104,7 @@ const NearbyShopsWithProductsSlider = ({ shops, productName }) => {
             <ShopCard
               name={shop.name}
               rating={shop.rating}
-              distance={calculateDistance(shop.distance)}
+              distance={formatDistance(shop.distance)}
             />
           </SwiperSlide>
         ))}
