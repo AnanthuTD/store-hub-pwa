@@ -50,6 +50,9 @@ const MainHeader = () => {
             Login / Register
           </Link>
         )}
+        <Link to={'/products/list'}>
+          <Button variant="contained">Shop</Button>
+        </Link>
         <Link to={'/cart'}>
           <IconButton>
             <ShoppingCartIcon color="action" />

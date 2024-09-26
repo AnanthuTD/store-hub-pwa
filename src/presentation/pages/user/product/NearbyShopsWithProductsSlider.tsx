@@ -99,15 +99,20 @@ const NearbyShopsWithProductsSlider = ({ shops, productName }) => {
         style={{ paddingBlock: '15px' }}
         onSlideChange={handleSlideChange}
       >
-        {shops.map((shop, index) => (
-          <SwiperSlide key={index}>
-            <ShopCard
-              name={shop.name}
-              rating={shop.rating}
-              distance={formatDistance(shop.distance)}
-            />
-          </SwiperSlide>
-        ))}
+        {shops.map((shop, index) => {
+          console.log(shop);
+
+          return (
+            <SwiperSlide key={index}>
+              <ShopCard
+                name={shop.name}
+                rating={shop.rating}
+                distance={formatDistance(shop.distance)}
+                onClick={() => window.open(`/product?productId=${shop.storeProductDetails[0]._id}`)}
+              />
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </CardContainer>
   );

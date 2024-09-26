@@ -88,14 +88,12 @@ const ProductSection: React.FC<ProductSectionProps> = ({
     };
 
     // Determine which API to call based on query or categoryId
-    if (query) {
-      fetchProductsByQuery(currentPage, query);
-    } else if (categoryId) {
+
+    if (categoryId) {
       setSelectedCategoryId(categoryId);
       fetchProductsByCategory(currentPage, categoryId);
     } else {
-      setProducts([]); // Reset products if neither query nor categoryId is present
-      setTotalPages(1);
+      fetchProductsByQuery(currentPage, query || '');
     }
   }, [currentPage, searchParams, sortOption, priceRange, setSelectedCategoryId]);
 

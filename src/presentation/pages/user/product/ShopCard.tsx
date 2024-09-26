@@ -31,9 +31,9 @@ const LocationText = styled(Typography)({
   marginBottom: '5px',
 });
 
-const ShopCard = ({ name, location, rating, distance }) => {
+const ShopCard = ({ name, location, rating, distance, onClick }) => {
   return (
-    <CustomCard>
+    <CustomCard onClick={onClick}>
       <StorefrontIcon style={{ fontSize: 80, color: '#0071e3', margin: '10px 0' }} />
       <CardContent>
         <ShopName>{name}</ShopName>

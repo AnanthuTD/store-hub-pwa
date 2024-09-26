@@ -23,6 +23,7 @@ function Index() {
     error: shopsError,
     fetchNearbyShops,
   } = useNearbyShopsWithProduct();
+
   const { loading: productLoading, product, error: productError } = useProductDetails(productId);
 
   const getLocation = () => {
@@ -60,8 +61,8 @@ function Index() {
   }, []);
 
   useEffect(() => {
-    if (latitude !== null && longitude !== null && product && product.productId) {
-      fetchNearbyShops(latitude, longitude, product?.productId, selectedDistance); // Pass selectedDistance
+    if (product && product.productId) {
+      fetchNearbyShops(latitude || '', longitude || '', product?.productId, selectedDistance); // Pass selectedDistance
     }
   }, [latitude, longitude, product, selectedDistance, fetchNearbyShops]);
 
@@ -112,9 +113,8 @@ function Index() {
           <Typography>Loading nearby shops...</Typography>
         ) : shopsError ? (
           <Typography color="error">Error loading nearby shops: {shopsError}</Typography>
-        ) : shops ? (
-          <NearbyShopsWithProductsSlider shops={shops} productName={product.name} />
         ) : null}
+        {shops ? <NearbyShopsWithProductsSlider shops={shops} productName={product.name} /> : null}
       </Box>
       <Footer />
     </>

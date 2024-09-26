@@ -6,6 +6,7 @@ import ProductSection from './components/ProductSection';
 import Footer from '../components/Footer';
 import axiosInstance from '@/config/axios';
 import PriceRangeSlider from './components/PriceRangeSlider';
+import CategoryNavBar from '../components/CategoryNavBar';
 
 export type SortOption = 'popularity' | 'price_asc' | 'price_desc' | 'rating';
 
@@ -44,6 +45,7 @@ function ProductsList() {
 
   return (
     <>
+      <CategoryNavBar />
       <Container>
         <Box
           sx={{ padding: '20px' }}
