@@ -33,6 +33,8 @@ const CustomCard = styled(Card)({
     transform: 'translateY(-10px)',
     boxShadow: '0 12px 24px rgba(0, 0, 0, 0.2)',
   },
+  width: 'fit-content',
+  aspectRatio: '1/1',
 });
 
 // TypeScript interfaces for product and product collection
@@ -81,7 +83,19 @@ const ProductCard = ({ images, name, variants, rating, _id }: Product) => {
           </Typography>
 
           {/* Product Price */}
-          <Typography variant="body2">${variants[0].averagePrice}</Typography>
+          {variants[0].discountedPrice ? (
+            <Box>
+              <Typography variant="body2">${variants[0].discountedPrice}</Typography>
+              <Typography
+                variant="body2"
+                sx={{ textDecoration: 'line-through', color: 'text.secondary' }}
+              >
+                ${variants[0].price}
+              </Typography>
+            </Box>
+          ) : (
+            <Typography variant="body2">${variants[0].price}</Typography>
+          )}
 
           {/* Product Rating */}
           <Typography variant="body2" color="green">
@@ -103,7 +117,7 @@ function productTabProps(label: string) {
 }
 
 // Main ShopSlider component
-const ShopSlider = () => {
+const ProductSlider = () => {
   // Refs and states
   const sliderRef = useRef<SwiperRef>(null);
   const [productCollection, setProductCollection] = useState<ProductCollection>([]);
@@ -115,7 +129,7 @@ const ShopSlider = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axiosInstance.get('/user/products/popular-by-random-categories'); // Adjust endpoint as necessary
+        const response = await axiosInstance.get('/user/products/popular-by-random-categories/v2'); // Adjust endpoint as necessary
         const fetchedProducts: ProductCollection = response.data; // Adjust data structure if needed
         setProductCollection(fetchedProducts);
       } catch (error) {
@@ -236,4 +250,4 @@ const ShopSlider = () => {
   );
 };
 
-export default ShopSlider;
+export default ProductSlider;

@@ -146,13 +146,7 @@ const ShopSlider = ({ shops }) => {
           480: { slidesPerView: 1 },
         }}
         style={{ paddingBlock: '15px' }}
-        onSlideChange={handleSlideChange} // Listen to slide change
-        // onReachBeginning={() => {setIsBeginning(true)}} // When at the beginning
-        // onReachEnd={() => setIsEnd(true)} // When at the end
-        /* onFromEdge={() => {
-          setIsBeginning(false);
-          setIsEnd(false);
-        }} */ // When not at the edge
+        onSlideChange={handleSlideChange}
       >
         {shops.map((shop, index) => (
           <SwiperSlide key={index}>
