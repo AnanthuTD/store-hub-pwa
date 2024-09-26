@@ -12,7 +12,7 @@ function useProductDetails(productId: string) {
     try {
       const {
         data: { product },
-      } = await axiosInstance.get(`/user/products/${productId}/details`);
+      } = await axiosInstance.get(`/user/products/shop/${productId}/details`);
       setProduct(product);
     } catch (err) {
       if (err instanceof AxiosError && err.response && err.response.data) {

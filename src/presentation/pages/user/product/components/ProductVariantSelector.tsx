@@ -74,10 +74,10 @@ const VariantList = ({ product, selectedVariant, handleVariantChange }) => {
             }}
           >
             <div style={{ display: 'flex', gap: '5px' }}>
-              {variant.options.map((option, index) => (
+              {variant.centralizedData.options.map((option, index) => (
                 <span key={option.key}>
                   {option.key}: {option.value}
-                  {index < variant.options.length - 1 ? ', ' : ''}
+                  {index < variant.centralizedData.options.length - 1 ? ', ' : ''}
                 </span>
               ))}
             </div>
