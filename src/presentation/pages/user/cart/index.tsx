@@ -1,106 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { List, Typography, Button, Row, Col, Image, message } from 'antd';
+import React from 'react';
+import { List, Typography, Button, Row, Col, Image } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import PaymentSummary from './PaymentSummary';
-import QuantitySelector from './QuantitySelector'; // Import the new component
-import {
-  decrementProductInCart,
-  fetchCartItems,
-  incrementQuantity,
-  removeProduct,
-} from '@/infrastructure/services/user/cart.service';
+import QuantitySelector from './QuantitySelector';
+import useCart, { CartItem } from './hooks/useCart';
 
 const { Title, Text } = Typography;
 
-// Define the type for cart items
-export interface CartItem {
-  _id: string;
-  productId: string;
-  name: string;
-  description: string;
-  images: string[];
-  price: number;
-  quantity: number;
-  variant: {
-    _id: string;
-    averagePrice: number;
-  };
-}
-
 const CartComponent = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
-  useEffect(() => {
-    fetchCartItems().then((data) => setCartItems(data));
-  }, []);
-
-  const handleIncrement = async (item: CartItem) => {
-    try {
-      const totalPrice = await incrementQuantity({
-        productId: item._id,
-        variantId: item.variant._id,
-      });
-
-      const cartItem = cartItems.find((cartItem) => item.variant._id === cartItem.variant._id);
-      if (cartItem) {
-        const updatedCartItems = cartItems.map((cartItem) =>
-          cartItem.variant._id === item.variant._id
-            ? {
-                ...cartItem,
-                quantity: cartItem.quantity + 1,
-                totalPrice,
-              }
-            : cartItem,
-        );
-        setCartItems(updatedCartItems);
-      }
-
-      return true;
-    } catch (error) {
-      message.error((error as Error).message || 'Failed to update quantity');
-      return false;
-    }
-  };
-
-  const handleDecrement = async (item: CartItem) => {
-    try {
-      const totalPrice = await decrementProductInCart({
-        productId: item._id,
-        variantId: item.variant._id,
-      });
-
-      const cartItem = cartItems.find((cartItem) => item.variant._id === cartItem.variant._id);
-      if (cartItem) {
-        const updatedCartItems = cartItems.map((cartItem) =>
-          cartItem.variant._id === item.variant._id
-            ? {
-                ...cartItem,
-                quantity: cartItem.quantity - 1,
-                totalPrice,
-              }
-            : cartItem,
-        );
-        setCartItems(updatedCartItems);
-      }
-
-      return true;
-    } catch (error) {
-      message.error((error as Error).message || 'Failed to update quantity');
-      return false;
-    }
-  };
-
-  const handleRemove = (item: CartItem) => {
-    removeProduct(item._id, item.variant._id).then((success) => {
-      if (success) {
-        setCartItems(cartItems.filter((cartItem) => cartItem._id !== item._id));
-        message.success('Product removed from cart');
-      } else {
-        message.error('Failed to remove product from cart');
-      }
-    });
-  };
-
+  const {
+    cartItems,
+    incrementItemQuantity,
+    decrementItemQuantity,
+    removeItemFromCart,
+    totalPrice,
+    itemCount,
+  } = useCart();
   return (
     <Row gutter={[24, 16]} style={{ padding: '20px' }}>
       <Col span={16}>
@@ -111,7 +26,7 @@ const CartComponent = () => {
         <List
           itemLayout="horizontal"
           dataSource={cartItems}
-          renderItem={(item) => (
+          renderItem={(item: CartItem) => (
             <List.Item
               actions={[
                 <QuantitySelector
@@ -119,15 +34,21 @@ const CartComponent = () => {
                   item={item}
                   min={1}
                   max={10}
-                  onIncrement={handleIncrement}
-                  onDecrement={handleDecrement}
+                  onIncrement={incrementItemQuantity}
+                  onDecrement={decrementItemQuantity}
                 />,
+                !item.inStock ? (
+                  <Text key={'out-of-stock' + item._id} type="danger">
+                    Out of Stock
+                  </Text>
+                ) : null,
+
                 <Text key={'avg-price' + item._id}>${item.totalPrice}</Text>,
                 <Button
                   key={'delete-button' + item._id}
                   type="text"
                   icon={<DeleteOutlined />}
-                  onClick={() => handleRemove(item)}
+                  onClick={() => removeItemFromCart(item)}
                 />,
               ]}
               style={{
@@ -145,7 +66,7 @@ const CartComponent = () => {
       </Col>
 
       <Col span={8}>
-        <PaymentSummary cartItems={cartItems} />
+        <PaymentSummary cartItems={cartItems} totalPrice={totalPrice} itemCount={itemCount} />
       </Col>
     </Row>
   );
