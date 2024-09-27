@@ -84,8 +84,11 @@ function Index() {
 
   return (
     <>
+      {/* Product Card */}
       <ProductCard product={product} />
+
       <Box marginInline={10}>
+        {/* Additional info like description, review, etc... */}
         <ProductDescription product={product} />
 
         {/* Distance Selection */}

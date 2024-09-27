@@ -10,11 +10,13 @@ import {
   Divider,
   Chip,
 } from '@mui/material';
-import { FavoriteBorder, ShoppingCartOutlined, VisibilityOutlined } from '@mui/icons-material';
+import { FavoriteBorder, ShoppingCartOutlined } from '@mui/icons-material';
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 import ProductVariantSelector, { Variant } from './ProductVariantSelector';
 import { IProduct } from '@/domain/entities/IProduct';
 import axiosInstance from '@/config/axios';
+import { message } from 'antd';
+import { AxiosError } from 'axios';
 
 interface ProductCardProps {
   product: IProduct;
@@ -73,7 +75,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         await axiosInstance.delete('/user/cart/remove', {
           data: { productId, variantId },
         });
-        setInCart(false); // Update UI state to reflect item is no longer in cart
+        setInCart(false);
       } catch (error) {
         console.error('Failed to remove product from cart:', error);
       }
@@ -83,10 +85,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         await axiosInstance.post('/user/cart/add', {
           productId,
           variantId,
-          quantity: 1, // Start with a quantity of 1
+          quantity: 1,
         });
-        setInCart(true); // Update UI state to reflect item is now in cart
+        setInCart(true);
       } catch (error) {
+        if (error instanceof AxiosError) {
+          message.error(error.response?.data.message);
+        } else {
+          message.error('An unexpected error occurred! Unable to add product to cart');
+        }
         console.error('Failed to add product to cart:', error);
       }
     }
@@ -151,9 +158,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               </Typography>
 
               <Box display="flex" alignItems="center" sx={{ marginTop: 1 }}>
-                <Rating value={product.rating || 4.5} precision={0.5} readOnly />
+                <Rating
+                  value={product?.ratingSummary.averageRating || 4.5}
+                  precision={0.5}
+                  readOnly
+                />
                 <Typography variant="body2" sx={{ marginLeft: 1, color: 'text.secondary' }}>
-                  ({product.reviewsCount} Reviews)
+                  ({product?.ratingSummary.totalReview} Reviews)
                 </Typography>
               </Box>
 
@@ -177,12 +188,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 <IconButton onClick={() => alert('Added to Wishlist!')}>
                   <FavoriteBorder />
                 </IconButton>
-                <IconButton onClick={() => handleAddToCart(product._id, variant._id)}>
+                <IconButton
+                  disabled={!variant?.stock}
+                  onClick={() => handleAddToCart(product._id, variant._id)}
+                >
                   {inCart ? <ShoppingCartOutlined color="success" /> : <ShoppingCartOutlined />}
                 </IconButton>
-                <IconButton onClick={() => alert('View Product!')}>
+                {/*  <IconButton onClick={() => alert('View Product!')}>
                   <VisibilityOutlined />
-                </IconButton>
+                </IconButton> */}
               </Box>
             </Box>
           </Box>
@@ -223,7 +237,13 @@ const VariantDetails: React.FC<VariantDetailsProps> = ({ variant }) => {
           ${variant.price}
         </Typography>
       </Typography>
-      {/* <Typography variant="body1">Stock: {variant.stock}</Typography> */}
+      {variant.stock ? (
+        <Typography variant="body1">Stock: {variant.stock}</Typography>
+      ) : (
+        <Typography color={'red'} variant="body1">
+          out of stock
+        </Typography>
+      )}
       <Typography variant="h6" sx={{ marginTop: 1 }}>
         Specifications:
       </Typography>

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { List, Typography, Button, Row, Col, Image, InputNumber, message } from 'antd';
+import { List, Typography, Button, Row, Col, Image, message } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import PaymentSummary from './PaymentSummary';
+import QuantitySelector from './QuantitySelector'; // Import the new component
 import {
+  decrementProductInCart,
   fetchCartItems,
   incrementQuantity,
   removeProduct,
@@ -11,7 +13,7 @@ import {
 const { Title, Text } = Typography;
 
 // Define the type for cart items
-interface CartItem {
+export interface CartItem {
   _id: string;
   productId: string;
   name: string;
@@ -32,25 +34,64 @@ const CartComponent = () => {
     fetchCartItems().then((data) => setCartItems(data));
   }, []);
 
-  const handleIncrement = (item: CartItem, quantity: number | null) => {
-    if (quantity !== null) {
-      incrementQuantity({ productId: item.productId, variantId: item.variant._id, quantity })
-        .then((success) => {
-          if (success) {
-            const updatedItems = cartItems.map((cartItem) =>
-              cartItem._id === item._id ? { ...cartItem, quantity } : cartItem,
-            );
-            setCartItems(updatedItems);
-          } else {
-            message.error('Failed to update quantity');
-          }
-        })
-        .catch(() => message.error('Failed to update quantity'));
+  const handleIncrement = async (item: CartItem) => {
+    try {
+      const totalPrice = await incrementQuantity({
+        productId: item._id,
+        variantId: item.variant._id,
+      });
+
+      const cartItem = cartItems.find((cartItem) => item.variant._id === cartItem.variant._id);
+      if (cartItem) {
+        const updatedCartItems = cartItems.map((cartItem) =>
+          cartItem.variant._id === item.variant._id
+            ? {
+                ...cartItem,
+                quantity: cartItem.quantity + 1,
+                totalPrice,
+              }
+            : cartItem,
+        );
+        setCartItems(updatedCartItems);
+      }
+
+      return true;
+    } catch (error) {
+      message.error((error as Error).message || 'Failed to update quantity');
+      return false;
+    }
+  };
+
+  const handleDecrement = async (item: CartItem) => {
+    try {
+      const totalPrice = await decrementProductInCart({
+        productId: item._id,
+        variantId: item.variant._id,
+      });
+
+      const cartItem = cartItems.find((cartItem) => item.variant._id === cartItem.variant._id);
+      if (cartItem) {
+        const updatedCartItems = cartItems.map((cartItem) =>
+          cartItem.variant._id === item.variant._id
+            ? {
+                ...cartItem,
+                quantity: cartItem.quantity - 1,
+                totalPrice,
+              }
+            : cartItem,
+        );
+        setCartItems(updatedCartItems);
+      }
+
+      return true;
+    } catch (error) {
+      message.error((error as Error).message || 'Failed to update quantity');
+      return false;
     }
   };
 
   const handleRemove = (item: CartItem) => {
-    removeProduct(item.productId, item.variant._id).then((success) => {
+    removeProduct(item._id, item.variant._id).then((success) => {
       if (success) {
         setCartItems(cartItems.filter((cartItem) => cartItem._id !== item._id));
         message.success('Product removed from cart');
@@ -73,16 +114,15 @@ const CartComponent = () => {
           renderItem={(item) => (
             <List.Item
               actions={[
-                <InputNumber
-                  key={'count' + item._id}
+                <QuantitySelector
+                  key={'quantity-selector' + item._id}
+                  item={item}
                   min={1}
                   max={10}
-                  defaultValue={item.quantity}
-                  onChange={(value) => handleIncrement(item, value)}
+                  onIncrement={handleIncrement}
+                  onDecrement={handleDecrement}
                 />,
-                <Text key={'avg-price' + item._id}>
-                  average price: ${item.variant.averagePrice}
-                </Text>,
+                <Text key={'avg-price' + item._id}>${item.totalPrice}</Text>,
                 <Button
                   key={'delete-button' + item._id}
                   type="text"
@@ -98,7 +138,6 @@ const CartComponent = () => {
               <List.Item.Meta
                 avatar={<Image width={80} src={item.images?.[0]} />}
                 title={<Title level={5}>{item.name}</Title>}
-                description={<Text>{item.description}</Text>}
               />
             </List.Item>
           )}
