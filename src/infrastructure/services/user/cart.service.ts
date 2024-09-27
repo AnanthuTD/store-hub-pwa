@@ -15,7 +15,7 @@ export const fetchCartItems = async () => {
 export const incrementQuantity = async (params: { productId: string; variantId: string }) => {
   try {
     const { data } = await axiosInstance.post('/user/cart/add', params);
-    return data.totalPrice;
+    return { totalPrice: data.totalPrice, inStock: data.inStock };
   } catch (error) {
     if (error instanceof AxiosError) {
       throw error.response?.data;
@@ -44,12 +44,25 @@ export const decrementProductInCart = async (
   params: DecrementProductParams,
 ): Promise<CartItem | null> => {
   try {
-    const response = await axiosInstance.patch(`/user/cart/decrement`, params);
-    return response.data.totalPrice; // Assuming the cart is returned in the response
+    const { data } = await axiosInstance.patch(`/user/cart/decrement`, params);
+    return { totalPrice: data.totalPrice, inStock: data.inStock }; // Assuming the cart is returned in the response
   } catch (error) {
     console.error('Error decrementing product in cart:', error);
     throw new Error(
       (error as AxiosError).response?.data?.error || 'Failed to decrement product in cart.',
     );
+  }
+};
+
+export const getCartTotal = async () => {
+  try {
+    const { data } = await axiosInstance.get<{ totalPrice: number; itemCount: number }>(
+      `/user/cart/total`,
+    );
+
+    return data;
+  } catch (error) {
+    console.error('Error getting total cart price:', error);
+    throw new Error((error as AxiosError).response?.data?.error || 'Failed to get total price.');
   }
 };
