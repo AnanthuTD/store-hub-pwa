@@ -12,6 +12,16 @@ export const fetchCartItems = async () => {
   }
 };
 
+export const fetchCartSummary = async () => {
+  try {
+    const { data } = await axiosInstance.get('/user/cart/summary');
+    return data.cartItems;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 export const incrementQuantity = async (params: { productId: string; variantId: string }) => {
   try {
     const { data } = await axiosInstance.post('/user/cart/add', params);
