@@ -14,7 +14,7 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({ totalPrice, itemCount }
       <Space direction="vertical" size="middle" style={{ width: '100%' }}>
         <Row justify="space-between">
           <Text>Subtotal</Text>
-          <Text>${totalPrice.toFixed(2)}</Text>
+          <Text>${totalPrice}</Text>
         </Row>
         <Row justify="space-between">
           <Text>Proceed to checkout {itemCount} items</Text>
