@@ -14,6 +14,7 @@ enum UserPages {
   UserProductsListPage,
   UserProductDetailsPage,
   UserCart,
+  UserCheckout,
 }
 
 // Partner Pages Enum

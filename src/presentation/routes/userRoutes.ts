@@ -69,6 +69,13 @@ const userRoutes: UserRoutes = {
     icon: LoginIcon,
     layoutType: 'user',
   },
+  [UserPages.UserCheckout]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/checkout')),
+    path: '/checkout',
+    title: 'Checkout',
+    icon: LoginIcon,
+    layoutType: 'user',
+  },
 };
 
 export default userRoutes;
