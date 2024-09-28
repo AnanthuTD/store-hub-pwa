@@ -1,79 +1,104 @@
-import React from 'react';
-import { Card, Typography, Row, Col, Button } from 'antd';
-import { CheckCircleOutlined } from '@ant-design/icons';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Card, Descriptions, Button, Spin, Result, Typography } from 'antd';
+import { useSearchParams } from 'react-router-dom';
+import axiosInstance from '@/config/axios';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
-const PaymentSuccess: React.FC = () => {
+interface OrderStatus {
+  paymentStatus: string;
+  paymentId: string;
+  updatedAt: string;
+  createdAt: string;
+  totalAmount: number;
+}
+
+const OrderSuccessComponent: React.FC = () => {
+  const [order, setOrder] = useState<OrderStatus | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const orderId = searchParams.get('orderId');
+
+  const fetchOrderStatus = useCallback(async () => {
+    try {
+      if (!orderId) {
+        setError('Order ID is missing in the URL parameters.');
+        setLoading(false);
+        return;
+      }
+
+      const response = await axiosInstance.get(`/user/order/status/${orderId}`);
+      if (!response.data.order) throw new Error();
+      setOrder(response.data.order);
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to fetch order details. Please try again later.');
+      setLoading(false);
+    }
+  }, [orderId]);
+
+  useEffect(() => {
+    fetchOrderStatus();
+  }, [fetchOrderStatus]);
+
+  if (loading) {
+    return (
+      <Spin
+        size="large"
+        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+      />
+    );
+  }
+
+  if (error) {
+    return (
+      <Result
+        status="error"
+        title="Something went wrong"
+        subTitle={error}
+        extra={
+          <Button type="primary" onClick={fetchOrderStatus}>
+            Try Again
+          </Button>
+        }
+      />
+    );
+  }
+
   return (
-    <div
-      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
-    >
-      <Card
-        style={{
-          width: 400,
-          textAlign: 'center',
-          borderRadius: '12px',
-          boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-        }}
-        styles={{ body: { padding: '2rem' } }}
-      >
-        {/* Success Icon */}
-        <CheckCircleOutlined style={{ fontSize: '3rem', color: '#52c41a' }} />
-
-        {/* Payment Success Title */}
-        <Title level={3} style={{ marginTop: '1rem' }}>
-          Payment Success!
-        </Title>
-        <Title level={2} style={{ color: '#000' }}>
-          IDR 1,000,000
-        </Title>
-
-        <div style={{ margin: '1.5rem 0' }}>
-          <Row justify="space-between" style={{ marginBottom: '1rem' }}>
-            <Col span={12} style={{ textAlign: 'left' }}>
-              <Text strong>Ref Number:</Text>
-            </Col>
-            <Col span={12} style={{ textAlign: 'right' }}>
-              <Text>000085752257</Text>
-            </Col>
-          </Row>
-
-          <Row justify="space-between" style={{ marginBottom: '1rem' }}>
-            <Col span={12} style={{ textAlign: 'left' }}>
-              <Text strong>Payment Time:</Text>
-            </Col>
-            <Col span={12} style={{ textAlign: 'right' }}>
-              <Text>25-02-2023, 13:22:16</Text>
-            </Col>
-          </Row>
-
-          <Row justify="space-between" style={{ marginBottom: '1rem' }}>
-            <Col span={12} style={{ textAlign: 'left' }}>
-              <Text strong>Payment Method:</Text>
-            </Col>
-            <Col span={12} style={{ textAlign: 'right' }}>
-              <Text>UPI</Text>
-            </Col>
-          </Row>
-
-          <Row justify="space-between">
-            <Col span={12} style={{ textAlign: 'left' }}>
-              <Text strong>Amount:</Text>
-            </Col>
-            <Col span={12} style={{ textAlign: 'right' }}>
-              <Text>IDR 1,000,000</Text>
-            </Col>
-          </Row>
-        </div>
-
-        {/* Track Order Button */}
-        <Button type="primary" size="large" style={{ borderRadius: '8px' }}>
-          Track Your Order
-        </Button>
+    <div style={{ maxWidth: 600, margin: 'auto', marginTop: '50px' }}>
+      <Card>
+        <Result
+          status="success"
+          title="Payment Success!"
+          subTitle={`Payment ID: ${order?.paymentId}`}
+          /*  extra={[
+            <Button key="track" type="primary">
+              Track your order
+            </Button>,
+          ]} */
+        />
+        {order ? (
+          <Descriptions title="Order Details" bordered column={1} style={{ marginTop: '20px' }}>
+            <Descriptions.Item label="Payment Status">{order?.paymentStatus}</Descriptions.Item>
+            <Descriptions.Item label="Payment ID">
+              <Text copyable>{order?.paymentId}</Text>
+            </Descriptions.Item>
+            <Descriptions.Item label="Total Amount">{`$${order?.totalAmount}`}</Descriptions.Item>
+            <Descriptions.Item label="Order Created At">
+              {new Date(order.createdAt).toLocaleString()}
+            </Descriptions.Item>
+            {order?.paymentStatus === 'Completed' && (
+              <Descriptions.Item label="Payment Time">
+                {new Date(order.updatedAt).toLocaleString()}
+              </Descriptions.Item>
+            )}
+          </Descriptions>
+        ) : null}
       </Card>
     </div>
   );
 };
 
-export default PaymentSuccess;
+export default OrderSuccessComponent;

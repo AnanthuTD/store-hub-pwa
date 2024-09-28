@@ -30,9 +30,9 @@ const CheckoutPage = () => {
 
   const onPaymentSuccess = async (razorpayData) => {
     try {
-      await handlePaymentSuccess(razorpayData);
+      const { data } = await handlePaymentSuccess(razorpayData);
       message.success('Payment successful! Redirecting...');
-      navigate('/payment/success');
+      navigate(`/payment/success?orderId${data.orderId}`);
     } catch (err) {
       message.error('Payment verification failed!');
     }

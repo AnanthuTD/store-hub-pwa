@@ -62,17 +62,26 @@ const userRoutes: UserRoutes = {
     icon: LoginIcon,
     layoutType: 'user',
   },
-  [UserPages.UserCart]: {
+  [UserPages.UserCartPage]: {
     component: asyncComponentLoader(() => import('@/presentation/pages/user/cart')),
     path: '/cart',
     title: 'Cart',
     icon: LoginIcon,
     layoutType: 'user',
   },
-  [UserPages.UserCheckout]: {
+  [UserPages.UserCheckoutPage]: {
     component: asyncComponentLoader(() => import('@/presentation/pages/user/checkout')),
     path: '/checkout',
     title: 'Checkout',
+    icon: LoginIcon,
+    layoutType: 'user',
+  },
+  [UserPages.UserPaymentSuccessPage]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/user/payment/PaymentSuccess'),
+    ),
+    path: '/payment/success',
+    title: 'Payment Success',
     icon: LoginIcon,
     layoutType: 'user',
   },
