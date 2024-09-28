@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, Layout, theme } from 'antd';
+import { Button, Layout, Row, Space, theme, Typography } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import axiosInstance from '@/config/axios';
 import { logout } from '@/infrastructure/redux/slices/vendor/vendorSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { AppDispatch } from '@/infrastructure/redux/store';
+import { AppDispatch, RootState } from '@/infrastructure/redux/store';
 
 const { Header } = Layout;
 
@@ -18,6 +18,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggle }) => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const store = useSelector((state: RootState) => state.vendor.selectedStore);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -49,10 +50,21 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ collapsed, toggle }) => {
           height: 64,
         }}
       />
-
-      <Button onClick={handleLogout} style={{ marginInline: 16 }} danger>
-        Logout
-      </Button>
+      <Row>
+        {store ? (
+          <Space.Compact size={'small'} direction="vertical">
+            <Typography.Title level={5} style={{ margin: 0, color: '#4B4B4B' }}>
+              {store.name}
+            </Typography.Title>
+            <Typography.Text type="secondary" style={{ fontSize: '14px' }}>
+              ID: #<strong>{store._id}</strong>
+            </Typography.Text>
+          </Space.Compact>
+        ) : null}
+        <Button onClick={handleLogout} style={{ marginInline: 16 }} danger>
+          Logout
+        </Button>
+      </Row>
     </Header>
   );
 };
