@@ -1,38 +1,49 @@
-// pages/CheckoutPage.js
 import React, { useEffect, useState } from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, message, Spin } from 'antd';
 import CartSummary from './CartSummary';
 import OrderSummary from './OrderSummary';
 import PaymentButton from './PaymentButton';
 import useCart from '../cart/hooks/useCart';
 import { fetchCartSummary } from '@/infrastructure/services/user/cart.service';
+import { useNavigate } from 'react-router-dom';
+import { handlePaymentSuccess } from '@/infrastructure/services/user/payment.service';
 
 const CheckoutPage = () => {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const { totalPrice } = useCart();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch cart summary when the component mounts
     const fetchItems = async () => {
-      const data = await fetchCartSummary();
-      setCartItems(data);
+      try {
+        const data = await fetchCartSummary();
+        setCartItems(data);
+      } catch (err) {
+        message.error('Failed to fetch cart items.');
+      } finally {
+        setLoading(false);
+      }
     };
     fetchItems();
   }, []);
 
-  const handlePaymentSuccess = (paymentId) => {
-    console.log('Payment Successful, ID:', paymentId);
-    // Handle post-payment actions (e.g., order confirmation, saving order details)
+  const onPaymentSuccess = async (razorpayData) => {
+    try {
+      await handlePaymentSuccess(razorpayData);
+      message.success('Payment successful! Redirecting...');
+      navigate('/payment/success');
+    } catch (err) {
+      message.error('Payment verification failed!');
+    }
   };
 
   return (
     <Row gutter={16}>
-      <Col span={12}>
-        <CartSummary items={cartItems} />
-      </Col>
+      <Col span={12}>{loading ? <Spin /> : <CartSummary items={cartItems} />}</Col>
       <Col span={12}>
         <OrderSummary totalPrice={totalPrice} />
-        <PaymentButton totalPrice={totalPrice} onSuccess={handlePaymentSuccess} />
+        <PaymentButton onSuccess={onPaymentSuccess} />
       </Col>
     </Row>
   );

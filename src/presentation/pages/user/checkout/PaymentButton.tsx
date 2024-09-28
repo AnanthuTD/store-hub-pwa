@@ -1,55 +1,77 @@
 // components/PaymentButton.js
 import axiosInstance from '@/config/axios';
 import { Button } from 'antd';
-import { useEffect } from 'react';
 
-const PaymentButton = ({ totalPrice, onSuccess }) => {
-  console.log(totalPrice, onSuccess);
+const PaymentButton = ({ onSuccess }) => {
+  function loadScript(src) {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  }
 
-  useEffect(() => {
-    const loadScript = (src) => {
-      return new Promise((resolve) => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onload = () => resolve(true);
-        script.onerror = () => resolve(false);
-        document.body.appendChild(script);
-      });
-    };
+  async function displayRazorpay() {
+    const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
 
-    loadScript('https://checkout.razorpay.com/v1/checkout.js');
-  }, []);
+    if (!res) {
+      alert('Razorpay SDK failed to load. Are you online?');
+      return;
+    }
 
-  /*   const handlePayment = () => {
+    // creating a new order
+    const result = await axiosInstance.post('/user/order');
+
+    if (!result) {
+      alert('Server error. Are you online?');
+      return;
+    }
+
+    // Getting the order details back
+    const { razorpayOrderId, amount, currency, key } = result.data;
+
     const options = {
-      key: 'YOUR_RAZORPAY_KEY',
-      amount: totalPrice * 100,
-      currency: 'INR',
-      name: 'Your App Name',
-      description: 'Purchase Description',
-      handler: function (response) {
-        onSuccess(response.razorpay_payment_id);
+      key: key,
+      amount: amount.toString(),
+      currency: currency,
+      name: 'ShopHub',
+      description: 'Test Transaction',
+      // image: { logo },
+      order_id: razorpayOrderId,
+      handler: async function (response) {
+        const data = {
+          razorpayPaymentId: response.razorpay_payment_id,
+          razorpayOrderId: response.razorpay_order_id,
+          razorpaySignature: response.razorpay_signature,
+        };
+
+        onSuccess(data);
       },
       prefill: {
-        name: 'Ananthu',
-        email: 'ananthu@example.com',
+        name: 'ShopHub',
+        email: 'shophub@shophub.com',
         contact: '9999999999',
       },
+      notes: {
+        address: 'Shop Hub',
+      },
       theme: {
-        color: '#3399cc',
+        color: '#61dafb',
       },
     };
 
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
-  }; */
-
-  const directOrder = () => {
-    axiosInstance.post('/user/order');
-  };
+  }
 
   return (
-    <Button type="primary" onClick={directOrder}>
+    <Button type="primary" onClick={displayRazorpay}>
       Pay with Razorpay
     </Button>
   );
