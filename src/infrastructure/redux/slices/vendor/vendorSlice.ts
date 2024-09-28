@@ -1,8 +1,14 @@
 import { IVendor } from '@/domain/entities/IVendor';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface SelectedStore {
+  _id: string;
+  name: string;
+}
+
 interface UserState {
   data: IVendor | null;
+  selectedStore?: SelectedStore;
 }
 
 const initialState: UserState = {
@@ -27,9 +33,13 @@ const vendorSlice = createSlice({
     clearShopOwner: (state) => {
       state.data = null;
     },
+    setSelectedStore: (state, action: PayloadAction<SelectedStore>) => {
+      state.selectedStore = action.payload;
+    },
   },
 });
 
-export const { login, logout, clearShopOwner, updateShopOwner } = vendorSlice.actions;
+export const { login, logout, clearShopOwner, updateShopOwner, setSelectedStore } =
+  vendorSlice.actions;
 
 export default vendorSlice.reducer;
