@@ -1,9 +1,9 @@
-import axiosInstance from '@/config/axios';
 import { IVendor } from '@/domain/entities/IVendor';
+import axios from 'axios';
 
 export async function fetchProfile(): Promise<IVendor | null> {
   try {
-    const response = await axiosInstance.get('/vendor/auth/profile');
+    const response = await axios.get('/api/vendor/auth/profile');
 
     return response.data;
   } catch (err) {
