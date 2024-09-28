@@ -1,9 +1,13 @@
-// components/PaymentButton.js
+import React, { useState } from 'react';
+import { Button, message, Modal, List } from 'antd';
 import axiosInstance from '@/config/axios';
-import { Button, message } from 'antd';
 import { AxiosError } from 'axios';
 
-const PaymentButton = ({ onSuccess }) => {
+const PaymentButton = ({ onSuccess, refetch }) => {
+  const [outOfStockProducts, setOutOfStockProducts] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [orderDetails, setOrderDetails] = useState(null);
+
   function loadScript(src) {
     return new Promise((resolve) => {
       const script = document.createElement('script');
@@ -26,24 +30,39 @@ const PaymentButton = ({ onSuccess }) => {
       return;
     }
 
-    // creating a new order
-    const result = await axiosInstance.post('/user/order');
+    // Creating a new order
+    try {
+      const result = await axiosInstance.post('/user/order');
 
-    if (!result) {
-      alert('Server error. Are you online?');
-      return;
+      if (!result) {
+        alert('Server error. Are you online?');
+        return;
+      }
+
+      const { razorpayOrderId, amount, currency, key, orderId, outOfStockProducts } = result.data;
+
+      // Check if there are any out-of-stock products
+      if (outOfStockProducts && outOfStockProducts.length > 0) {
+        setOutOfStockProducts(outOfStockProducts); // Set the out-of-stock products in state
+        setOrderDetails({ razorpayOrderId, amount, currency, key, orderId }); // Store order details
+        setShowModal(true); // Show modal to the user
+        refetch();
+      } else {
+        proceedToPayment({ razorpayOrderId, amount, currency, key, orderId });
+      }
+    } catch (error) {
+      console.error(error);
+      message.error('Failed to create order');
     }
+  }
 
-    // Getting the order details back
-    const { razorpayOrderId, amount, currency, key, orderId } = result.data;
-
+  const proceedToPayment = ({ razorpayOrderId, amount, currency, key, orderId }) => {
     const options = {
       key: key,
       amount: amount.toString(),
       currency: currency,
       name: 'ShopHub',
       description: 'Test Transaction',
-      // image: { logo },
       order_id: razorpayOrderId,
       handler: async function (response) {
         const data = {
@@ -80,12 +99,41 @@ const PaymentButton = ({ onSuccess }) => {
 
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
-  }
+  };
+
+  const handleModalConfirm = () => {
+    setShowModal(false);
+    if (orderDetails) {
+      proceedToPayment(orderDetails);
+    }
+  };
 
   return (
-    <Button type="primary" onClick={displayRazorpay}>
-      Pay with Razorpay
-    </Button>
+    <>
+      <Button type="primary" onClick={displayRazorpay}>
+        Pay with Razorpay
+      </Button>
+
+      <Modal
+        title="Out of Stock Products"
+        open={showModal}
+        onOk={handleModalConfirm}
+        onCancel={() => setShowModal(false)}
+        okText="Proceed to Payment"
+        cancelText="Cancel"
+      >
+        <p>The following products are out of stock:</p>
+        <List
+          dataSource={outOfStockProducts}
+          renderItem={(item) => (
+            <List.Item>
+              <List.Item.Meta title={item} />
+            </List.Item>
+          )}
+        />
+        <p>Do you want to proceed with the remaining items?</p>
+      </Modal>
+    </>
   );
 };
 

@@ -13,6 +13,7 @@ const CheckoutPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const { totalPrice } = useCart();
   const [loading, setLoading] = useState(true);
+  const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -26,7 +27,7 @@ const CheckoutPage = () => {
       }
     };
     fetchItems();
-  }, []);
+  }, [refetch]);
 
   const onPaymentSuccess = async (razorpayData) => {
     try {
@@ -38,12 +39,16 @@ const CheckoutPage = () => {
     }
   };
 
+  function handleRefetch() {
+    setRefetch((prev) => !prev);
+  }
+
   return (
     <Row gutter={16}>
       <Col span={12}>{loading ? <Spin /> : <CartSummary items={cartItems} />}</Col>
       <Col span={12}>
         <OrderSummary totalPrice={totalPrice} />
-        <PaymentButton onSuccess={onPaymentSuccess} />
+        <PaymentButton onSuccess={onPaymentSuccess} refetch={handleRefetch} />
       </Col>
     </Row>
   );
