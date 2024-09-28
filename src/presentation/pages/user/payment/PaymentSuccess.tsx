@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Card, Descriptions, Button, Spin, Result, Typography } from 'antd';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axiosInstance from '@/config/axios';
 
 const { Text } = Typography;
@@ -19,6 +19,7 @@ const OrderSuccessComponent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const orderId = searchParams.get('orderId');
+  const navigate = useNavigate();
 
   const fetchOrderStatus = useCallback(async () => {
     try {
@@ -73,11 +74,14 @@ const OrderSuccessComponent: React.FC = () => {
           status="success"
           title="Payment Success!"
           subTitle={`Payment ID: ${order?.paymentId}`}
-          /*  extra={[
+          extra={[
             <Button key="track" type="primary">
               Track your order
             </Button>,
-          ]} */
+            <Button key="continue" type="default" onClick={() => navigate('/home')}>
+              Continue Shopping
+            </Button>,
+          ]}
         />
         {order ? (
           <Descriptions title="Order Details" bordered column={1} style={{ marginTop: '20px' }}>

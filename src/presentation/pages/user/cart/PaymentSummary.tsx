@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Row, Space, Typography, Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const { Text } = Typography;
 
@@ -9,6 +10,7 @@ interface PaymentSummaryProps {
 }
 
 const PaymentSummary: React.FC<PaymentSummaryProps> = ({ totalPrice, itemCount }) => {
+  const navigate = useNavigate();
   return (
     <Card style={{ borderRadius: '8px', backgroundColor: '#f0f5ff' }}>
       <Space direction="vertical" size="middle" style={{ width: '100%' }}>
@@ -19,7 +21,12 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({ totalPrice, itemCount }
         <Row justify="space-between">
           <Text>Proceed to checkout {itemCount} items</Text>
         </Row>
-        <Button block type="primary" style={{ background: '#22d3ee' }}>
+        <Button
+          block
+          type="primary"
+          style={{ background: '#22d3ee' }}
+          onClick={() => navigate('/checkout')}
+        >
           Pay Now & Collect Later
         </Button>
         <Button block type="default" style={{ background: '#a7f3d0' }}>

@@ -1,6 +1,7 @@
 // components/PaymentButton.js
 import axiosInstance from '@/config/axios';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
+import { AxiosError } from 'axios';
 
 const PaymentButton = ({ onSuccess }) => {
   function loadScript(src) {
@@ -34,7 +35,7 @@ const PaymentButton = ({ onSuccess }) => {
     }
 
     // Getting the order details back
-    const { razorpayOrderId, amount, currency, key } = result.data;
+    const { razorpayOrderId, amount, currency, key, orderId } = result.data;
 
     const options = {
       key: key,
@@ -52,6 +53,17 @@ const PaymentButton = ({ onSuccess }) => {
         };
 
         onSuccess(data);
+      },
+      modal: {
+        ondismiss: async function () {
+          try {
+            // If the user closes the payment window, cancel the order on the backend
+            await axiosInstance.post('/user/order/cancel', { orderId: orderId });
+          } catch (error) {
+            if (error instanceof AxiosError) message.error(error.response?.data.message);
+            else message.error('Failed to cancel the order');
+          }
+        },
       },
       prefill: {
         name: 'ShopHub',

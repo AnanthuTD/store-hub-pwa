@@ -23,7 +23,7 @@ const CardContainer = styled(Box)({
 
 // Custom card component with styles
 const CustomCard = styled(Card)({
-  maxWidth: 280,
+  height: '17rem',
   margin: '0 auto',
   textAlign: 'center',
   backgroundColor: '#ffffff',

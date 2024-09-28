@@ -32,7 +32,7 @@ const CheckoutPage = () => {
     try {
       const { data } = await handlePaymentSuccess(razorpayData);
       message.success('Payment successful! Redirecting...');
-      navigate(`/payment/success?orderId${data.orderId}`);
+      navigate(`/payment/success?orderId=${data.orderId}`);
     } catch (err) {
       message.error('Payment verification failed!');
     }
