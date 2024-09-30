@@ -84,6 +84,9 @@ function MyComponent({ onLocationSelect, selectedLocation }: MyComponentProps) {
             description: 'Failed to retrieve your current location.',
           });
         },
+        {
+          enableHighAccuracy: true,
+        },
       );
     } else {
       notification.error({

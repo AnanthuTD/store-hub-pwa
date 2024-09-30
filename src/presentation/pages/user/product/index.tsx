@@ -53,6 +53,9 @@ function Index() {
             setGeoError('An unknown error occurred.');
         }
       },
+      {
+        enableHighAccuracy: true,
+      },
     );
   };
 

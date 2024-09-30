@@ -24,6 +24,9 @@ export default async function getCurrentCoordinates() {
             reject(new Error('An unknown error occurred.'));
         }
       },
+      {
+        enableHighAccuracy: true,
+      },
     );
   });
 }
