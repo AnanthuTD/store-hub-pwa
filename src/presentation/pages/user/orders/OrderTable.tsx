@@ -5,13 +5,15 @@ import { Order } from './types';
 interface OrderTableProps {
   orders: Order[];
   onViewDetails: (order: Order) => void;
+  totalOrders: number;
+  setPage: (page: number) => void;
 }
 
-const OrderTable: React.FC<OrderTableProps> = ({ orders, onViewDetails }) => {
+const OrderTable: React.FC<OrderTableProps> = ({ orders, onViewDetails, totalOrders, setPage }) => {
   const columns = [
     {
       title: 'Order ID',
-      dataIndex: 'orderId',
+      dataIndex: '_id',
       key: 'orderId',
     },
     {
@@ -26,6 +28,12 @@ const OrderTable: React.FC<OrderTableProps> = ({ orders, onViewDetails }) => {
       key: 'paymentStatus',
     },
     {
+      title: 'Order Date',
+      dataIndex: 'orderDate',
+      key: 'orderDate',
+      render: (text: string) => new Date(text).toLocaleString(),
+    },
+    {
       title: 'Action',
       key: 'action',
       render: (text: any, record: Order) => (
@@ -35,7 +43,18 @@ const OrderTable: React.FC<OrderTableProps> = ({ orders, onViewDetails }) => {
   ];
 
   return (
-    <Table columns={columns} dataSource={orders} rowKey="orderId" pagination={{ pageSize: 5 }} />
+    <Table
+      columns={columns}
+      dataSource={orders}
+      rowKey="orderId"
+      pagination={{
+        pageSize: 10,
+        onChange: (page) => {
+          setPage(page);
+        },
+        total: totalOrders,
+      }}
+    />
   );
 };
 

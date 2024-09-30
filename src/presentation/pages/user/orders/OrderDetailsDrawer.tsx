@@ -34,7 +34,7 @@ const OrderDetailsDrawer: React.FC<OrderDetailsDrawerProps> = ({
       ) : (
         selectedOrder && (
           <>
-            <Title level={4}>Order ID: {selectedOrder.orderId}</Title>
+            <Title level={4}>Order ID: {selectedOrder._id}</Title>
             <Paragraph>
               <strong>Total Amount:</strong> ₹{selectedOrder.totalAmount}
             </Paragraph>
