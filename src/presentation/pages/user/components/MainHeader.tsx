@@ -2,24 +2,11 @@ import React from 'react';
 import { Toolbar, Typography, Stack, Button, IconButton } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/infrastructure/redux/store';
-import { logout } from '@/infrastructure/redux/slices/user/userSlice';
+import { Link } from 'react-router-dom';
 import SearchAutocomplete from './SearchAutoComplete'; // Import the new component
-import axiosInstance from '@/config/axios';
+import UserMenu from './UserMenu';
 
 const MainHeader = () => {
-  const user = useSelector<RootState>((state) => state.user.data);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    dispatch(logout()); // Clear Redux store
-    navigate('/signin'); // Navigate to sign-in page after logout
-    axiosInstance.get('/user/auth/logout');
-  };
-
   return (
     <Toolbar
       sx={{
@@ -41,15 +28,7 @@ const MainHeader = () => {
 
       {/* Right Menu */}
       <Stack direction="row" spacing={2} alignItems="center">
-        {user ? (
-          <Button variant="outlined" onClick={handleLogout}>
-            Logout
-          </Button>
-        ) : (
-          <Link to="/signin" style={{ textDecoration: 'none', color: '#23A6F0' }}>
-            Login / Register
-          </Link>
-        )}
+        <UserMenu />
         <Link to={'/products/list'}>
           <Button variant="contained">Shop</Button>
         </Link>

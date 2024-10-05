@@ -44,7 +44,7 @@ const items: MenuItem[] = [
   getItem('Dashboard', '/vendor/dashboard', <HomeOutlined />),
   getItem('Register', '/vendor/owner/register', <ProfileOutlined />),
   getItem('Register Shop', '/vendor/shop/register', <ProfileOutlined />),
-  getItem('New Orders', '/vendor/new-orders', <ShoppingCartOutlined />),
+  getItem('New Orders', '/vendor/orders', <ShoppingCartOutlined />),
   getItem('Products', '/vendor/products', <AppstoreOutlined />, [
     getItem('Add Product', '/vendor/products/add', <PlusOutlined />),
     getItem('Manage Products', '/vendor/products/manage', <EditOutlined />),
