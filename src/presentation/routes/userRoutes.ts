@@ -92,6 +92,13 @@ const userRoutes: UserRoutes = {
     icon: LoginIcon,
     layoutType: 'user',
   },
+  [UserPages.UserWalletPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/wallet')),
+    path: '/wallet',
+    title: 'Wallet Page',
+    icon: LoginIcon,
+    layoutType: 'user',
+  },
 };
 
 export default userRoutes;

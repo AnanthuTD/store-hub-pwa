@@ -30,6 +30,11 @@ const UserMenu: React.FC = () => {
           Orders
         </Link>
       </Menu.Item>
+      <Menu.Item key="Orders" icon={<OrderedListOutlined />}>
+        <Link to="/wallet" rel="noopener noreferrer">
+          Wallet
+        </Link>
+      </Menu.Item>
       <Menu.Item key="Logout" icon={<LogoutOutlined />}>
         <Button type="default" onClick={handleLogout} style={{ padding: 0, border: 'none' }}>
           Logout
