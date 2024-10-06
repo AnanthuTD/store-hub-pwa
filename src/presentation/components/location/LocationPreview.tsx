@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Button, Form } from 'antd';
-import { LocationData } from './types';
+import { LocationData } from '../../pages/vendor/shop/register/types';
 
 interface LocationPreviewProps {
   selectedLocation: LocationData | null;
@@ -9,7 +9,7 @@ interface LocationPreviewProps {
 
 const LocationPreview: React.FC<LocationPreviewProps> = ({ selectedLocation, onOpenModal }) => {
   return (
-    <Form.Item label="Shop Location">
+    <Form.Item label="Location">
       {selectedLocation ? (
         <Card
           hoverable
