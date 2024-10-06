@@ -1,6 +1,11 @@
 import React from 'react';
 import { Dropdown, Button, Space, Menu } from 'antd';
-import { UserOutlined, LogoutOutlined, OrderedListOutlined } from '@ant-design/icons';
+import {
+  UserOutlined,
+  LogoutOutlined,
+  OrderedListOutlined,
+  WalletOutlined,
+} from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
@@ -30,7 +35,7 @@ const UserMenu: React.FC = () => {
           Orders
         </Link>
       </Menu.Item>
-      <Menu.Item key="Orders" icon={<OrderedListOutlined />}>
+      <Menu.Item key="Wallet" icon={<WalletOutlined />}>
         <Link to="/wallet" rel="noopener noreferrer">
           Wallet
         </Link>
