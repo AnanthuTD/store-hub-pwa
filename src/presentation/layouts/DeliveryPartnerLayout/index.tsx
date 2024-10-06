@@ -8,7 +8,10 @@ import { notification } from 'antd';
 import { useProgressTimer } from './useProgressTimer';
 import { useDeliveryPartnerSocket } from './useDeliveryPartnerSocket';
 import OrderAlertModal from './OrderAlertModal';
-import { socket } from './socket';
+import {
+  deliveryPartnerSocket,
+  DeliveryPartnerSocketEvents,
+} from '@/infrastructure/socket/deliveryPartnerSocket';
 
 const DeliveryPartnerLayout = ({ children }: { children: React.ReactNode }) => {
   const deliveryPartner = useSelector<RootState>((state) => state.partner.data);
@@ -40,8 +43,9 @@ const DeliveryPartnerLayout = ({ children }: { children: React.ReactNode }) => {
   }, [deliveryPartner, dispatch, navigate]);
 
   const handleOrderAcceptance = () => {
+    if (!newOrder) return;
     console.log('Order accepted', newOrder);
-    socket.emit('accept', newOrder.orderId);
+    deliveryPartnerSocket.emit(DeliveryPartnerSocketEvents.OrderAccepted, newOrder.orderId);
     setNewOrder(null);
     notification.success({ message: 'Order accepted' });
   };

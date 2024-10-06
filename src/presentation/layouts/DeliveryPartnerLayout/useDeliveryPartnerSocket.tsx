@@ -1,81 +1,92 @@
 import { useEffect, useRef } from 'react';
-import { socket } from './socket';
 import getDistance from 'geolib/es/getPreciseDistance';
+import {
+  deliveryPartnerSocket,
+  DeliveryPartnerSocketEvents,
+} from '@/infrastructure/socket/deliveryPartnerSocket';
+import { OrderDetailsAndDirection } from './types';
+import { useNavigate } from 'react-router-dom';
 
 interface CoordinatesInterface {
   latitude: number;
   longitude: number;
 }
 
-export const useDeliveryPartnerSocket = (setNewOrder: (order: any) => void) => {
+interface OrderAlert {
+  // Define the structure of the order alert here
+}
+
+export const useDeliveryPartnerSocket = (setNewOrder: (order: OrderAlert | null) => void) => {
   const previousLocationRef = useRef<CoordinatesInterface | null>(null);
+  const DISTANCE_THRESHOLD = 5; // Distance threshold in meters
+  const navigate = useNavigate();
 
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Connected to /deliveryPartner namespace with authToken');
-    });
-
-    socket.on('connect_error', (error) => {
-      console.log('Connection error:', error.message);
-    });
-
-    socket.on('order-alert', (orderAlert) => {
+    const handleOrderAlert = (orderAlert: OrderAlert) => {
       console.log('Order alert:', orderAlert);
       setNewOrder(orderAlert);
-    });
+    };
 
-    socket.on('order-accepted', (orderAccepted) => {
-      console.log('Order accepted:', orderAccepted);
+    const handleOrderAccepted = (orderDetailsAndDirection: OrderDetailsAndDirection) => {
+      // Define the type for orderAccepted
+      console.log('Order accepted:', orderDetailsAndDirection);
       setNewOrder(null);
-    });
+      localStorage.setItem('orderDetailsAndDirection', JSON.stringify(orderDetailsAndDirection));
+      navigate('/partner/direction');
+    };
 
-    socket.on('order-details', (orderDetails) => {
+    const handleOrderDetails = (orderDetails: any) => {
       console.log(orderDetails);
-    });
+    };
+
+    deliveryPartnerSocket.on(DeliveryPartnerSocketEvents.OrderAlert, handleOrderAlert);
+    deliveryPartnerSocket.on(DeliveryPartnerSocketEvents.OrderAccepted, handleOrderAccepted);
+    deliveryPartnerSocket.on(DeliveryPartnerSocketEvents.OrderDetails, handleOrderDetails);
 
     function updateLocation({ latitude, longitude }: CoordinatesInterface) {
-      socket.emit('locationUpdate', {
+      deliveryPartnerSocket.emit(DeliveryPartnerSocketEvents.LocationUpdate, {
         latitude,
         longitude,
       });
     }
 
-    navigator.geolocation.watchPosition(
-      (position) => {
-        console.log('Location updated');
-        let { longitude: currentLongitude, latitude: currentLatitude } = position.coords;
+    const watchPositionSuccess = (position: GeolocationPosition) => {
+      console.log('Location updated');
+      let { longitude: currentLongitude, latitude: currentLatitude } = position.coords;
 
-        // TODO: remove this
-        (currentLongitude = 76.3579401), (currentLatitude = 10.0037578);
+      // TODO: remove this
+      currentLongitude = 76.3579401; // Simulated longitude
+      currentLatitude = 10.0037578; // Simulated latitude
 
-        if (previousLocationRef.current) {
-          const distance = getDistance(
-            {
-              latitude: previousLocationRef.current.latitude,
-              longitude: previousLocationRef.current.longitude,
-            },
-            { latitude: currentLatitude, longitude: currentLongitude },
-          );
+      if (previousLocationRef.current) {
+        const distance = getDistance(previousLocationRef.current, {
+          latitude: currentLatitude,
+          longitude: currentLongitude,
+        });
 
-          if (distance > 5) {
-            updateLocation({ latitude: currentLatitude, longitude: currentLongitude });
-          }
-          previousLocationRef.current = { latitude: currentLatitude, longitude: currentLongitude };
-        } else {
+        if (distance > DISTANCE_THRESHOLD) {
           updateLocation({ latitude: currentLatitude, longitude: currentLongitude });
-          previousLocationRef.current = { latitude: currentLatitude, longitude: currentLongitude };
         }
-      },
-      () => {},
-      {
-        enableHighAccuracy: true,
-        // timeout: 5000,
-        maximumAge: 0,
-      },
-    );
-
-    return () => {
-      socket.off('order-alert');
+      } else {
+        updateLocation({ latitude: currentLatitude, longitude: currentLongitude });
+      }
+      previousLocationRef.current = { latitude: currentLatitude, longitude: currentLongitude };
     };
-  }, [setNewOrder]);
+
+    const watchPositionError = (error: GeolocationPositionError) => {
+      console.error('Error getting location:', error.message);
+    };
+
+    navigator.geolocation.watchPosition(watchPositionSuccess, watchPositionError, {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+    });
+
+    // Cleanup function to remove listeners
+    return () => {
+      deliveryPartnerSocket.off(DeliveryPartnerSocketEvents.OrderAlert, handleOrderAlert);
+      deliveryPartnerSocket.off(DeliveryPartnerSocketEvents.OrderAccepted, handleOrderAccepted);
+      deliveryPartnerSocket.off(DeliveryPartnerSocketEvents.OrderDetails, handleOrderDetails);
+    };
+  }, [setNewOrder, navigate]);
 };
