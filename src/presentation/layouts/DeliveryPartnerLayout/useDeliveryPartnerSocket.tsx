@@ -29,6 +29,10 @@ export const useDeliveryPartnerSocket = (setNewOrder: (order: any) => void) => {
       setNewOrder(null);
     });
 
+    socket.on('order-details', (orderDetails) => {
+      console.log(orderDetails);
+    });
+
     function updateLocation({ latitude, longitude }: CoordinatesInterface) {
       socket.emit('locationUpdate', {
         latitude,

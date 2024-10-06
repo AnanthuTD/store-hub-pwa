@@ -3,7 +3,7 @@ import { Button, message, Modal, List } from 'antd';
 import axiosInstance from '@/config/axios';
 import { AxiosError } from 'axios';
 
-const PaymentButton = ({ onSuccess, refetch }) => {
+const PaymentButton = ({ onSuccess, refetch, createOrder }) => {
   const [outOfStockProducts, setOutOfStockProducts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [orderDetails, setOrderDetails] = useState(null);
@@ -32,14 +32,12 @@ const PaymentButton = ({ onSuccess, refetch }) => {
 
     // Creating a new order
     try {
-      const result = await axiosInstance.post('/user/order');
-
-      if (!result) {
-        alert('Server error. Are you online?');
+      const order = await createOrder();
+      if (!order) {
         return;
       }
 
-      const { razorpayOrderId, amount, currency, key, orderId, outOfStockProducts } = result.data;
+      const { razorpayOrderId, amount, currency, key, orderId, outOfStockProducts } = order.data;
 
       // Check if there are any out-of-stock products
       if (outOfStockProducts && outOfStockProducts.length > 0) {

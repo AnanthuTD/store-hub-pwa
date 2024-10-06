@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Button, message, Modal } from 'antd';
 import ShopFormFields from './ShopFormFields';
-import LocationMap from './LocationMap';
+import LocationMap from '../../../../components/location/LocationMap';
 import axiosInstance from '@/config/axios';
 import { FormData, LocationData } from './types';
 import useShopData from './hooks/useShopData';
 import formatData from './utils/formatData';
-import LocationPreview from './LocationPreview';
+import LocationPreview from '../../../../components/location/LocationPreview';
 
 const ShopRegistrationForm: React.FC = () => {
   const [form] = Form.useForm();
