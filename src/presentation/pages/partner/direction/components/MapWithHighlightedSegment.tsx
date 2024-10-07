@@ -5,6 +5,9 @@ import { useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
 import MapContainer from './MapContainer';
 import DirectionsDisplay from './DirectionsDisplay';
 import { Direction } from '@/presentation/layouts/DeliveryPartnerLayout/types';
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:4000/track');
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_MAP_API_KEY;
 const REACH_DISTANCE_THRESHOLD = 50;
@@ -16,7 +19,7 @@ const MapWithHighlightedSegment = () => {
   });
 
   const [currentLocation, setCurrentLocation] = useState(null);
-  const [directions, setDirections] = useState(null);
+  const [directions, setDirections] = useState<Direction | null>(null);
   const [waypoints, setWaypoints] = useState([]);
   const [selectedWaypoint, setSelectedWaypoint] = useState(null);
   const [currentWaypointIndex, setCurrentWaypointIndex] = useState(null);
@@ -172,6 +175,16 @@ const MapWithHighlightedSegment = () => {
     }
     return null;
   };
+
+  useEffect(() => {
+    socket.emit('emit:location', {
+      location: currentLocation,
+      orderId: 'orderId',
+      duration: directions?.routes[0].duration,
+      polyline: directions?.routes[0].polyline.encodedPolyline,
+      distance: directions?.routes[0].distanceMeters,
+    });
+  }, [currentLocation]);
 
   return isLoaded && waypoints.length ? (
     <div>

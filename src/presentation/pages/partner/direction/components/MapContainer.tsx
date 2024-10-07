@@ -28,11 +28,8 @@ const MapContainer: React.FC<MapProps> = ({
   console.log(fullRoutePolyline, currentSegmentPolyline);
 
   const [map, setMap] = useState<google.maps.Map | null>(null); // Correct type for Google Map
-  const [heading, setHeading] = useState<number>(320);
-  const [tilt, setTilt] = useState<number>(100);
   const [deviceHeading, setDeviceHeading] = useState<number>(0);
-
-  // Debounce the heading updates to avoid excessive renders
+  const [tilt, setTilt] = useState<number>(100);
 
   // Handle device orientation and update heading smoothly
   useEffect(() => {
@@ -40,18 +37,16 @@ const MapContainer: React.FC<MapProps> = ({
     const handleOrientation = (event: DeviceOrientationEvent) => {
       if (event.alpha !== null) {
         // Calculate the minimal angular difference
-        let difference = Math.abs((event.alpha - deviceHeading + 360) % 360);
+        const difference = Math.abs((event.alpha - deviceHeading + 360) % 360);
         if (difference > 180) {
-          difference = 360 - difference; // Choose the smaller rotation (clockwise or counterclockwise)
-        }
-
-        // Only update heading if the change is considerable
-        if (difference >= 1) {
-          clearTimeout(headingTimeout); // Clear previous timeout
-          headingTimeout = setTimeout(() => {
-            setDeviceHeading(event.alpha!); // Ensure alpha is not null with !
-            console.log('Orientation changed: ', event.alpha);
-          }, 100); // Adding a debounce of 100ms
+          const adjustedDifference = 360 - difference; // Choose the smaller rotation
+          if (adjustedDifference >= 1) {
+            clearTimeout(headingTimeout);
+            headingTimeout = setTimeout(() => {
+              setDeviceHeading(event.alpha!); // Ensure alpha is not null with !
+              console.log('Orientation changed: ', event.alpha);
+            }, 100); // Adding a debounce of 100ms
+          }
         }
       }
     };
@@ -72,11 +67,15 @@ const MapContainer: React.FC<MapProps> = ({
     if (map && currentLocation) {
       map.panTo(currentLocation);
       map.setZoom(18);
-
-      // Smoothly rotate map to device heading
-      map.setHeading(360 - deviceHeading);
+      map.setHeading(360 - deviceHeading); // Ensure heading is updated
     }
   }, [map, currentLocation, deviceHeading]);
+
+  useEffect(() => {
+    if (map) {
+      map.setHeading(360 - deviceHeading);
+    }
+  }, [deviceHeading, map]);
 
   const adjustMap = (mode: 'tilt' | 'rotate', amount: number) => {
     if (map) {
@@ -89,7 +88,7 @@ const MapContainer: React.FC<MapProps> = ({
         case 'rotate':
           const newHeading = (map.getHeading() || 0) + amount;
           map.setHeading(newHeading);
-          setHeading(360 - newHeading);
+          setDeviceHeading(360 - newHeading); // Update device heading
           break;
         default:
           break;
@@ -103,7 +102,7 @@ const MapContainer: React.FC<MapProps> = ({
         onLoad={onLoad}
         zoom={16}
         options={{
-          heading: heading,
+          heading: 360 - deviceHeading,
           tilt: tilt,
           mapId: '90f87356969d889c',
         }}
@@ -133,6 +132,7 @@ const MapContainer: React.FC<MapProps> = ({
             }}
           />
         )}
+
         {/* Custom Vehicle Marker */}
         <MarkerF
           position={currentLocation}
