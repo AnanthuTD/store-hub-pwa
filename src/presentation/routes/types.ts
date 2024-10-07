@@ -32,6 +32,7 @@ enum PartnerPages {
   PartnerBankAccountInformationPage,
   PartnerEmergencyInformationPage,
   PartnerOrderPage,
+  PartnerDirectionPage,
 }
 
 // Admin Pages Enum

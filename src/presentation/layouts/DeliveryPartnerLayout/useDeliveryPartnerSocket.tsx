@@ -27,16 +27,22 @@ export const useDeliveryPartnerSocket = (setNewOrder: (order: OrderAlert | null)
       setNewOrder(orderAlert);
     };
 
-    const handleOrderAccepted = (orderDetailsAndDirection: OrderDetailsAndDirection) => {
-      // Define the type for orderAccepted
-      console.log('Order accepted:', orderDetailsAndDirection);
+    const handleOrderAccepted = (OrderAccepted) => {
+      console.log('Order accepted:', OrderAccepted);
       setNewOrder(null);
-      localStorage.setItem('orderDetailsAndDirection', JSON.stringify(orderDetailsAndDirection));
-      navigate('/partner/direction');
     };
 
-    const handleOrderDetails = (orderDetails: any) => {
-      console.log(orderDetails);
+    const handleOrderDetails = (orderDetailsAndDirection: OrderDetailsAndDirection) => {
+      console.log(orderDetailsAndDirection);
+
+      try {
+        localStorage.setItem('orderDetailsAndDirection', JSON.stringify(orderDetailsAndDirection));
+      } catch (error) {
+        console.error('Failed to save order details to local storage:', error);
+      }
+
+      // Navigate to the direction page
+      navigate('/partner/direction');
     };
 
     deliveryPartnerSocket.on(DeliveryPartnerSocketEvents.OrderAlert, handleOrderAlert);

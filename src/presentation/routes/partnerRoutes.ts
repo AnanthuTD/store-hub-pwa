@@ -76,6 +76,13 @@ const partnerRoutes: PartnerRoutes = {
     icon: LoginIcon,
     layoutType: 'deliveryPartner',
   },
+  [PartnerPages.PartnerDirectionPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/partner/direction/page')),
+    path: '/partner/direction',
+    title: 'Partner Direction',
+    icon: LoginIcon,
+    layoutType: 'deliveryPartner',
+  },
 };
 
 export default partnerRoutes;

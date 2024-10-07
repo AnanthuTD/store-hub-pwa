@@ -1,4 +1,4 @@
-import { ComponentType, StrictMode } from 'react';
+import { ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -9,13 +9,11 @@ const root = createRoot(container);
 
 function render(App: ComponentType) {
   root.render(
-    <StrictMode>
-      <HelmetProvider>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
-      </HelmetProvider>
-    </StrictMode>,
+    <HelmetProvider>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </HelmetProvider>,
   );
 }
 
