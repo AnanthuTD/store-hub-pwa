@@ -1,5 +1,6 @@
 import { GoogleMap, MarkerF, Polyline, InfoWindow } from '@react-google-maps/api';
 import React, { useState, useCallback, useEffect } from 'react';
+import { Direction } from '../types';
 
 // Types
 type LatLngLiteral = google.maps.LatLngLiteral;
@@ -9,9 +10,7 @@ type MapProps = {
   onMarkerDragEnd: (e: google.maps.MapMouseEvent) => void;
   selectedWaypoint: number | null;
   setSelectedWaypoint: React.Dispatch<React.SetStateAction<number | null>>;
-  directions: google.maps.DirectionsResult | null;
-  getPolylineForCurrentSegment: () => LatLngLiteral[] | null;
-  getFullRoutePolyline: () => LatLngLiteral[] | null;
+  directions: Direction;
 };
 
 const MapContainer: React.FC<MapProps> = ({
@@ -20,78 +19,69 @@ const MapContainer: React.FC<MapProps> = ({
   onMarkerDragEnd,
   selectedWaypoint,
   setSelectedWaypoint,
-  getPolylineForCurrentSegment,
-  getFullRoutePolyline,
+  directions,
+  deliveryDirection,
 }) => {
-  const fullRoutePolyline = getFullRoutePolyline();
-  const currentSegmentPolyline = getPolylineForCurrentSegment();
-  console.log(fullRoutePolyline, currentSegmentPolyline);
-
+  const [polyline, setPolyline] = useState<LatLngLiteral[] | null>(null); // Direct type use
   const [map, setMap] = useState<google.maps.Map | null>(null); // Correct type for Google Map
   const [deviceHeading, setDeviceHeading] = useState<number>(0);
-  const [tilt, setTilt] = useState<number>(100);
+  const [tilt, setTilt] = useState<number>(45); // Adjust default tilt
 
-  // Handle device orientation and update heading smoothly
+  // Utility function to decode polyline from directions
+  const decodePolyline = useCallback((directions) => {
+    if (directions) {
+      const polylineStr = directions.routes[0].polyline.encodedPolyline;
+
+      console.log(google.maps.geometry.encoding.decodePath(polylineStr));
+      return google.maps.geometry.encoding.decodePath(polylineStr);
+    }
+    return null;
+  }, []);
+
+  // Effect to update polyline when directions change
   useEffect(() => {
-    let headingTimeout: number;
+    const newPolyline = decodePolyline(directions);
+    setPolyline(newPolyline);
+  }, [directions, decodePolyline]);
+
+  // Handle device orientation
+  useEffect(() => {
     const handleOrientation = (event: DeviceOrientationEvent) => {
       if (event.alpha !== null) {
-        // Calculate the minimal angular difference
-        const difference = Math.abs((event.alpha - deviceHeading + 360) % 360);
-        if (difference > 180) {
-          const adjustedDifference = 360 - difference; // Choose the smaller rotation
-          if (adjustedDifference >= 1) {
-            clearTimeout(headingTimeout);
-            headingTimeout = setTimeout(() => {
-              setDeviceHeading(event.alpha!); // Ensure alpha is not null with !
-              console.log('Orientation changed: ', event.alpha);
-            }, 100); // Adding a debounce of 100ms
-          }
-        }
+        setDeviceHeading((prev) => {
+          const difference = Math.abs((event.alpha! - prev + 360) % 360);
+          return difference > 180 ? 360 - difference : difference;
+        });
       }
     };
-
     window.addEventListener('deviceorientationabsolute', handleOrientation);
-
-    return () => {
-      window.removeEventListener('deviceorientationabsolute', handleOrientation);
-    };
-  }, [deviceHeading]);
+    return () => window.removeEventListener('deviceorientationabsolute', handleOrientation);
+  }, []);
 
   const onLoad = useCallback((mapInstance: google.maps.Map) => {
     setMap(mapInstance);
   }, []);
 
-  // Recenter the map and smoothly rotate it based on device heading
+  // Recenter map and apply rotation based on device heading
   const recenterMap = useCallback(() => {
     if (map && currentLocation) {
       map.panTo(currentLocation);
       map.setZoom(18);
-      map.setHeading(360 - deviceHeading); // Ensure heading is updated
+      map.setHeading(360 - deviceHeading);
     }
   }, [map, currentLocation, deviceHeading]);
 
-  useEffect(() => {
-    if (map) {
-      map.setHeading(360 - deviceHeading);
-    }
-  }, [deviceHeading, map]);
-
+  // Adjust map rotation and tilt
   const adjustMap = (mode: 'tilt' | 'rotate', amount: number) => {
     if (map) {
-      switch (mode) {
-        case 'tilt':
-          const newTilt = (map.getTilt() || 0) + amount;
-          map.setTilt(newTilt);
-          setTilt(newTilt);
-          break;
-        case 'rotate':
-          const newHeading = (map.getHeading() || 0) + amount;
-          map.setHeading(newHeading);
-          setDeviceHeading(360 - newHeading); // Update device heading
-          break;
-        default:
-          break;
+      if (mode === 'tilt') {
+        const newTilt = Math.max(0, Math.min(67.5, (map.getTilt() || 0) + amount)); // Safeguard tilt between 0 and 67.5
+        map.setTilt(newTilt);
+        setTilt(newTilt);
+      } else if (mode === 'rotate') {
+        const newHeading = (map.getHeading() || 0) + amount;
+        map.setHeading(newHeading);
+        setDeviceHeading(360 - newHeading);
       }
     }
   };
@@ -109,29 +99,27 @@ const MapContainer: React.FC<MapProps> = ({
         mapContainerStyle={{ height: '500px', width: '100%' }}
       >
         {/* Full Route Polyline */}
-        {fullRoutePolyline && fullRoutePolyline.length && (
+        {!decodePolyline(deliveryDirection)?.length && polyline && polyline.length > 0 && (
           <Polyline
-            path={fullRoutePolyline}
+            path={polyline}
             options={{
-              strokeColor: '#808080',
+              strokeColor: '#0000FF',
               strokeOpacity: 0.8,
               strokeWeight: 4,
             }}
-            visible={true}
           />
         )}
 
-        {/* Highlighted Polyline for the current segment */}
-        {currentSegmentPolyline && (
+        {
           <Polyline
-            path={currentSegmentPolyline}
+            path={decodePolyline(deliveryDirection)}
             options={{
               strokeColor: '#0000FF',
-              strokeOpacity: 0.9,
-              strokeWeight: 6,
+              strokeOpacity: 0.8,
+              strokeWeight: 4,
             }}
           />
-        )}
+        }
 
         {/* Custom Vehicle Marker */}
         <MarkerF
@@ -172,8 +160,8 @@ const MapContainer: React.FC<MapProps> = ({
       <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between' }}>
         <button onClick={() => adjustMap('rotate', 20)}>Rotate Left</button>
         <button onClick={() => adjustMap('rotate', -20)}>Rotate Right</button>
-        <button onClick={() => adjustMap('tilt', 20)}>Tilt Down</button>
-        <button onClick={() => adjustMap('tilt', -20)}>Tilt Up</button>
+        <button onClick={() => adjustMap('tilt', 10)}>Tilt Down</button>
+        <button onClick={() => adjustMap('tilt', -10)}>Tilt Up</button>
         <button onClick={recenterMap}>Recenter & Zoom In</button>
       </div>
     </div>

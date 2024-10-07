@@ -4,7 +4,7 @@ import {
   deliveryPartnerSocket,
   DeliveryPartnerSocketEvents,
 } from '@/infrastructure/socket/deliveryPartnerSocket';
-import { OrderDetailsAndDirection } from './types';
+import { OrderDetailsAndDirection } from '../../pages/partner/direction/types';
 import { useNavigate } from 'react-router-dom';
 
 interface CoordinatesInterface {
@@ -61,8 +61,8 @@ export const useDeliveryPartnerSocket = (setNewOrder: (order: OrderAlert | null)
       let { longitude: currentLongitude, latitude: currentLatitude } = position.coords;
 
       // TODO: remove this
-      currentLongitude = 76.3579401; // Simulated longitude
-      currentLatitude = 10.0037578; // Simulated latitude
+      // currentLongitude = 76.3579401; // Simulated longitude
+      // currentLatitude = 10.0037578; // Simulated latitude
 
       if (previousLocationRef.current) {
         const distance = getDistance(previousLocationRef.current, {
