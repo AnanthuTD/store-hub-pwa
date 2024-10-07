@@ -99,6 +99,13 @@ const userRoutes: UserRoutes = {
     icon: LoginIcon,
     layoutType: 'user',
   },
+  [UserPages.UserOrderTrackingPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/orderTracking')),
+    path: '/orderTracking',
+    title: 'Order Tracking',
+    icon: LoginIcon,
+    layoutType: 'user',
+  },
 };
 
 export default userRoutes;
