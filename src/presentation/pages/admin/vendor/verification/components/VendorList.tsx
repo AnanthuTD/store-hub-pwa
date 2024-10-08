@@ -8,12 +8,12 @@ const StyledDivider = styled(Divider)`
   background-color: #e0e0e0; /* Light grey divider */
 `;
 
-interface PartnersListProps {
+interface VendorListProps {
   partners: PartnerSummary[];
   onPartnerClick: (id: string) => void;
 }
 
-const PartnersList: React.FC<PartnersListProps> = ({ partners, onPartnerClick }) => (
+const VendorList: React.FC<VendorListProps> = ({ partners, onPartnerClick }) => (
   <>
     <List
       itemLayout="horizontal"
@@ -28,4 +28,4 @@ const PartnersList: React.FC<PartnersListProps> = ({ partners, onPartnerClick })
   </>
 );
 
-export default PartnersList;
+export default VendorList;

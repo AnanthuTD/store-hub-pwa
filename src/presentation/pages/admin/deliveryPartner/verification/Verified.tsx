@@ -42,7 +42,7 @@ const PartnersListPage: React.FC = () => {
 
   const fetchPartners = async () => {
     try {
-      const response = await axiosInstance.get('/admin/partner/list/not-verified');
+      const response = await axiosInstance.get('/admin/partner/list/verified');
       setPartners(response.data);
     } catch (error) {
       console.error('Error fetching partners data', error);
@@ -55,7 +55,7 @@ const PartnersListPage: React.FC = () => {
 
   return (
     <>
-      <StyledTitle level={4}>Delivery Partners</StyledTitle>
+      <StyledTitle level={4}>Verified Delivery Partners</StyledTitle>
       <List
         itemLayout="horizontal"
         dataSource={partners}

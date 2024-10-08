@@ -18,29 +18,47 @@ const adminRoutes: AdminRoutes = {
     icon: LoginIcon,
     layoutType: 'admin',
   },
-  [AdminPages.AdminPartnerListPage]: {
+  [AdminPages.AdminUnverifiedPartnerListPage]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/admin/partnerAcceptance/PartnersListPage'),
+      () => import('@/presentation/pages/admin/deliveryPartner/verification/Unverified'),
     ),
-    path: '/admin/partner/list/pending',
+    path: '/admin/partner/list/unverified',
+    title: 'Admin Partner List',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
+  [AdminPages.AdminVerifiedPartnerListPage]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/admin/deliveryPartner/verification/Verified'),
+    ),
+    path: '/admin/partner/list/verified',
     title: 'Admin Partner List',
     icon: LoginIcon,
     layoutType: 'admin',
   },
   [AdminPages.AdminPartnerValidationFormPage]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/admin/partnerAcceptance/AdminValidationPage'),
+      () => import('@/presentation/pages/admin/deliveryPartner/verification/PartnerValidationPage'),
     ),
     path: '/admin/partner/validate',
     title: 'Admin Partner Validation',
     icon: LoginIcon,
     layoutType: 'admin',
   },
-  [AdminPages.AdminVendorVerificationPendingListPage]: {
+  [AdminPages.AdminVendorUnverifiedListPage]: {
     component: asyncComponentLoader(
-      () => import('@/presentation/pages/admin/vendor/verification/pending'),
+      () => import('@/presentation/pages/admin/vendor/verification/unverified'),
     ),
-    path: '/admin/vendor/verification/pending',
+    path: '/admin/vendor/verification/unverified',
+    title: 'Vendor Verification Pending',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
+  [AdminPages.AdminVendorVerifiedListPage]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/admin/vendor/verification/verified'),
+    ),
+    path: '/admin/vendor/verification/verified',
     title: 'Vendor Verification Pending',
     icon: LoginIcon,
     layoutType: 'admin',

@@ -36,14 +36,12 @@ const items: MenuItem[] = [
   getItem('Dashboard', '/admin/dashboard', <HomeOutlined />),
   getItem('Verification', '/admin/verification', <UserOutlined />, [
     getItem('Partner', '/admin/partner', <UserOutlined />, [
-      getItem('Verified Partner', '/admin/partner/list/verified', <UserOutlined />),
-      getItem('Pending Partner', '/admin/partner/list/pending', <UserOutlined />),
-      getItem('Rejected Partner', '/admin/partner/list/rejected', <UserOutlined />),
+      getItem('Verified Partners', '/admin/partner/list/verified', <UserOutlined />),
+      getItem('Unverified Partners', '/admin/partner/list/unverified', <UserOutlined />),
     ]),
     getItem('Vendor', '/admin/vendor', <UserOutlined />, [
-      getItem('Verified Vendor', '/admin/vendor/verification/verified', <UserOutlined />),
-      getItem('Pending Vendor', '/admin/vendor/verification/pending', <UserOutlined />),
-      getItem('Rejected Vendor', '/admin/vendor/verification/rejected', <UserOutlined />),
+      getItem('Verified Vendors', '/admin/vendor/verification/verified', <UserOutlined />),
+      getItem('Unverified Vendors', '/admin/vendor/verification/unverified', <UserOutlined />),
     ]),
   ]),
   getItem('User', '/admin/user', <UserOutlined />),

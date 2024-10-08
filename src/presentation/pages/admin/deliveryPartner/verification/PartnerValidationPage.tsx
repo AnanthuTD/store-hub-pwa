@@ -93,7 +93,7 @@ const AdminValidationPage: React.FC = () => {
         message,
       };
       await axiosInstance.post(`/admin/partner/${deliveryPartnerId}/validateDocuments`, data);
-      navigate('/admin/partner/list');
+      navigate(-1);
     } catch (error) {
       console.error('Error submitting validation data', error);
     }

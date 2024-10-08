@@ -40,10 +40,15 @@ enum PartnerPages {
 enum AdminPages {
   AdminSignInPage = 200,
   AdminDashboardPage,
-  AdminPartnerListPage,
+
+  AdminVerifiedPartnerListPage,
+  AdminUnverifiedPartnerListPage,
   AdminPartnerValidationFormPage,
-  AdminVendorVerificationPendingListPage,
+
   AdminVendorVerificationPage,
+  AdminVendorUnverifiedListPage,
+  AdminVendorVerifiedListPage,
+
   AdminAddCategoryPage,
   AdminViewCategoryPage,
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '@/config/axios';
 import styled from '@emotion/styled';
 import { Typography } from 'antd';
-import PartnersList from '../components/PartnersList';
+import VendorList from '../components/VendorList';
 import { PartnerSummary } from '../components/PartnerCard';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ const PartnersListPage: React.FC = () => {
 
   const fetchPartners = async () => {
     try {
-      const response = await axiosInstance.get('/admin/vendor/list/pending');
+      const response = await axiosInstance.get('/admin/vendor/list/verified');
       setPartners(response.data);
     } catch (error) {
       console.error('Error fetching partners data', error);
@@ -35,8 +35,8 @@ const PartnersListPage: React.FC = () => {
 
   return (
     <>
-      <StyledTitle level={4}>Vendor Pending Verification</StyledTitle>
-      <PartnersList partners={partners} onPartnerClick={handlePartnerClick} />
+      <StyledTitle level={4}>Verified Vendors</StyledTitle>
+      <VendorList partners={partners} onPartnerClick={handlePartnerClick} />
     </>
   );
 };
