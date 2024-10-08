@@ -11,6 +11,8 @@ import LocationPreview from '@/presentation/components/location/LocationPreview'
 import LocationMap from '@/presentation/components/location/LocationMap';
 import { LocationData } from '../../vendor/shop/register/types';
 import axiosInstance from '@/config/axios';
+import axios from 'axios';
+import UnavailableProductsModal from './unavailableProductsModel';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ const CheckoutPage = () => {
   const [refetch, setRefetch] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [unavailableProducts, setUnavailableProducts] = useState([]);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -60,7 +63,15 @@ const CheckoutPage = () => {
         longitude: selectedLocation?.lng,
         latitude: selectedLocation?.lat,
       });
-    } catch {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const { data } = await error.response;
+
+        if (data.unavailableProducts && data.unavailableProducts.length) {
+          message.error('Some products are currently unavailable for delivery.');
+          setUnavailableProducts(data.unavailableProducts);
+        }
+      }
       message.error('Failed to create order.');
       return null;
     }
@@ -73,30 +84,36 @@ const CheckoutPage = () => {
   };
 
   return (
-    <Row gutter={16}>
-      <Col span={12}>{loading ? <Spin /> : <CartSummary items={cartItems} />}</Col>
-      <Col span={12}>
-        <OrderSummary totalPrice={totalPrice} />
-        <LocationPreview selectedLocation={selectedLocation} onOpenModal={handleOpenModal} />
-        <Modal
-          title="Select Delivery Location"
-          open={isModalVisible}
-          onCancel={handleCloseModal}
-          footer={null}
-          width={800}
-        >
-          <LocationMap
-            onLocationSelect={handleLocationSelect}
-            selectedLocation={selectedLocation}
+    <>
+      <UnavailableProductsModal
+        onClose={() => setUnavailableProducts([])}
+        unavailableProducts={unavailableProducts}
+      />
+      <Row gutter={16}>
+        <Col span={12}>{loading ? <Spin /> : <CartSummary items={cartItems} />}</Col>
+        <Col span={12}>
+          <OrderSummary totalPrice={totalPrice} />
+          <LocationPreview selectedLocation={selectedLocation} onOpenModal={handleOpenModal} />
+          <Modal
+            title="Select Delivery Location"
+            open={isModalVisible}
+            onCancel={handleCloseModal}
+            footer={null}
+            width={800}
+          >
+            <LocationMap
+              onLocationSelect={handleLocationSelect}
+              selectedLocation={selectedLocation}
+            />
+          </Modal>
+          <PaymentButton
+            onSuccess={onPaymentSuccess}
+            refetch={handleRefetch}
+            createOrder={handleOrderCreation}
           />
-        </Modal>
-        <PaymentButton
-          onSuccess={onPaymentSuccess}
-          refetch={handleRefetch}
-          createOrder={handleOrderCreation}
-        />
-      </Col>
-    </Row>
+        </Col>
+      </Row>
+    </>
   );
 };
 
