@@ -60,11 +60,18 @@ const CheckoutPage = () => {
     }
 
     try {
-      return await axiosInstance.post('/user/order', {
+      const response = await axiosInstance.post('/user/order', {
         longitude: selectedLocation?.lng,
         latitude: selectedLocation?.lat,
         useWallet,
       });
+
+      if (useWallet) {
+        message.success('Order created successfully! Redirecting to checkout...');
+        navigate(`/payment/success?orderId=${response.data.orderId}`);
+        return;
+      }
+      return response;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const { data } = error.response;

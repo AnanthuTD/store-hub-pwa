@@ -75,7 +75,11 @@ const OrderSuccessComponent: React.FC = () => {
           title="Payment Success!"
           subTitle={`Payment ID: ${order?.paymentId}`}
           extra={[
-            <Button key="track" type="primary">
+            <Button
+              key="track"
+              type="primary"
+              onClick={() => navigate(`/orderTracking?orderId=${orderId}`)}
+            >
               Track your order
             </Button>,
             <Button key="continue" type="default" onClick={() => navigate('/home')}>
