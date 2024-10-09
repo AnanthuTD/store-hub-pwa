@@ -1,5 +1,5 @@
 import axiosInstance from '@/config/axios';
-import { CartItem } from '@/presentation/pages/user/cart';
+import { CartItem } from '@/presentation/pages/user/cart/hooks/useCart';
 import { AxiosError } from 'axios';
 
 export const fetchCartItems = async () => {
@@ -64,10 +64,15 @@ export const decrementProductInCart = async (
   }
 };
 
-export const getCartTotal = async () => {
+export const getCartTotal = async (useWallet: boolean) => {
   try {
     const { data } = await axiosInstance.get<{ totalPrice: number; itemCount: number }>(
       `/user/cart/total`,
+      {
+        params: {
+          useWallet,
+        },
+      },
     );
 
     return data;

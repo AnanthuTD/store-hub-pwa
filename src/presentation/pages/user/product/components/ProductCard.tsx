@@ -219,23 +219,29 @@ interface VariantDetailsProps {
 }
 
 const VariantDetails: React.FC<VariantDetailsProps> = ({ variant }) => {
-  if (!variant.discountedPrice) {
+  if (!variant.discountedPrice && !variant.price) {
     return <Typography color="error">This product is not available</Typography>;
   }
 
   return (
     <Card variant="outlined" sx={{ padding: 2, marginTop: 2 }}>
       <Typography variant="body1">
-        Average Price:{' '}
-        <Typography component="span" color="primary">
-          ${variant.discountedPrice}
-        </Typography>{' '}
-        <Typography
-          component="span"
-          sx={{ textDecoration: 'line-through', color: 'text.secondary' }}
-        >
-          ${variant.price}
-        </Typography>
+        Price:{' '}
+        {variant.discountedPrice ? (
+          <>
+            <Typography component="span" color="primary">
+              ${variant.discountedPrice}
+            </Typography>{' '}
+            <Typography
+              component="span"
+              sx={{ textDecoration: 'line-through', color: 'text.secondary' }}
+            >
+              ${variant.price}
+            </Typography>
+          </>
+        ) : (
+          <Typography component="span">${variant.price}</Typography>
+        )}
       </Typography>
       {variant.stock ? (
         <Typography variant="body1">Stock: {variant.stock}</Typography>

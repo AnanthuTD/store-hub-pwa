@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, message, Spin, Modal } from 'antd';
+import { Row, Col, message, Spin, Modal, Button } from 'antd';
 import CartSummary from './CartSummary';
 import OrderSummary from './OrderSummary';
 import PaymentButton from './PaymentButton';
@@ -17,12 +17,13 @@ import UnavailableProductsModal from './unavailableProductsModel';
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
-  const { totalPrice } = useCart();
   const [loading, setLoading] = useState(true);
   const [refetch, setRefetch] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [unavailableProducts, setUnavailableProducts] = useState([]);
+  const [useWallet, setUseWallet] = useState(false);
+  const { totalPrice, fetchTotalPrice } = useCart();
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -62,17 +63,17 @@ const CheckoutPage = () => {
       return await axiosInstance.post('/user/order', {
         longitude: selectedLocation?.lng,
         latitude: selectedLocation?.lat,
+        useWallet,
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const { data } = await error.response;
+        const { data } = error.response;
 
         if (data.unavailableProducts && data.unavailableProducts.length) {
           message.error('Some products are currently unavailable for delivery.');
           setUnavailableProducts(data.unavailableProducts);
-        }
-      }
-      message.error('Failed to create order.');
+        } else message.error(data.message || 'Failed to create order.');
+      } else message.error('Failed to create order.');
       return null;
     }
   }
@@ -83,6 +84,18 @@ const CheckoutPage = () => {
     setSelectedLocation(location);
   };
 
+  const toggleWallet = (checked: boolean) => {
+    if (checked) {
+      setUseWallet(true);
+    } else {
+      setUseWallet(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTotalPrice(useWallet);
+  }, [useWallet]);
+
   return (
     <>
       <UnavailableProductsModal
@@ -92,7 +105,7 @@ const CheckoutPage = () => {
       <Row gutter={16}>
         <Col span={12}>{loading ? <Spin /> : <CartSummary items={cartItems} />}</Col>
         <Col span={12}>
-          <OrderSummary totalPrice={totalPrice} />
+          <OrderSummary totalPrice={totalPrice} toggleWallet={toggleWallet} />
           <LocationPreview selectedLocation={selectedLocation} onOpenModal={handleOpenModal} />
           <Modal
             title="Select Delivery Location"
@@ -106,11 +119,15 @@ const CheckoutPage = () => {
               selectedLocation={selectedLocation}
             />
           </Modal>
-          <PaymentButton
-            onSuccess={onPaymentSuccess}
-            refetch={handleRefetch}
-            createOrder={handleOrderCreation}
-          />
+          {totalPrice === 0 ? (
+            <Button onClick={handleOrderCreation}>Pay</Button>
+          ) : (
+            <PaymentButton
+              onSuccess={onPaymentSuccess}
+              refetch={handleRefetch}
+              createOrder={handleOrderCreation}
+            />
+          )}
         </Col>
       </Row>
     </>
