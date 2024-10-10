@@ -86,6 +86,20 @@ const adminRoutes: AdminRoutes = {
     icon: LoginIcon,
     layoutType: 'admin',
   },
+  [AdminPages.AdminAddCouponPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/admin/coupon/AddCoupon')),
+    path: '/admin/coupons/add',
+    title: 'Add Coupon',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
+  [AdminPages.AdminViewCouponPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/admin/coupon/ViewCoupons')),
+    path: '/admin/coupons/view',
+    title: 'Add Coupon',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
 };
 
 export default adminRoutes;

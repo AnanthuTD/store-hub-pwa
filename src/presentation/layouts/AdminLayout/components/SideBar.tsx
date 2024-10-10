@@ -48,7 +48,10 @@ const items: MenuItem[] = [
   getItem('Shops', '/admin/vendors', <ShopOutlined />),
   getItem('Products', '/admin/products', <AppstoreOutlined />),
   getItem('Offers', '/admin/offers', <TagOutlined />),
-  getItem('Coupons', '/admin/coupons', <TagOutlined />),
+  getItem('Coupons', '/admin/coupons', <TagOutlined />, [
+    getItem('Add', '/admin/coupons/add', <TagOutlined />),
+    getItem('View', '/admin/coupons/view', <TagOutlined />),
+  ]),
   getItem('Category', '/admin/category', <AppstoreOutlined />, [
     getItem('Add', '/admin/category/add', <UserOutlined />),
     getItem('View', '/admin/category/view', <UserOutlined />),

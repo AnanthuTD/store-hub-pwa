@@ -51,6 +51,9 @@ enum AdminPages {
 
   AdminAddCategoryPage,
   AdminViewCategoryPage,
+
+  AdminAddCouponPage,
+  AdminViewCouponPage,
 }
 
 // Vendor Pages Enum
