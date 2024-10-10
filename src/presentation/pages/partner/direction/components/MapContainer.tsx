@@ -66,7 +66,7 @@ const MapContainer: React.FC<MapProps> = ({
   const recenterMap = useCallback(() => {
     if (map && currentLocation) {
       map.panTo(currentLocation);
-      map.setZoom(18);
+      map.setZoom(100);
       map.setHeading(360 - deviceHeading);
     }
   }, [map, currentLocation, deviceHeading]);
@@ -90,7 +90,7 @@ const MapContainer: React.FC<MapProps> = ({
     <div>
       <GoogleMap
         onLoad={onLoad}
-        zoom={16}
+        zoom={100}
         options={{
           heading: 360 - deviceHeading,
           tilt: tilt,
@@ -101,7 +101,7 @@ const MapContainer: React.FC<MapProps> = ({
         {/* Full Route Polyline */}
         {!decodePolyline(deliveryDirection)?.length && polyline && polyline.length > 0 && (
           <Polyline
-            path={polyline}
+            path={decodePolyline(directions)}
             options={{
               strokeColor: '#0000FF',
               strokeOpacity: 0.8,
@@ -110,7 +110,7 @@ const MapContainer: React.FC<MapProps> = ({
           />
         )}
 
-        {
+        {decodePolyline(deliveryDirection)?.length && (
           <Polyline
             path={decodePolyline(deliveryDirection)}
             options={{
@@ -119,7 +119,7 @@ const MapContainer: React.FC<MapProps> = ({
               strokeWeight: 4,
             }}
           />
-        }
+        )}
 
         {/* Custom Vehicle Marker */}
         <MarkerF

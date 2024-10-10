@@ -15,6 +15,8 @@ function OrderDetails({
 }) {
   const [orderDetails, setOrderDetails] = useState<Order | null>(null);
   const [storeArrived, setStoreArrived] = useState(false);
+  const [userReached, setUserReached] = useState(false);
+  const [collected, setCollected] = useState(false);
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ function OrderDetails({
     setOpen(false);
   };
 
-  const onReached = useCallback(
+  const onReachedStore = useCallback(
     _.debounce(() => {
       console.log('Reached Store');
       setStoreArrived(true);
@@ -50,6 +52,20 @@ function OrderDetails({
     [orderDetails],
   );
 
+  const onReachedUser = useCallback(
+    _.debounce(() => {
+      console.log('User Reached');
+      setUserReached(true);
+      Modal.success({
+        title: 'You have reached the destination',
+        content: 'Please verify the products with the user.',
+      });
+
+      axiosInstance.post('/partner/delivery/user-reached', { orderId: orderDetails?._id });
+    }, 500),
+    [orderDetails],
+  );
+
   const handleOrderCollected = () => {
     Modal.confirm({
       title: 'Confirm Order Collection',
@@ -57,7 +73,7 @@ function OrderDetails({
       onOk: () => {
         console.log('Order collected');
         setOpen(false);
-        setStoreArrived(true);
+        setCollected(true);
         axiosInstance
           .post('/partner/delivery/collected', { orderId: orderDetails?._id })
           .then(({ data }) => {
@@ -69,19 +85,37 @@ function OrderDetails({
   };
 
   const renderActionButton = () => {
-    return storeArrived ? (
-      <Tooltip title="Click to confirm order collection after checking all products">
-        <Button type="primary" onClick={handleOrderCollected} disabled={!storeArrived}>
-          Order Collected
-        </Button>
-      </Tooltip>
-    ) : (
-      <Tooltip title="Confirm your arrival at the store">
-        <Button type="default" onClick={onReached}>
-          Reached Store
-        </Button>
-      </Tooltip>
-    );
+    if (!storeArrived) {
+      return (
+        <Tooltip title="Confirm your arrival at the store">
+          <Button type="default" onClick={onReachedStore}>
+            Reached Store
+          </Button>
+        </Tooltip>
+      );
+    }
+
+    if (storeArrived && !collected) {
+      return (
+        <Tooltip title="Click to confirm order collection after checking all products">
+          <Button type="primary" onClick={handleOrderCollected} disabled={!storeArrived}>
+            Order Collected
+          </Button>
+        </Tooltip>
+      );
+    }
+
+    if (collected && !userReached) {
+      return (
+        <Tooltip title="Confirm your arrival at the user's destination">
+          <Button type="primary" onClick={onReachedUser}>
+            Destination Reached
+          </Button>
+        </Tooltip>
+      );
+    }
+
+    return null; // No action if everything is done
   };
 
   return (

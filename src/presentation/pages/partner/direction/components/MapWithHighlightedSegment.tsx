@@ -6,6 +6,8 @@ import MapContainer from './MapContainer';
 import { Direction } from '@/presentation/pages/partner/direction/types';
 import { io } from 'socket.io-client';
 import OrderDetails from './OrderDetails';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/infrastructure/redux/store';
 
 const socket = io('http://localhost:4000/track');
 
@@ -26,7 +28,9 @@ const MapWithHighlightedSegment = () => {
   const [currentWaypointIndex, setCurrentWaypointIndex] = useState(null);
   const [waypointCount, setWaypointCount] = useState<number>(0);
   const [walkingMode, setWalkingMode] = useState<boolean>(false);
+  const [orderId, setOrderId] = useState(null);
   // const [highlightedInstructionIndex, setHighlightedInstructionIndex] = useState(0);
+  const partnerId = useSelector((state: RootState) => state.partner.data.id);
 
   const updateLocation = (position: GeolocationPosition) => {
     const { latitude, longitude } = position.coords;
@@ -83,8 +87,10 @@ const MapWithHighlightedSegment = () => {
         if (!orderDetailsAndDirections) {
           throw new Error('OrderDetails and directions are not found in localStorage');
         }
-        const { direction }: { direction: Direction } = JSON.parse(orderDetailsAndDirections);
+        const { direction, order }: { direction: Direction } =
+          JSON.parse(orderDetailsAndDirections);
 
+        setOrderId(order._id);
         setDirections(direction);
       } catch (error) {
         console.error('Error fetching directions:', error);
@@ -122,14 +128,18 @@ const MapWithHighlightedSegment = () => {
   };
 
   useEffect(() => {
+    console.log(partnerId);
+    const d = deliveryDirection ? deliveryDirection : directions;
+
     socket.emit('emit:location', {
       location: currentLocation,
-      orderId: '66f6f2f973ee00f755f395e4',
-      duration: directions?.routes[0].duration,
-      polyline: directions?.routes[0].polyline.encodedPolyline,
-      distance: directions?.routes[0].distanceMeters,
+      orderId,
+      duration: d?.routes[0].duration,
+      polyline: d?.routes[0].polyline.encodedPolyline,
+      distance: d?.routes[0].distanceMeters,
+      partnerId,
     });
-  }, [currentLocation]);
+  }, [currentLocation, orderId, partnerId]);
 
   return isLoaded && waypoints.length ? (
     <div>

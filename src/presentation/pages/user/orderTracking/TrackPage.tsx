@@ -39,7 +39,7 @@ function statusMessage(status: string): string {
   }
 }
 
-const TrackPage = ({ orderId = 'orderId' }: { orderId: string }) => {
+const TrackPage = ({ orderId }: { orderId: string }) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   });
