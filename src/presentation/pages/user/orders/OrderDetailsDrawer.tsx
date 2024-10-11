@@ -1,6 +1,7 @@
 import React from 'react';
 import { Drawer, Spin, Typography, Table, Button, notification } from 'antd';
 import { Order } from './types';
+import axiosInstance from '@/config/axios';
 
 const { Title, Paragraph } = Typography;
 
@@ -11,16 +12,63 @@ interface OrderDetailsDrawerProps {
   selectedOrder: Order | null;
 }
 
+const isReturnable = (item: any, order: any): boolean => {
+  return (
+    item.returnStatus === 'Not Requested' &&
+    !order.isCancelled &&
+    order.storeStatus === 'Collected' &&
+    order.deliveryStatus === 'Delivered'
+  );
+};
+
+const isCancelable = (item: any, order: any): boolean => {
+  return !order.isCancelled && order.storeStatus === 'Pending';
+};
+
+const isReturned = (item: any): boolean => {
+  return item.returnStatus === 'Returned';
+};
+
+const isReturnRequested = (item: any): boolean => {
+  return item.returnStatus === 'Requested';
+};
+
+const isCancelled = (order): boolean => {
+  return order.isCancelled;
+};
+
 const OrderDetailsDrawer: React.FC<OrderDetailsDrawerProps> = ({
   visible,
   onClose,
   loading,
   selectedOrder,
 }) => {
-  const handleReturnRequest = (productId: string) => {
+  const handleReturnRequest = (productId: string, variantId: string) => {
+    const { data } = axiosInstance.post('/user/return/request', {
+      orderId: selectedOrder._id,
+      productId: productId,
+      variantId: variantId,
+    });
+
+    console.log(data);
+
     notification.success({
       message: 'Return Request Sent',
       description: `Return request for product ID ${productId} has been successfully sent.`,
+    });
+  };
+
+  const handleCancelRequest = (itemId: string) => {
+    const { data } = axiosInstance.post('/user/order/cancel-item', {
+      orderId: selectedOrder._id,
+      itemId,
+    });
+
+    console.log(data);
+
+    notification.success({
+      message: 'Cancel Request Sent',
+      description: `Cancel request for product ID ${productId} has been successfully sent.`,
     });
   };
 
@@ -68,10 +116,23 @@ const OrderDetailsDrawer: React.FC<OrderDetailsDrawerProps> = ({
                 title="Action"
                 key="action"
                 render={(_, item) =>
-                  item.returnStatus === 'Not Requested' && item.storeStatus !== 'Failed' ? (
-                    <Button type="primary" onClick={() => handleReturnRequest(item.productId)}>
+                  isReturnable(item, selectedOrder) ? (
+                    <Button
+                      type="primary"
+                      onClick={() => handleReturnRequest(item.productId, item.variantId)}
+                    >
                       Request Return
                     </Button>
+                  ) : isCancelable(item, selectedOrder) ? (
+                    <Button type="primary" onClick={() => handleCancelRequest(item._id)}>
+                      Cancel
+                    </Button>
+                  ) : isReturnRequested(item, selectedOrder) ? (
+                    <span>Return Requested</span>
+                  ) : isReturned(item, selectedOrder) ? (
+                    <span>{item.refundMessage} Returned</span>
+                  ) : isCancelled(selectedOrder) ? (
+                    <span>Cancelled</span>
                   ) : null
                 }
               />

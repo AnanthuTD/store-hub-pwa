@@ -63,6 +63,24 @@ const vendorRoutes: VendorRoutes = {
     icon: LoginIcon,
     layoutType: 'vendor',
   },
+  [VendorPages.VendorReturnRequestPage]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/vendor/order/ReturnRequestedItems'),
+    ),
+    path: '/vendor/orders/return/requested',
+    title: 'Shop Registration',
+    icon: LoginIcon,
+    layoutType: 'vendor',
+  },
+  [VendorPages.VendorReturnedItemPage]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/vendor/order/ReturnedItemList'),
+    ),
+    path: '/vendor/orders/returned',
+    title: 'Shop Registration',
+    icon: LoginIcon,
+    layoutType: 'vendor',
+  },
 };
 
 export default vendorRoutes;

@@ -1,6 +1,12 @@
 import React from 'react';
 import { Table, Tag } from 'antd';
 import { Order, OrderItem } from './types';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface OrderOverviewProps {
   data: Order[];
@@ -14,7 +20,7 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
       key: 'orderId',
     },
     {
-      title: 'Status',
+      title: 'Payment Status',
       dataIndex: 'paymentStatus',
       key: 'paymentStatus',
       render: (status: Order['paymentStatus']) => {
@@ -26,7 +32,7 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
       title: 'Amount',
       dataIndex: 'totalAmount',
       key: 'totalAmount',
-      render: (amount: Order['totalAmount']) => `$${amount.toFixed(2)} USD`,
+      render: (amount: Order['totalAmount']) => `$${amount.toFixed(2)} Rs`,
     },
     {
       title: 'Payment Method',
@@ -37,6 +43,7 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
       title: 'Order Date',
       dataIndex: 'orderDate',
       key: 'orderDate',
+      render: (orderDate) => dayjs(orderDate).tz('Asia/Kolkata').format('YYYY MMMM DD, hh:mm A'),
     },
   ];
 
@@ -67,7 +74,7 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
         title: 'Price',
         dataIndex: 'price',
         key: 'price',
-        render: (price: OrderItem['price']) => `$${price.toFixed(2)} USD`,
+        render: (price: OrderItem['price']) => `$${price.toFixed(2)} Rs`,
       },
     ];
 
@@ -76,7 +83,7 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
         columns={productColumns}
         dataSource={record.items}
         pagination={false}
-        rowKey="productId"
+        rowKey={(item) => item._id}
         style={{ backgroundColor: '#f0f8ff', padding: '10px' }}
       />
     );
@@ -91,7 +98,7 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
           rowExpandable: (record) => record.items.length > 0,
         }}
         dataSource={data}
-        rowKey="orderId"
+        rowKey={(record) => record._id}
         pagination={{ pageSize: 10 }}
       />
     </div>
