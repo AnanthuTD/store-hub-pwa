@@ -13,6 +13,7 @@ import { LocationData } from '../../vendor/shop/register/types';
 import axiosInstance from '@/config/axios';
 import axios from 'axios';
 import UnavailableProductsModal from './unavailableProductsModel';
+import CouponList from './CouponList';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const CheckoutPage = () => {
   const [unavailableProducts, setUnavailableProducts] = useState([]);
   const [useWallet, setUseWallet] = useState(false);
   const { totalPrice, fetchTotalPrice } = useCart();
+  const [couponCode, setCouponCode] = useState(null);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -64,6 +66,7 @@ const CheckoutPage = () => {
         longitude: selectedLocation?.lng,
         latitude: selectedLocation?.lat,
         useWallet,
+        couponCode,
       });
 
       if (useWallet) {
@@ -100,8 +103,13 @@ const CheckoutPage = () => {
   };
 
   useEffect(() => {
-    fetchTotalPrice(useWallet);
-  }, [useWallet]);
+    fetchTotalPrice(useWallet, couponCode);
+  }, [useWallet, couponCode]);
+
+  const onCouponChange = (couponCode: string) => {
+    console.log(couponCode);
+    setCouponCode(couponCode);
+  };
 
   return (
     <>
@@ -136,6 +144,9 @@ const CheckoutPage = () => {
             />
           )}
         </Col>
+      </Row>
+      <Row>
+        <CouponList onChange={onCouponChange} totalAmount={totalPrice} />
       </Row>
     </>
   );

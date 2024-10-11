@@ -50,10 +50,10 @@ const useCart = () => {
   }, []);
 
   // Function to fetch total price
-  const fetchTotalPrice = async (useWallet = false) => {
+  const fetchTotalPrice = async (useWallet = false, couponCode = '') => {
     setCartTotalState((prevState) => ({ ...prevState, isLoading: true, error: null }));
     try {
-      const data = await getCartTotal(useWallet);
+      const data = await getCartTotal(useWallet, couponCode);
       const { totalPrice, itemCount } = data;
 
       setCartTotalState({
