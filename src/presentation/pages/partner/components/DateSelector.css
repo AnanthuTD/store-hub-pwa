@@ -1,0 +1,18 @@
+.date-selector {
+  margin: 20px; /* Add some margin for spacing */
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+/* Ensure the date picker is mobile-friendly */
+@media (max-width: 768px) {
+  .date-selector {
+    margin: 10px; /* Smaller margin on mobile */
+  }
+
+  .ant-picker {
+    font-size: 16px; /* Larger text for easier reading */
+    padding: 10px; /* More padding for better touch interaction */
+  }
+}

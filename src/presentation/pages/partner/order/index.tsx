@@ -1,11 +1,8 @@
 import React from 'react';
-import BottomNavigationBar from '../components/BottomNavigationBar';
-import { Box, Typography } from '@mui/material';
-import Wrapper from '../components/Wrapper';
-import AppHeader from '../components/AppHeader';
 import DateSelector from '../components/DateSelector';
 import Illustration from '../components/Illustration';
 import Card from './components/Card';
+import { Typography } from 'antd';
 
 const orders = [
   { id: '#11250', status: 'Ongoing', color: '#00bfff' },
@@ -19,18 +16,17 @@ const orders = [
 
 const Store: React.FC = () => {
   return (
-    <Wrapper>
-      <AppHeader />
+    <>
       <DateSelector />
-      <Box>
+      <div>
         {orders.length ? (
           <Card orders={orders} />
         ) : (
           <>
             <Illustration />
-            <Typography
-              variant="h6"
-              sx={{
+            <Typography.Title
+              level={5}
+              style={{
                 position: 'fixed',
                 top: 520,
                 left: '50%',
@@ -41,12 +37,11 @@ const Store: React.FC = () => {
               }}
             >
               No New Orders
-            </Typography>
+            </Typography.Title>
           </>
         )}
-      </Box>
-      <BottomNavigationBar />
-    </Wrapper>
+      </div>
+    </>
   );
 };
 

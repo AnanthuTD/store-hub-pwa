@@ -1,6 +1,6 @@
-import { Box } from '@mui/material';
 import React from 'react';
-import OrderCard from './OrderCard';
+import { Collapse, Tag, Typography, Card as AntdCard, CollapseProps } from 'antd';
+import { CaretRightOutlined, MoneyCollectOutlined } from '@ant-design/icons';
 
 export interface Order {
   id: string;
@@ -9,12 +9,51 @@ export interface Order {
 }
 
 function Card({ orders }: { orders: Order[] }) {
+  const panelStyle: React.CSSProperties = {
+    marginBottom: 24,
+    borderRadius: '8px',
+    border: 'none',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+  };
+
+  const getItems = (): CollapseProps['items'] =>
+    orders.map((order) => ({
+      key: order.id,
+      label: (
+        <AntdCard style={panelStyle}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <Typography.Text strong>Order No.</Typography.Text>
+              <br />
+              <Typography.Text type="secondary">#{order.id}</Typography.Text>
+            </div>
+            <Tag color={order.color}>{order.status}</Tag>
+          </div>
+        </AntdCard>
+      ),
+      children: (
+        <div style={{ marginTop: 8 }}>
+          <Typography.Text strong>{'storeName'}</Typography.Text>
+          <br />
+          <Typography.Text type="secondary">{'order.address'}</Typography.Text>
+          <br />
+          <Typography.Text>
+            <MoneyCollectOutlined style={{ marginRight: 4 }} />
+            Earned: ₹{order.earned} {/* Assuming earned is a number */}
+          </Typography.Text>
+        </div>
+      ),
+      showArrow: false,
+    }));
+
   return (
-    <Box sx={{ marginTop: 15, paddingX: 2 }} display={'flex'} flexDirection={'column'} gap={2}>
-      {orders.map((order) => (
-        <OrderCard key={order.id} order={order} />
-      ))}
-    </Box>
+    <Collapse
+      bordered={false}
+      defaultActiveKey={['1']}
+      expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+      style={{ background: '#f0f2f5' }}
+      items={getItems()}
+    />
   );
 }
 

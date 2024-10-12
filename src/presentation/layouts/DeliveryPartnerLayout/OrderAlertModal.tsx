@@ -32,11 +32,11 @@ const OrderAlertModal = ({ newOrder, progress, handleOrderAcceptance }) => {
               }}
               icon={<CheckCircleOutlined />}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#45a049';
+                e.currentTarget.style.backgroundColor = 'FF5963';
                 e.currentTarget.style.transform = 'scale(1.05)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#4CAF50';
+                e.currentTarget.style.backgroundColor = 'FF5963';
                 e.currentTarget.style.transform = 'scale(1)';
               }}
             >
@@ -46,6 +46,10 @@ const OrderAlertModal = ({ newOrder, progress, handleOrderAcceptance }) => {
           <Progress percent={progress} showInfo={false} strokeColor="#4CAF50" size="small" />
         </>,
       ]}
+      style={{
+        backgroundColor: '#FF5963', // Change to your desired color
+        borderRadius: '8px', // Optional: rounded corners for the modal
+      }}
       title={<div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#333' }}>New Order</div>}
     >
       <div style={{ fontSize: '1rem', color: '#555' }}>
