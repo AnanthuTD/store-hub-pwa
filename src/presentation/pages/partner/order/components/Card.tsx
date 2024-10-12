@@ -25,9 +25,9 @@ function Card({ orders }: { orders: Order[] }) {
             <div>
               <Typography.Text strong>Order No.</Typography.Text>
               <br />
-              <Typography.Text type="secondary">#{order.id}</Typography.Text>
+              <Typography.Text type="secondary">#{order._id}</Typography.Text>
             </div>
-            <Tag color={order.color}>{order.status}</Tag>
+            <Tag>{order.deliveryStatus}</Tag>
           </div>
         </AntdCard>
       ),
@@ -39,7 +39,7 @@ function Card({ orders }: { orders: Order[] }) {
           <br />
           <Typography.Text>
             <MoneyCollectOutlined style={{ marginRight: 4 }} />
-            Earned: ₹{order.earned} {/* Assuming earned is a number */}
+            Earned: ₹{order?.deliveryFee || 0} {/* Assuming earned is a number */}
           </Typography.Text>
         </div>
       ),

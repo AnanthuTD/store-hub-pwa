@@ -1,23 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DateSelector from '../components/DateSelector';
 import Illustration from '../components/Illustration';
 import Card from './components/Card';
 import { Typography } from 'antd';
+import axiosInstance from '@/config/axios';
+import dayjs from 'dayjs';
 
-const orders = [
-  { id: '#11250', status: 'Ongoing', color: '#00bfff' },
-  { id: '#11251', status: 'Pickup Failed', color: '#ff6f61' },
-  { id: '#11252', status: 'Delivered', color: '#32cd32' },
-  { id: '#11251', status: 'Delivery Failed', color: '#ff6f61' },
-  { id: '#11253', status: 'Delivered', color: '#32cd32' },
-  { id: '#11250', status: 'Delivered', color: '#32cd32' },
-  { id: '#11252', status: 'Delivered', color: '#32cd32' },
-];
+interface IOrders {
+  _id: string;
+}
+[];
+
+async function fetchOrders(date): Promise<IOrders> {
+  try {
+    const { data } = await axiosInstance.get('/partner/orders', { params: { date } });
+    return data.orders;
+  } catch {
+    return [];
+  }
+}
 
 const Store: React.FC = () => {
+  const [orders, setOrders] = useState([]);
+  const [date, setDate] = useState(dayjs());
+
+  useEffect(() => {
+    fetchOrders(date).then((orders) => setOrders(orders));
+  }, [date]);
+
   return (
     <>
-      <DateSelector />
+      <DateSelector setDate={setDate} />
       <div>
         {orders.length ? (
           <Card orders={orders} />

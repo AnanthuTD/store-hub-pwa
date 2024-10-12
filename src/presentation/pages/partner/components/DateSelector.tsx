@@ -18,11 +18,12 @@ dayjs.extend(weekYear);
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 
-const DateSelector: React.FC = () => {
+const DateSelector: React.FC = ({ setDate }) => {
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(dayjs().subtract(1, 'day')); // Default to yesterday
 
   const handleDateChange = (date: dayjs.Dayjs | null) => {
     setSelectedDate(date);
+    setDate(date);
   };
 
   // Disable future dates
