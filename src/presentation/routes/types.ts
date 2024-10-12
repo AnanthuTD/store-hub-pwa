@@ -69,6 +69,7 @@ enum VendorPages {
 
   VendorReturnedItemPage,
   VendorReturnRequestPage,
+  VendorCollectedItemPage,
 }
 
 // Common Pages Enum

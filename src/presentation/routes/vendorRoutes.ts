@@ -81,6 +81,13 @@ const vendorRoutes: VendorRoutes = {
     icon: LoginIcon,
     layoutType: 'vendor',
   },
+  [VendorPages.VendorCollectedItemPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/vendor/order/completed')),
+    path: '/vendor/orders/collected',
+    title: 'Shop Registration',
+    icon: LoginIcon,
+    layoutType: 'vendor',
+  },
 };
 
 export default vendorRoutes;

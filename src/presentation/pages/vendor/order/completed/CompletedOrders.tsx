@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, message } from 'antd';
-import { Order, OrderItem } from './types';
+import { Table, Tag } from 'antd';
+import { Order, OrderItem } from '../types';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import axiosInstance from '@/config/axios';
-import './styles.css';
+import '../styles.css';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -14,29 +13,12 @@ interface OrderOverviewProps {
   data: Order[];
 }
 
-const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
+const CompletedOrders: React.FC<OrderOverviewProps> = ({ data }) => {
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     setOrders(data);
   }, [data]);
-
-  // Function to update the order status
-  const updateStatus = async (orderId: string) => {
-    try {
-      const response = await axiosInstance.patch(`/vendor/orders/store-status`, { orderId });
-      const updatedStatus = response.data.storeStatus;
-
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === orderId ? { ...order, storeStatus: updatedStatus } : order,
-        ),
-      );
-      message.success('Order status updated successfully');
-    } catch (error) {
-      message.error('Error while updating status');
-    }
-  };
 
   const columns = [
     {
@@ -48,13 +30,9 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
       title: 'Status',
       dataIndex: 'storeStatus',
       key: 'storeStatus',
-      render: (status: Order['storeStatus'], record: Order) => {
+      render: (status: Order['storeStatus']) => {
         const color = status === 'Pending' ? 'orange' : 'green';
-        return (
-          <Tag onClick={() => updateStatus(record._id)} color={color} style={{ cursor: 'pointer' }}>
-            {status?.toUpperCase()}
-          </Tag>
-        );
+        return <Tag color={color}>{status?.toUpperCase()}</Tag>;
       },
     },
     {
@@ -150,4 +128,4 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
   );
 };
 
-export default OrderOverview;
+export default CompletedOrders;

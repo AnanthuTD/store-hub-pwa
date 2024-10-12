@@ -22,6 +22,7 @@ interface FetchOrdersParams {
   startDate?: string;
   endDate?: string;
   searchId?: string;
+  storeStatus?: string;
 }
 
 function useFetchOrders({
@@ -34,6 +35,7 @@ function useFetchOrders({
   startDate,
   endDate,
   searchId,
+  storeStatus,
 }: FetchOrdersParams) {
   const selectedStore = useSelector<RootState, RootState['vendor']['selectedStore']>(
     (state) => state.vendor.selectedStore,
@@ -63,6 +65,7 @@ function useFetchOrders({
             startDate,
             endDate,
             searchId,
+            storeStatus,
           },
         });
 
