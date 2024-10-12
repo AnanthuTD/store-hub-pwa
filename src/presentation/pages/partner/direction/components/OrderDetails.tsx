@@ -4,20 +4,24 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Order } from '../types';
 import _ from 'lodash';
 import axiosInstance from '@/config/axios';
+import { dummyDistance, dummyDuration, dummyOrder } from './sampleOrderData';
+import { useNavigate } from 'react-router-dom';
 
 function OrderDetails({
-  distance,
-  duration,
+  distance = dummyDistance,
+  duration = dummyDuration,
   setDirection,
 }: {
   distance: number;
   duration: number;
 }) {
-  const [orderDetails, setOrderDetails] = useState<Order | null>(null);
+  const [orderDetails, setOrderDetails] = useState<Order | null>(dummyOrder);
   const [storeArrived, setStoreArrived] = useState(false);
   const [userReached, setUserReached] = useState(false);
   const [collected, setCollected] = useState(false);
   const [open, setOpen] = useState(true);
+  const [userPhone, setUserPhone] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const data = localStorage.getItem('orderDetailsAndDirection');
@@ -25,6 +29,7 @@ function OrderDetails({
       const parsedData = JSON.parse(data);
       console.log(parsedData);
       setOrderDetails(parsedData?.order || null);
+      setUserPhone(parsedData?.order?.userPhone || null); // Get user phone from order data
     }
   }, []);
 
@@ -59,11 +64,26 @@ function OrderDetails({
       Modal.success({
         title: 'You have reached the destination',
         content: 'Please verify the products with the user.',
+        onOk: () => {
+          // Ask if the partner needs to call the user
+          if (userPhone) {
+            Modal.confirm({
+              title: 'User Not Found?',
+              content: `If you cannot find the user, you can call them at ${userPhone}.`,
+              okText: 'Call User',
+              cancelText: 'Cancel',
+              onOk: () => {
+                // Implement functionality to call the user (can be a link to a dialer)
+                window.open(`tel:${userPhone}`);
+              },
+            });
+          }
+        },
       });
 
       axiosInstance.post('/partner/delivery/user-reached', { orderId: orderDetails?._id });
     }, 500),
-    [orderDetails],
+    [orderDetails, userPhone], // Added userPhone as a dependency
   );
 
   const handleOrderCollected = () => {
@@ -81,6 +101,12 @@ function OrderDetails({
             localStorage.setItem('direction', JSON.stringify(data.direction));
           });
       },
+    });
+  };
+
+  const handleOrderDelivered = () => {
+    axiosInstance.post('/partner/delivery/delivered', { orderId: orderDetails?._id }).then(() => {
+      navigate('/partner/delivery-summary');
     });
   };
 
@@ -121,7 +147,7 @@ function OrderDetails({
   return (
     orderDetails && (
       <>
-        <Row gutter={[16, 16]}>
+        <Row gutter={[16, 16]} style={{ marginBlock: 10, justifyContent: 'center' }}>
           <Col>{renderActionButton()}</Col>
           <Col>
             <Button type="primary" onClick={showDrawer}>
@@ -177,7 +203,6 @@ function OrderDetails({
               <Title level={4}>Order Items</Title>
               {orderDetails.items.map((item) => (
                 <Row key={item.productId} gutter={[16, 16]}>
-                  {orderDetails._id}
                   <Col span={12}>
                     <Typography.Text>{item?.productName || item.productId}</Typography.Text>
                   </Col>
@@ -189,6 +214,19 @@ function OrderDetails({
             </Space>
           </Card>
         </Drawer>
+
+        <Modal
+          open={userReached}
+          footer={[
+            <Button key="submit" type="primary" onClick={handleOrderDelivered}>
+              Delivered
+            </Button>,
+          ]}
+        >
+          <Typography.Text>
+            please call and verify the user before delivering the product +91xxxxxxxxxx
+          </Typography.Text>
+        </Modal>
       </>
     )
   );

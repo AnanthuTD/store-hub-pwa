@@ -96,7 +96,7 @@ const MapContainer: React.FC<MapProps> = ({
           tilt: tilt,
           mapId: '90f87356969d889c',
         }}
-        mapContainerStyle={{ height: '500px', width: '100%' }}
+        mapContainerStyle={{ height: '90vh' }}
       >
         {/* Full Route Polyline */}
         {!decodePolyline(deliveryDirection)?.length && polyline && polyline.length > 0 && (

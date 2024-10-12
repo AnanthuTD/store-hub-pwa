@@ -34,6 +34,7 @@ enum PartnerPages {
   PartnerEmergencyInformationPage,
   PartnerOrderPage,
   PartnerDirectionPage,
+  PartnerDeliverySummaryPage,
 }
 
 // Admin Pages Enum

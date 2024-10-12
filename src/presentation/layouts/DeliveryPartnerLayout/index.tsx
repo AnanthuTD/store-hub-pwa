@@ -77,6 +77,12 @@ const DeliveryPartnerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
 
   if (!deliveryPartner) return null;
 
+  // check if direction page
+  const directionPage = window.location.pathname.split('/').includes('direction');
+
+  // avoid layout in direction page
+  if (directionPage) return children;
+
   return (
     <Layout style={{ maxHeight: '100vh' }}>
       <Header
@@ -89,10 +95,10 @@ const DeliveryPartnerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
       >
         <AppHeader />
       </Header>
-      <Content style={{ padding: '0px', minHeight: 280, overflow: 'clip' }}>
+      <Content style={{ padding: '0px', overflow: 'clip', height: contentHeight }}>
         <div
           style={{
-            maxHeight: contentHeight,
+            height: '100%',
             overflowY: 'auto',
             overflowX: 'hidden',
             padding: '20px',

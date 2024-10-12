@@ -14,7 +14,7 @@ const socket = io('http://localhost:4000/track');
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_MAP_API_KEY;
 const REACH_DISTANCE_THRESHOLD = 50;
 
-const MapWithHighlightedSegment = () => {
+const Map = () => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
@@ -27,9 +27,7 @@ const MapWithHighlightedSegment = () => {
   const [selectedWaypoint, setSelectedWaypoint] = useState(null);
   const [currentWaypointIndex, setCurrentWaypointIndex] = useState(null);
   const [waypointCount, setWaypointCount] = useState<number>(0);
-  const [walkingMode, setWalkingMode] = useState<boolean>(false);
   const [orderId, setOrderId] = useState(null);
-  // const [highlightedInstructionIndex, setHighlightedInstructionIndex] = useState(0);
   const partnerId = useSelector((state: RootState) => state.partner.data.id);
 
   const updateLocation = (position: GeolocationPosition) => {
@@ -143,15 +141,6 @@ const MapWithHighlightedSegment = () => {
 
   return isLoaded && waypoints.length ? (
     <div>
-      <h2>Route with Highlighted Waypoint Segment</h2>
-      <label>
-        <input
-          type="checkbox"
-          checked={walkingMode}
-          onChange={(e) => setWalkingMode(e.target.checked)}
-        />
-        Walking Directions
-      </label>
       <MapContainer
         currentLocation={currentLocation}
         waypoints={waypoints}
@@ -171,6 +160,6 @@ const MapWithHighlightedSegment = () => {
   ) : null;
 };
 
-export default MapWithHighlightedSegment;
+export default Map;
 
 // https://developers.google.com/maps/documentation/javascript/reference/directions#DirectionsRenderer
