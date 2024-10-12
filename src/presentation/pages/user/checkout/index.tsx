@@ -26,6 +26,8 @@ const CheckoutPage = () => {
   const [useWallet, setUseWallet] = useState(false);
   const { totalPrice, fetchTotalPrice } = useCart();
   const [couponCode, setCouponCode] = useState(null);
+  const [deliveryCharge, setDeliveryCharge] = useState(0);
+  const [platformFee, setPlatformFee] = useState(0);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -111,6 +113,30 @@ const CheckoutPage = () => {
     setCouponCode(couponCode);
   };
 
+  useEffect(() => {
+    if (selectedLocation) {
+      axiosInstance
+        .get('/user/order/calculate-delivery-charge', {
+          params: {
+            userLat: selectedLocation.lat,
+            userLng: selectedLocation.lng,
+          },
+        })
+        .then((response) => {
+          setDeliveryCharge(response.data.deliveryCharge);
+        })
+        .catch((error) => {
+          message.error(error?.response?.data?.message);
+        });
+    }
+  }, [selectedLocation]);
+
+  useEffect(() => {
+    axiosInstance.get('/user/order/platform-fee').then((response) => {
+      setPlatformFee(response.data.platformFee);
+    });
+  }, []);
+
   return (
     <>
       <UnavailableProductsModal
@@ -120,7 +146,12 @@ const CheckoutPage = () => {
       <Row gutter={16}>
         <Col span={12}>{loading ? <Spin /> : <CartSummary items={cartItems} />}</Col>
         <Col span={12}>
-          <OrderSummary totalPrice={totalPrice} toggleWallet={toggleWallet} />
+          <OrderSummary
+            totalPrice={totalPrice}
+            toggleWallet={toggleWallet}
+            deliveryCharge={deliveryCharge}
+            platformFee={platformFee}
+          />
           <LocationPreview selectedLocation={selectedLocation} onOpenModal={handleOpenModal} />
           <Modal
             title="Select Delivery Location"

@@ -8,6 +8,8 @@ interface OrderSummaryProps {
   discount?: number;
   tax?: number;
   toggleWallet: (isChecked: boolean) => void;
+  deliveryCharge?: number;
+  platformFee?: number;
 }
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({
@@ -15,6 +17,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   discount = 0,
   tax = 0,
   toggleWallet,
+  deliveryCharge = 0,
+  platformFee = 0,
 }) => {
   const { getBalance } = new WalletService();
   const totalAmount = totalPrice - discount + tax;
@@ -33,10 +37,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       <p>Base Price: ₹{totalPrice}</p>
       {discount > 0 && <p>Discount: - ₹{discount}</p>}
       {tax > 0 && <p>Tax: ₹{tax}</p>}
+      {deliveryCharge > 0 && <p>Delivery Charge: ₹{deliveryCharge}</p>}
+      {platformFee > 0 && <p>Platform Fee: ₹{platformFee}</p>}
       <Checkbox onChange={(e) => toggleWallet(e.target.checked)}>
         Use Wallet Balance ( ₹{walletBalance} )
       </Checkbox>
-      <p>Total: ₹{totalAmount}</p>
+      <p>Total: ₹{totalAmount + deliveryCharge + platformFee}</p>
     </Card>
   );
 };
