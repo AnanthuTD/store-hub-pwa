@@ -1,4 +1,17 @@
-import { Button, Card, Drawer, Row, Typography, Modal, Tooltip, Col, Divider, Space } from 'antd';
+import {
+  Button,
+  Card,
+  Drawer,
+  Row,
+  Typography,
+  Modal,
+  Tooltip,
+  Col,
+  Divider,
+  Space,
+  InputNumber,
+  Alert,
+} from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Order } from '../types';
@@ -21,15 +34,32 @@ function OrderDetails({
   const [collected, setCollected] = useState(false);
   const [open, setOpen] = useState(true);
   const [userPhone, setUserPhone] = useState<string | null>(null);
+  const [otp, setOtp] = useState<number | null>(null);
+  const [otpMessage, setOtpMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const data = localStorage.getItem('orderDetailsAndDirection');
     if (data) {
       const parsedData = JSON.parse(data);
-      console.log(parsedData);
-      setOrderDetails(parsedData?.order || null);
-      setUserPhone(parsedData?.order?.userPhone || null); // Get user phone from order data
+
+      const orderId = parsedData?.order?._id;
+
+      if (orderId) {
+        axiosInstance
+          .get(`/partner/orders/${orderId}/order`)
+          .then((response) => {
+            const { order } = response.data;
+            console.log(order);
+
+            setOrderDetails(order);
+            setUserPhone(order.user.mobileNumber || null);
+          })
+          .catch((error) => {
+            console.error('Error fetching earnings:', error);
+            setOrderDetails(null);
+          });
+      }
     }
   }, []);
 
@@ -52,7 +82,15 @@ function OrderDetails({
         content: 'Please verify the products before collecting the order.',
       });
 
-      axiosInstance.post('/partner/delivery/store-reached', { orderId: orderDetails?._id });
+      axiosInstance
+        .post('/partner/delivery/store-reached', { orderId: orderDetails?._id })
+        .catch((error) => {
+          console.error('Error reaching store:', error);
+          Modal.error({
+            title: 'Error',
+            content: 'There was an issue while notifying the server. Please try again.',
+          });
+        });
     }, 500),
     [orderDetails],
   );
@@ -105,9 +143,20 @@ function OrderDetails({
   };
 
   const handleOrderDelivered = () => {
-    axiosInstance.post('/partner/delivery/delivered', { orderId: orderDetails?._id }).then(() => {
-      navigate('/partner/delivery-summary');
-    });
+    if (!otp) {
+      setOtpMessage('Please enter otp!');
+      return;
+    }
+
+    axiosInstance
+      .post('/partner/delivery/delivered', { orderId: orderDetails?._id, otp })
+      .then(() => {
+        setOtp(null);
+        navigate('/partner/delivery-summary');
+      })
+      .catch(() => {
+        setOtpMessage('Invalid OTP!');
+      });
   };
 
   const renderActionButton = () => {
@@ -141,7 +190,7 @@ function OrderDetails({
       );
     }
 
-    return null; // No action if everything is done
+    return null;
   };
 
   return (
@@ -170,6 +219,19 @@ function OrderDetails({
                 Please check that all products in the order are available before confirming
                 collection.
               </Typography.Text>
+
+              <Divider />
+
+              <Typography.Text>Collection OTP: {orderDetails.collectionOTP}</Typography.Text>
+
+              <Divider />
+
+              <Typography.Text>
+                User Name:{' '}
+                {orderDetails.user?.profile.firstName + orderDetails.user?.profile.lastName}
+              </Typography.Text>
+              <Typography.Text>User phone: {userPhone}</Typography.Text>
+
               <Divider />
 
               <Title level={4}>Order Summary</Title>
@@ -195,6 +257,15 @@ function OrderDetails({
                 </Col>
                 <Col span={12}>
                   <Typography.Text>{totalAmount} Rs</Typography.Text>
+                </Col>
+
+                <Divider />
+
+                <Col span={12}>
+                  <Typography.Text strong>Your Earnings:</Typography.Text>
+                </Col>
+                <Col span={12}>
+                  <Typography.Text>{orderDetails.deliveryFee} Rs</Typography.Text>
                 </Col>
               </Row>
 
@@ -224,8 +295,12 @@ function OrderDetails({
           ]}
         >
           <Typography.Text>
-            please call and verify the user before delivering the product +91xxxxxxxxxx
+            please call and verify the user before delivering the product +91{userPhone}
           </Typography.Text>
+
+          <InputNumber onChange={(value) => setOtp(value)} />
+
+          {otpMessage ? <Alert banner closable={false} message={otpMessage} /> : null}
         </Modal>
       </>
     )

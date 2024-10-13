@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, message } from 'antd';
+import { Alert, Button, InputNumber, Modal, Table, Tag, Typography, message } from 'antd';
 import { Order, OrderItem } from './types';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import axiosInstance from '@/config/axios';
 import './styles.css';
+import axios from 'axios';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -16,15 +17,34 @@ interface OrderOverviewProps {
 
 const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [otp, setOtp] = useState<number | null>(null);
+  const [otpMessage, setOtpMessage] = useState('');
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     setOrders(data);
   }, [data]);
 
   // Function to update the order status
-  const updateStatus = async (orderId: string) => {
+  const updateStatus = async () => {
+    if (!selectedOrder) {
+      message.error('No order selected');
+      return;
+    }
+
+    const { orderId, storeStatus } = selectedOrder;
+
+    if (storeStatus === 'ReadyForPickup' && !otp) {
+      message.warning('Please enter OTP');
+      setOpenModal(true);
+      return;
+    }
+
+    setOpenModal(false);
+
     try {
-      const response = await axiosInstance.patch(`/vendor/orders/store-status`, { orderId });
+      const response = await axiosInstance.patch(`/vendor/orders/store-status`, { orderId, otp });
       const updatedStatus = response.data.storeStatus;
 
       setOrders((prevOrders) =>
@@ -34,7 +54,18 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
       );
       message.success('Order status updated successfully');
     } catch (error) {
-      message.error('Error while updating status');
+      if (axios.isAxiosError(error)) {
+        if (storeStatus === 'ReadyForPickup') {
+          setOtpMessage('Please enter a valid OTP');
+          setOpenModal(true);
+          setOtp(null);
+          return;
+        }
+
+        message.error(error.response?.data.message);
+      } else {
+        message.error('Error while updating status');
+      }
     }
   };
 
@@ -51,7 +82,14 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
       render: (status: Order['storeStatus'], record: Order) => {
         const color = status === 'Pending' ? 'orange' : 'green';
         return (
-          <Tag onClick={() => updateStatus(record._id)} color={color} style={{ cursor: 'pointer' }}>
+          <Tag
+            onClick={() => {
+              setSelectedOrder(record);
+              updateStatus();
+            }}
+            color={color}
+            style={{ cursor: 'pointer' }}
+          >
             {status?.toUpperCase()}
           </Tag>
         );
@@ -107,14 +145,14 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
       },
     ];
 
-    const userDetails = (
+    const userDetails = record.userDetails ? (
       <div style={{ marginBottom: '10px' }}>
         <strong>User Details:</strong>
-        <div>Email: {record.userDetails.email}</div>
-        <div>First Name: {record.userDetails.profile.firstName}</div>
-        <div>Last Name: {record.userDetails.profile.lastName}</div>
+        <div>Email: {record.userDetails?.email}</div>
+        <div>First Name: {record.userDetails?.profile?.firstName}</div>
+        <div>Last Name: {record.userDetails?.profile?.lastName}</div>
       </div>
-    );
+    ) : null;
 
     return (
       <div>
@@ -146,6 +184,23 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
         rowKey={(record) => record._id}
         pagination={{ pageSize: 10 }}
       />
+
+      <Modal
+        open={openModal}
+        footer={[
+          <Button key="submit" type="primary" onClick={updateStatus}>
+            Verify
+          </Button>,
+        ]}
+      >
+        <Typography.Text>
+          please call and verify the user before delivering the product +91xxxxxxxxxx
+        </Typography.Text>
+
+        <InputNumber onChange={(value) => setOtp(value)} />
+
+        {otpMessage ? <Alert banner closable={false} message={otpMessage} /> : null}
+      </Modal>
     </div>
   );
 };
