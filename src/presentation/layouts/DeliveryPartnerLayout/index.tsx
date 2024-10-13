@@ -14,6 +14,8 @@ import {
 } from '@/infrastructure/socket/deliveryPartnerSocket';
 import AppHeader from '@/presentation/layouts/DeliveryPartnerLayout/components/AppHeader';
 import BottomNavigationBar from '@/presentation/layouts/DeliveryPartnerLayout/components/BottomNavigationBar';
+import useRegisterFCMToken from '@/hooks/useRegisterFCMToken';
+import useFCM, { FCMRoles } from '@/hooks/useFCM';
 
 const { Header, Content, Footer } = Layout;
 
@@ -21,7 +23,13 @@ const DeliveryPartnerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
   const deliveryPartner = useSelector<RootState>((state) => state.partner.data);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const [newOrder, setNewOrder] = useState<any>(null); // Set type accordingly
+
+  useFCM(FCMRoles.DELIVERY_PARTNER);
+
+  // update fcm token
+  useRegisterFCMToken('/partner/update-fcm-token');
+
+  const [newOrder, setNewOrder] = useState<any>(null);
 
   const progress = useProgressTimer(newOrder, setNewOrder);
   useDeliveryPartnerSocket(setNewOrder);

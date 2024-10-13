@@ -44,6 +44,7 @@
     "axios": "^1.7.3",
     "compressorjs": "^1.2.1",
     "dayjs": "^1.11.12",
+    "firebase": "^10.14.1",
     "framer-motion": "^11.5.4",
     "geolib": "^3.3.4",
     "is-mobile": "^4.0.0",
