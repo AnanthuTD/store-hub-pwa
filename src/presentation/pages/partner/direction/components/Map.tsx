@@ -74,6 +74,11 @@ const Map = () => {
           console.error(error);
           alert('Unable to retrieve your location.');
         },
+        {
+          enableHighAccuracy: true,
+          maximumAge: 0,
+          timeout: 5000,
+        },
       );
     }
   }, []);

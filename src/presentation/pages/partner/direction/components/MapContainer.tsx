@@ -97,6 +97,7 @@ const MapContainer: React.FC<MapProps> = ({
           mapId: '90f87356969d889c',
         }}
         mapContainerStyle={{ height: '90vh' }}
+        center={currentLocation}
       >
         {/* Full Route Polyline */}
         {!decodePolyline(deliveryDirection)?.length && polyline && polyline.length > 0 && (

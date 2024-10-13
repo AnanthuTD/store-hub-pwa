@@ -86,6 +86,8 @@ function MyComponent({ onLocationSelect, selectedLocation }: MyComponentProps) {
         },
         {
           enableHighAccuracy: true,
+          maximumAge: 0,
+          timeout: 5000,
         },
       );
     } else {

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { getMessaging, onMessage } from 'firebase/messaging';
+import { onMessage } from 'firebase/messaging';
 import { notification } from 'antd';
+import { messaging } from '@/infrastructure/firebase/firebaseConfig';
 
 export enum FCMRoles {
   ADMIN = 'admin',
@@ -17,10 +18,10 @@ interface FCMMessagePayload {
 
 const useFCM = (role: FCMRoles) => {
   useEffect(() => {
-    const messaging = getMessaging();
+    console.log('FCM');
 
     const unsubscribe = onMessage(messaging, (payload) => {
-      console.log('Message received. ', payload);
+      console.log('Message received. hook ', payload);
 
       const { title, body, role: messageRole } = payload.data as FCMMessagePayload;
 
@@ -37,16 +38,13 @@ const useFCM = (role: FCMRoles) => {
 };
 
 const handleForegroundMessage = (payload: FCMMessagePayload) => {
-  const { title, body, role } = payload;
+  const { title, body } = payload;
 
   notification.open({
     message: title,
     description: (
       <div>
         <p>{body}</p>
-        <p>
-          <strong>Role:</strong> {role}
-        </p>
       </div>
     ),
     onClick: () => {
@@ -55,6 +53,7 @@ const handleForegroundMessage = (payload: FCMMessagePayload) => {
 
     placement: 'topRight',
     duration: 3,
+    type: 'info',
   });
 };
 

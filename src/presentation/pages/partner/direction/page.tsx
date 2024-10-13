@@ -1,8 +1,15 @@
 import React from 'react';
 import Map from './components/Map';
 import { LoadScript } from '@react-google-maps/api';
+import useRegisterFCMToken from '@/hooks/useRegisterFCMToken';
+import useFCM, { FCMRoles } from '@/hooks/useFCM';
 
 function Page() {
+  useFCM(FCMRoles.DELIVERY_PARTNER);
+
+  // update fcm token
+  useRegisterFCMToken('/partner/update-fcm-token');
+
   return (
     <div>
       <LoadScript

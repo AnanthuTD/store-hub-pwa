@@ -6,11 +6,18 @@ import { login } from '@/infrastructure/redux/slices/user/userSlice';
 import { useSearchParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { fetchProfile } from '@/infrastructure/repositories/UserAuthRepository';
+import useFCM, { FCMRoles } from '@/hooks/useFCM';
+import useRegisterFCMToken from '@/hooks/useRegisterFCMToken';
 
 function UserLayout({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.user.data);
   const [searchParams] = useSearchParams();
+
+  useFCM(FCMRoles.USER);
+
+  // update fcm token
+  useRegisterFCMToken('/user/update-fcm-token');
 
   useEffect(() => {
     const loadProfile = async () => {

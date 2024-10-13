@@ -32,7 +32,6 @@ function CategoryNavBar() {
 
   const handleCategoryHover = async (event: React.MouseEvent<HTMLElement>, category: Category) => {
     setSelectedCategory(category);
-    console.log(event.currentTarget);
 
     setAnchorEl(event.currentTarget);
 

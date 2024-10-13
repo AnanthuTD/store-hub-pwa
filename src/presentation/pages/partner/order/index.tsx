@@ -4,16 +4,20 @@ import Illustration from '../components/Illustration';
 import Card from './components/Card';
 import { Typography } from 'antd';
 import axiosInstance from '@/config/axios';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 interface IOrders {
   _id: string;
 }
 [];
 
-async function fetchOrders(date): Promise<IOrders> {
+async function fetchOrders(date: Dayjs): Promise<IOrders> {
   try {
-    const { data } = await axiosInstance.get('/partner/orders', { params: { date } });
+    const newDate = date.tz('Asia/Kolkata').toDate();
+    console.log(newDate);
+    const { data } = await axiosInstance.get('/partner/orders', {
+      params: { date: newDate },
+    });
     return data.orders;
   } catch {
     return [];
