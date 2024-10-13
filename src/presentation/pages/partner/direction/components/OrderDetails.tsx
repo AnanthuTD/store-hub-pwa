@@ -298,6 +298,8 @@ function OrderDetails({
             please call and verify the user before delivering the product +91{userPhone}
           </Typography.Text>
 
+          <Divider />
+          {'OTP: '}
           <InputNumber onChange={(value) => setOtp(value)} />
 
           {otpMessage ? <Alert banner closable={false} message={otpMessage} /> : null}
