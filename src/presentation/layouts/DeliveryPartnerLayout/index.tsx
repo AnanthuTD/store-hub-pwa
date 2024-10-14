@@ -5,15 +5,15 @@ import { AppDispatch, RootState } from '@/infrastructure/redux/store';
 import { login } from '@/infrastructure/redux/slices/partner/partnerSlice';
 import { fetchProfile } from '@/infrastructure/repositories/PartnerAuthRepository';
 import { notification, Layout } from 'antd';
-import { useProgressTimer } from './useProgressTimer';
-import { useDeliveryPartnerSocket } from './useDeliveryPartnerSocket';
-import OrderAlertModal from './OrderAlertModal';
+import { useProgressTimer } from './components/useProgressTimer';
+import OrderAlertModal from './components/OrderAlertModal';
 import {
   deliveryPartnerSocket,
   DeliveryPartnerSocketEvents,
 } from '@/infrastructure/socket/deliveryPartnerSocket';
 import AppHeader from '@/presentation/layouts/DeliveryPartnerLayout/components/AppHeader';
 import BottomNavigationBar from '@/presentation/layouts/DeliveryPartnerLayout/components/BottomNavigationBar';
+import { useDeliveryPartnerSocket } from './components/useDeliveryPartnerSocket';
 
 const { Header, Content, Footer } = Layout;
 

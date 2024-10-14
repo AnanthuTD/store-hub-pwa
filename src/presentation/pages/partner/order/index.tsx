@@ -40,7 +40,9 @@ const Store: React.FC = () => {
           <Card orders={orders} />
         ) : (
           <>
-            <Illustration />
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Illustration />
+            </div>
             <Typography.Title
               level={5}
               style={{
