@@ -42,6 +42,7 @@ const CartItem = ({
 function OptionsMenu({ setSelectedOption }) {
   const options = [
     { label: 'Edit Profile', icon: <UserOutlined style={iconStyle} />, value: 'editProfile' },
+    { label: 'Wallet', icon: <UserOutlined style={iconStyle} />, value: 'wallet' },
     { label: 'Logout', icon: <LogoutOutlined style={iconStyle} />, value: 'logout' },
   ];
 

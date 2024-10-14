@@ -94,7 +94,7 @@ const partnerRoutes: PartnerRoutes = {
   },
 
   [PartnerPages.PartnerAccountPage]: {
-    component: asyncComponentLoader(() => import('@/presentation/pages/partner/account')),
+    component: asyncComponentLoader(() => import('@/presentation/pages/partner/account/index')),
     path: '/partner/account',
     title: 'Partner Account',
     icon: LoginIcon,
@@ -106,6 +106,15 @@ const partnerRoutes: PartnerRoutes = {
     ),
     path: '/partner/account/edit-profile',
     title: 'Partner Account',
+    icon: LoginIcon,
+    layoutType: 'deliveryPartner',
+  },
+  [PartnerPages.PartnerWalletPage]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/account/WalletPage'),
+    ),
+    path: '/partner/account/wallet',
+    title: 'Partner Wallet',
     icon: LoginIcon,
     layoutType: 'deliveryPartner',
   },
