@@ -46,11 +46,13 @@ const BottomNavigationBar: React.FC = () => {
   ];
 
   useEffect(() => {
-    if (activeKey === '1') {
+    // TODO: Uncomment
+    /*  if (activeKey === '1') {
       navigate('/partner/order');
     } else if (activeKey === '2') {
       navigate('/partner/account');
-    }
+      } */
+    navigate('/partner/account');
   }, [activeKey]);
 
   return (

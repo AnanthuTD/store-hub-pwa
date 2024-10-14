@@ -37,6 +37,7 @@ enum PartnerPages {
   PartnerDeliverySummaryPage,
 
   PartnerAccountPage,
+  PartnerEditProfilePage,
 }
 
 // Admin Pages Enum

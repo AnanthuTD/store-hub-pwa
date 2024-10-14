@@ -100,6 +100,15 @@ const partnerRoutes: PartnerRoutes = {
     icon: LoginIcon,
     layoutType: 'deliveryPartner',
   },
+  [PartnerPages.PartnerEditProfilePage]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/partner/account/EditProfilePage'),
+    ),
+    path: '/partner/account/edit-profile',
+    title: 'Partner Account',
+    icon: LoginIcon,
+    layoutType: 'deliveryPartner',
+  },
 };
 
 export default partnerRoutes;

@@ -32,9 +32,14 @@ const partnerSlice = createSlice({
     clearPartner: (state) => {
       state.data = null;
     },
+    updatePartnerProfile: (state, action: PayloadAction<IDeliveryPartner | null>) => {
+      console.log(action.payload);
+      state.data = action.payload;
+    },
   },
 });
 
-export const { storePartner, setId, clearPartner, login, logout } = partnerSlice.actions;
+export const { storePartner, setId, clearPartner, login, logout, updatePartnerProfile } =
+  partnerSlice.actions;
 
 export default partnerSlice.reducer;
