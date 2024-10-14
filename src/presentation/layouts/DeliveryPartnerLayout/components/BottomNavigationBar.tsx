@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs, theme, Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const BottomNavigationBar: React.FC = () => {
   const [activeKey, setActiveKey] = useState('1');
+  const navigate = useNavigate();
 
   const handleTabChange = (key: string) => {
     setActiveKey(key);
@@ -42,6 +44,14 @@ const BottomNavigationBar: React.FC = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    if (activeKey === '1') {
+      navigate('/partner/order');
+    } else if (activeKey === '2') {
+      navigate('/partner/account');
+    }
+  }, [activeKey]);
 
   return (
     <>
