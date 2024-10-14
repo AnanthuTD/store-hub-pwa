@@ -9,6 +9,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Divider from '@mui/material/Divider';
 import 'swiper/css/navigation';
 import { formatDistance } from '@/infrastructure/utils/formatDistance';
+import { Link } from 'react-router-dom';
 
 // Container for the whole card slider
 const CardContainer = styled(Box)({
@@ -53,22 +54,24 @@ const LocationText = styled(Typography)({
 });
 
 // Custom ShopCard component
-const ShopCard = ({ name, city, rating, distance }) => {
+const ShopCard = ({ name, city, rating, distance, id }) => {
   return (
-    <CustomCard>
-      <StorefrontIcon style={{ fontSize: 80, color: '#0071e3', margin: '10px 0' }} />
-      <CardContent>
-        <ShopName>{name}</ShopName>
-        <LocationText>{city}</LocationText>
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <Rating name="read-only" value={rating} readOnly precision={0.5} />
-          <Typography style={{ marginLeft: '8px' }}>{rating}</Typography>
-        </Box>
-        <Typography color="primary" style={{ marginTop: '5px', fontWeight: 'bold' }}>
-          {distance}
-        </Typography>
-      </CardContent>
-    </CustomCard>
+    <Link to={`/shop/details?shopId=${id}`}>
+      <CustomCard>
+        <StorefrontIcon style={{ fontSize: 80, color: '#0071e3', margin: '10px 0' }} />
+        <CardContent>
+          <ShopName>{name}</ShopName>
+          <LocationText>{city}</LocationText>
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Rating name="read-only" value={rating} readOnly precision={0.5} />
+            <Typography style={{ marginLeft: '8px' }}>{rating}</Typography>
+          </Box>
+          <Typography color="primary" style={{ marginTop: '5px', fontWeight: 'bold' }}>
+            {distance}
+          </Typography>
+        </CardContent>
+      </CustomCard>
+    </Link>
   );
 };
 
@@ -158,6 +161,7 @@ const ShopSlider = ({ shops, city }) => {
                 city={shop?.city}
                 rating={shop.rating}
                 distance={formatDistance(shop.distance)}
+                id={shop._id}
               />
             </SwiperSlide>
           ))}
