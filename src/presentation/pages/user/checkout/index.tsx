@@ -24,7 +24,7 @@ const CheckoutPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [unavailableProducts, setUnavailableProducts] = useState([]);
   const [useWallet, setUseWallet] = useState(false);
-  const { totalPrice, fetchTotalPrice } = useCart();
+  const { basePrice, totalPrice, fetchTotalPrice } = useCart();
   const [couponCode, setCouponCode] = useState(null);
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const [platformFee, setPlatformFee] = useState(0);
@@ -105,8 +105,9 @@ const CheckoutPage = () => {
   };
 
   useEffect(() => {
-    fetchTotalPrice(useWallet, couponCode);
-  }, [useWallet, couponCode]);
+    console.log('fetching total price...');
+    fetchTotalPrice(useWallet, couponCode, deliveryCharge);
+  }, [useWallet, couponCode, deliveryCharge]);
 
   const onCouponChange = (couponCode: string) => {
     console.log(couponCode);
@@ -151,6 +152,7 @@ const CheckoutPage = () => {
             toggleWallet={toggleWallet}
             deliveryCharge={deliveryCharge}
             platformFee={platformFee}
+            basePrice={basePrice}
           />
           <LocationPreview selectedLocation={selectedLocation} onOpenModal={handleOpenModal} />
           <Modal
@@ -165,7 +167,7 @@ const CheckoutPage = () => {
               selectedLocation={selectedLocation}
             />
           </Modal>
-          {totalPrice === 0 ? (
+          {basePrice === 0 ? (
             <Button onClick={handleOrderCreation}>Pay</Button>
           ) : (
             <PaymentButton

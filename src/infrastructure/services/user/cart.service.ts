@@ -64,7 +64,7 @@ export const decrementProductInCart = async (
   }
 };
 
-export const getCartTotal = async (useWallet: boolean, couponCode) => {
+export const getCartTotal = async (useWallet: boolean, couponCode, deliveryCharge = 0) => {
   try {
     const { data } = await axiosInstance.get<{ totalPrice: number; itemCount: number }>(
       `/user/cart/total`,
@@ -72,6 +72,7 @@ export const getCartTotal = async (useWallet: boolean, couponCode) => {
         params: {
           useWallet,
           couponCode,
+          deliveryCharge,
         },
       },
     );
