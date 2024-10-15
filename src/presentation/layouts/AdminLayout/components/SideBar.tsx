@@ -44,7 +44,7 @@ const items: MenuItem[] = [
       getItem('Unverified Vendors', '/admin/vendor/verification/unverified', <UserOutlined />),
     ]),
   ]),
-  getItem('User', '/admin/user', <UserOutlined />),
+  getItem('User', '/admin/users', <UserOutlined />),
   getItem('Shops', '/admin/vendors', <ShopOutlined />),
   getItem('Products', '/admin/products', <AppstoreOutlined />),
   getItem('Offers', '/admin/offers', <TagOutlined />),
