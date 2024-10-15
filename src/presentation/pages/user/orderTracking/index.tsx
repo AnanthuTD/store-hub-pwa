@@ -12,11 +12,16 @@ function Page() {
   const [useParams] = useSearchParams();
   const orderId = useParams.get('orderId');
   const [order, setOrder] = useState(null);
+  const [initialLocation, setInitialLocation] = useState(null);
 
   const fetchOrder = async () => {
     if (!orderId) return;
     const { data } = await axiosInstance.get(`/user/order/status/${orderId}`);
     console.log(data);
+
+    if (data?.location) {
+      setInitialLocation(data.location);
+    }
 
     setOrder(data.order);
   };
@@ -66,7 +71,7 @@ function Page() {
       </Modal>
 
       <LoadScript googleMapsApiKey={import.meta.env.VITE_MAP_API_KEY} libraries={['geometry']}>
-        <TrackPage orderId={orderId} />
+        <TrackPage orderId={orderId} initialLocation={initialLocation} />
       </LoadScript>
     </div>
   );

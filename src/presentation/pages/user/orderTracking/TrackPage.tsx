@@ -39,15 +39,17 @@ function statusMessage(status: string): string {
   }
 }
 
-const TrackPage = ({ orderId }: { orderId: string }) => {
+const TrackPage = ({ orderId, initialLocation }: { orderId: string }) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   });
 
-  const [markerPosition, setMarkerPosition] = useState({
-    lat: 37.7749,
-    lng: -122.4194,
-  });
+  const [markerPosition, setMarkerPosition] = useState(
+    initialLocation || {
+      lat: 37.7749,
+      lng: -122.4194,
+    },
+  );
   const [targetPosition, setTargetPosition] = useState({
     lat: 37.7749,
     lng: -122.4194,
@@ -61,15 +63,18 @@ const TrackPage = ({ orderId }: { orderId: string }) => {
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
+    if (initialLocation) {
+      setMarkerPosition(initialLocation);
+    }
+  }, [initialLocation]);
+
+  useEffect(() => {
     async function fetchOrder(orderId: string) {
       const { data } = await axiosInstance.get(`/user/order/${orderId}`);
       setOrder(data.order);
       setDeliveryStatus(statusMessage(data.order.deliveryStatus));
     }
     fetchOrder(orderId);
-
-    // Join the specific order room for tracking
-    socket.emit('track:order', orderId);
 
     // Listen for real-time location updates from the server
     socket.on('location:update', (data) => {
@@ -81,6 +86,9 @@ const TrackPage = ({ orderId }: { orderId: string }) => {
       setPolyline(decodedPath);
       setDistance(distance);
     });
+
+    // Join the specific order room for tracking
+    socket.emit('track:order', orderId);
 
     socket.on('order:status:update', ({ deliveryStatus }) => {
       const msg = statusMessage(deliveryStatus);

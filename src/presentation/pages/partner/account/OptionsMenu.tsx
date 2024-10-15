@@ -1,4 +1,4 @@
-import { LogoutOutlined, RightOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined, RightOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons';
 import { Card, Space, Typography } from 'antd';
 import React, { ReactNode } from 'react';
 
@@ -42,7 +42,7 @@ const CartItem = ({
 function OptionsMenu({ setSelectedOption }) {
   const options = [
     { label: 'Edit Profile', icon: <UserOutlined style={iconStyle} />, value: 'editProfile' },
-    { label: 'Wallet', icon: <UserOutlined style={iconStyle} />, value: 'wallet' },
+    { label: 'Wallet', icon: <WalletOutlined style={iconStyle} />, value: 'wallet' },
     { label: 'Logout', icon: <LogoutOutlined style={iconStyle} />, value: 'logout' },
   ];
 
