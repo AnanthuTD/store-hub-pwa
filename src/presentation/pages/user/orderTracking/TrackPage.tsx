@@ -6,9 +6,10 @@ import {
   // DirectionsRenderer,
   useLoadScript,
   Polyline,
+  MarkerF,
 } from '@react-google-maps/api';
 import io from 'socket.io-client';
-import { Card, Typography, Progress, Row, Col, message, notification } from 'antd';
+import { Card, Typography, Row, Col, message, notification } from 'antd';
 import axiosInstance from '@/config/axios';
 
 const { Title, Text } = Typography;
@@ -39,12 +40,29 @@ function statusMessage(status: string): string {
   }
 }
 
-const TrackPage = ({ orderId, initialLocation }: { orderId: string }) => {
+const TrackPage = ({
+  orderId,
+  initialLocation,
+  deliveryOtp,
+}: {
+  orderId: string;
+  initialLocation: {
+    lat: number;
+    lng: number;
+  };
+  deliveryOtp: number;
+}) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   });
 
   const [markerPosition, setMarkerPosition] = useState(
+    initialLocation || {
+      lat: 37.7749,
+      lng: -122.4194,
+    },
+  );
+  const [nextMarkerPosition, setNextMarkerPosition] = useState(
     initialLocation || {
       lat: 37.7749,
       lng: -122.4194,
@@ -59,12 +77,14 @@ const TrackPage = ({ orderId, initialLocation }: { orderId: string }) => {
   const [polyline, setPolyline] = useState([]);
   const [deliveryStatus, setDeliveryStatus] = useState(statusMessage('Assigned'));
   const [order, setOrder] = useState(null);
+  const [desitnationLocation, setDestinationLocation] = useState({});
 
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (initialLocation) {
       setMarkerPosition(initialLocation);
+      setNextMarkerPosition(initialLocation);
     }
   }, [initialLocation]);
 
@@ -78,9 +98,12 @@ const TrackPage = ({ orderId, initialLocation }: { orderId: string }) => {
 
     // Listen for real-time location updates from the server
     socket.on('location:update', (data) => {
-      const { location, duration, polyline, distance } = data;
+      console.log(data);
+      const { location, destinationLocation, duration, polyline, distance } = data;
       message.success('Location update received');
+      setDestinationLocation(destinationLocation);
       setTargetPosition(location);
+      setNextMarkerPosition(location);
       setEta(duration);
       const decodedPath = google.maps.geometry.encoding.decodePath(polyline);
       setPolyline(decodedPath);
@@ -113,6 +136,7 @@ const TrackPage = ({ orderId, initialLocation }: { orderId: string }) => {
       const nextLng = lerp(startLng, endLng, 0.05);
 
       setMarkerPosition({ lat: nextLat, lng: nextLng });
+      setNextMarkerPosition({ lat: nextLat, lng: nextLng });
 
       const distanceLat = Math.abs(nextLat - endLat);
       const distanceLng = Math.abs(nextLng - endLng);
@@ -135,7 +159,7 @@ const TrackPage = ({ orderId, initialLocation }: { orderId: string }) => {
         animationRef.current = null;
       }
     };
-  }, [targetPosition, markerPosition]);
+  }, [targetPosition, nextMarkerPosition]);
 
   if (!isLoaded) return <div>Loading...</div>;
 
@@ -152,12 +176,16 @@ const TrackPage = ({ orderId, initialLocation }: { orderId: string }) => {
             {deliveryStatus && <Text>{deliveryStatus}</Text>}
 
             <br />
+            <Text strong>Delivery OTP: </Text>
+            <Text>{deliveryOtp}</Text>
+            <br />
+            <br />
             <Text strong>Distance: </Text>
             <Text>{distance}</Text>
             <br />
             <Text strong>ETA: </Text>
             <Text>{eta}</Text>
-            <Progress percent={100 - eta} status="active" />
+            {/* <Progress percent={100 - eta} status="active" /> */}
           </Card>
         </Col>
         <Col span={16}>
@@ -175,6 +203,7 @@ const TrackPage = ({ orderId, initialLocation }: { orderId: string }) => {
                 anchor: new google.maps.Point(25, 25),
               }}
             />
+            <MarkerF position={desitnationLocation} label={`Desitnation`} />
             {/* {directions && <DirectionsRenderer directions={directions} />} */}
           </GoogleMap>
         </Col>

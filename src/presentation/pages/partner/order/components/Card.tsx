@@ -33,9 +33,11 @@ function Card({ orders }: { orders: Order[] }) {
       ),
       children: (
         <div style={{ marginTop: 8 }}>
-          <Typography.Text strong>{'storeName'}</Typography.Text>
+          <Typography.Text strong>{order?.store?.name}</Typography.Text>
           <br />
-          <Typography.Text type="secondary">{'order.address'}</Typography.Text>
+
+          {order?.store?.address && <AddressDisplay address={order.store.address} />}
+
           <br />
           <Typography.Text>
             <MoneyCollectOutlined style={{ marginRight: 4 }} />
@@ -56,5 +58,16 @@ function Card({ orders }: { orders: Order[] }) {
     />
   );
 }
+
+const AddressDisplay = ({ address }) => {
+  if (!address) return null;
+
+  const { street, city, state, postalCode, country } = address;
+
+  // Format the address in a clean way
+  const formattedAddress = `${street}, ${city}, ${state} ${postalCode}, ${country}`;
+
+  return <Typography.Text type="secondary">{formattedAddress}</Typography.Text>;
+};
 
 export default Card;

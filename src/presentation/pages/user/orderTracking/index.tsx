@@ -13,6 +13,7 @@ function Page() {
   const orderId = useParams.get('orderId');
   const [order, setOrder] = useState(null);
   const [initialLocation, setInitialLocation] = useState(null);
+  const [deliveryOtp, setDeliveryOtp] = useState(null);
 
   const fetchOrder = async () => {
     if (!orderId) return;
@@ -22,6 +23,8 @@ function Page() {
     if (data?.location) {
       setInitialLocation(data.location);
     }
+
+    setDeliveryOtp(data.order.deliveryOTP);
 
     setOrder(data.order);
   };
@@ -54,7 +57,7 @@ function Page() {
   return (
     <div>
       <Modal
-        open={!order || ['Pending', 'Failed'].includes(order.deliveryStatus)}
+        open={!order || ['Pending', 'Failed', 'Delivered'].includes(order.deliveryStatus)}
         closable={false}
         footer={null}
       >
@@ -67,11 +70,12 @@ function Page() {
             (order.deliveryStatus === 'Failed' &&
               'No delivery partners available. Amount will be refunded to your wallet.') ||
             (order.deliveryStatus === 'Delivered' && 'Your order has been successfully delivered.')}
+          {order?.deliveryStatus}
         </div>
       </Modal>
 
       <LoadScript googleMapsApiKey={import.meta.env.VITE_MAP_API_KEY} libraries={['geometry']}>
-        <TrackPage orderId={orderId} initialLocation={initialLocation} />
+        <TrackPage orderId={orderId} initialLocation={initialLocation} deliveryOtp={deliveryOtp} />
       </LoadScript>
     </div>
   );

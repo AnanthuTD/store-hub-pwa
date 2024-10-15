@@ -27,13 +27,15 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
   }, [data]);
 
   // Function to update the order status
-  const updateStatus = async () => {
-    if (!selectedOrder) {
+  const updateStatus = async (order) => {
+    if (!selectedOrder || !order) {
       message.error('No order selected');
       return;
     }
 
-    const { orderId, storeStatus } = selectedOrder;
+    console.log(order);
+
+    const { _id: orderId, storeStatus } = selectedOrder || order;
 
     if (storeStatus === 'ReadyForPickup' && !otp) {
       message.warning('Please enter OTP');
@@ -85,7 +87,7 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
           <Tag
             onClick={() => {
               setSelectedOrder(record);
-              updateStatus();
+              updateStatus(record);
             }}
             color={color}
             style={{ cursor: 'pointer' }}

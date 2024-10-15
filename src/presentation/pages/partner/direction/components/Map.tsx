@@ -131,10 +131,11 @@ const Map = () => {
   };
 
   useEffect(() => {
-    console.log(partnerId);
+    console.log(waypoints);
     const d = deliveryDirection ? deliveryDirection : directions;
 
     socket.emit('emit:location', {
+      destinationLocation: waypoints[0],
       location: currentLocation,
       orderId,
       duration: d?.routes[0].duration,
