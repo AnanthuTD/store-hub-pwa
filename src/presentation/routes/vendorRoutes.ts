@@ -88,6 +88,15 @@ const vendorRoutes: VendorRoutes = {
     icon: LoginIcon,
     layoutType: 'vendor',
   },
+  [VendorPages.VendorTransactionsPage]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/vendor/transactions/WalletPage'),
+    ),
+    path: '/vendor/transactions',
+    title: 'Transactions',
+    icon: LoginIcon,
+    layoutType: 'vendor',
+  },
 };
 
 export default vendorRoutes;

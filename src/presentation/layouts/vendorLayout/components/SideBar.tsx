@@ -53,7 +53,7 @@ const items: MenuItem[] = [
     getItem('Manage Products', '/vendor/products/manage', <EditOutlined />),
   ]),
   getItem('Offers', '/vendor/offers', <PercentageOutlined />),
-  getItem('Payment Overview', '/vendor/payment-overview', <DollarCircleOutlined />),
+  getItem('Payment Overview', '/vendor/transactions', <DollarCircleOutlined />),
   getItem('Reports', '/vendor/reports', <FileTextOutlined />),
   getItem('Notifications', '/vendor/notifications', <BellOutlined />),
 ];
