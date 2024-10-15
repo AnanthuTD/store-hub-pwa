@@ -42,20 +42,31 @@ const OrderDetailsDrawer: React.FC<OrderDetailsDrawerProps> = ({
   onClose,
   loading,
   selectedOrder,
+  setSelectedOrder,
 }) => {
   const handleReturnRequest = (productId: string, variantId: string) => {
-    const { data } = axiosInstance.post('/user/return/request', {
-      orderId: selectedOrder._id,
-      productId: productId,
-      variantId: variantId,
-    });
+    const { data } = axiosInstance
+      .post('/user/return/request', {
+        orderId: selectedOrder._id,
+        productId: productId,
+        variantId: variantId,
+      })
+      .then(() => {
+        console.log(data);
 
-    console.log(data);
+        setSelectedOrder((prev) => ({ ...prev, returnStatus: 'Requested' }));
 
-    notification.success({
-      message: 'Return Request Sent',
-      description: `Return request for product ID ${productId} has been successfully sent.`,
-    });
+        notification.success({
+          message: 'Return Request Sent',
+          description: `Return request for product ID ${productId} has been successfully sent.`,
+        });
+      })
+      .catch(() => {
+        notification.error({
+          message: 'Failed to send return request',
+          description: 'Something went wrong while sending return request. Please try again.',
+        });
+      });
   };
 
   const handleCancelRequest = (itemId: string) => {

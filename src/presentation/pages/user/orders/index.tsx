@@ -94,6 +94,7 @@ const OrderListing: React.FC = () => {
         onClose={onClose}
         loading={loading}
         selectedOrder={selectedOrder}
+        setSelectedOrder={setSelectedOrder}
       />
     </div>
   );

@@ -4,10 +4,10 @@ import {
   ProfileOutlined,
   ShoppingCartOutlined,
   AppstoreOutlined,
-  PercentageOutlined,
+  // PercentageOutlined,
   DollarCircleOutlined,
   FileTextOutlined,
-  BellOutlined,
+  // BellOutlined,
   PlusOutlined,
   EditOutlined,
   CreditCardOutlined,
@@ -52,10 +52,10 @@ const items: MenuItem[] = [
     getItem('Add Product', '/vendor/products/add', <PlusOutlined />),
     getItem('Manage Products', '/vendor/products/manage', <EditOutlined />),
   ]),
-  getItem('Offers', '/vendor/offers', <PercentageOutlined />),
+  // getItem('Offers', '/vendor/offers', <PercentageOutlined />),
   getItem('Payment Overview', '/vendor/transactions', <DollarCircleOutlined />),
   getItem('Reports', '/vendor/reports', <FileTextOutlined />),
-  getItem('Notifications', '/vendor/notifications', <BellOutlined />),
+  // getItem('Notifications', '/vendor/notifications', <BellOutlined />),
 ];
 
 // Account section items

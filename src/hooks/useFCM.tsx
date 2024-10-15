@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { onMessage } from 'firebase/messaging';
 import { notification } from 'antd';
 import { messaging } from '@/infrastructure/firebase/firebaseConfig';
@@ -17,9 +17,9 @@ interface FCMMessagePayload {
 }
 
 const useFCM = (role: FCMRoles) => {
-  useEffect(() => {
-    console.log('FCM');
+  const [message, setMessage] = useState();
 
+  useEffect(() => {
     const unsubscribe = onMessage(messaging, (payload) => {
       console.log('Message received. hook ', payload);
 
@@ -28,6 +28,8 @@ const useFCM = (role: FCMRoles) => {
       // Check if the role in the payload matches the current user's role
       if (messageRole !== role) return;
 
+      setMessage(payload.data);
+
       handleForegroundMessage({ title, body, role: messageRole });
     });
 
@@ -35,6 +37,8 @@ const useFCM = (role: FCMRoles) => {
       unsubscribe();
     };
   }, [role]);
+
+  return message;
 };
 
 const handleForegroundMessage = (payload: FCMMessagePayload) => {

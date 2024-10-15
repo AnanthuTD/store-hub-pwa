@@ -9,8 +9,9 @@ import {
   MarkerF,
 } from '@react-google-maps/api';
 import io from 'socket.io-client';
-import { Card, Typography, Row, Col, message, notification } from 'antd';
+import { Card, Typography, Row, Col, message as antdMessage, notification } from 'antd';
 import axiosInstance from '@/config/axios';
+import { useOrderStatus } from '@/presentation/layouts/UserLayout';
 
 const { Title, Text } = Typography;
 
@@ -79,12 +80,14 @@ const TrackPage = ({
   const [order, setOrder] = useState(null);
   const [desitnationLocation, setDestinationLocation] = useState({});
 
+  const message = useOrderStatus();
+
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (initialLocation) {
-      setMarkerPosition(initialLocation);
-      setNextMarkerPosition(initialLocation);
+      setTargetPosition(initialLocation);
+      // setNextMarkerPosition(initialLocation);
     }
   }, [initialLocation]);
 
@@ -100,7 +103,7 @@ const TrackPage = ({
     socket.on('location:update', (data) => {
       console.log(data);
       const { location, destinationLocation, duration, polyline, distance } = data;
-      message.success('Location update received');
+      antdMessage.success('Location update received');
       setDestinationLocation(destinationLocation);
       setTargetPosition(location);
       setNextMarkerPosition(location);
@@ -173,7 +176,11 @@ const TrackPage = ({
             <Title level={4}>Order #{order._id}</Title>
 
             {/* deliveryStatus */}
-            {deliveryStatus && <Text>{deliveryStatus}</Text>}
+            {message ? (
+              <Text>{message?.body}</Text>
+            ) : (
+              deliveryStatus && <Text>{deliveryStatus}</Text>
+            )}
 
             <br />
             <Text strong>Delivery OTP: </Text>
