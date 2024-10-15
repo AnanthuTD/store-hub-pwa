@@ -7,7 +7,7 @@ import {
   TagOutlined,
   DollarOutlined,
   FileTextOutlined,
-  NotificationOutlined,
+  // NotificationOutlined,
   CreditCardOutlined,
   ProfileOutlined,
 } from '@ant-design/icons';
@@ -45,9 +45,9 @@ const items: MenuItem[] = [
     ]),
   ]),
   getItem('User', '/admin/users', <UserOutlined />),
-  getItem('Shops', '/admin/vendors', <ShopOutlined />),
+  getItem('Shops', '/admin/stores', <ShopOutlined />),
   getItem('Products', '/admin/products', <AppstoreOutlined />),
-  getItem('Offers', '/admin/offers', <TagOutlined />),
+  // getItem('Offers', '/admin/offers', <TagOutlined />),
   getItem('Coupons', '/admin/coupons', <TagOutlined />, [
     getItem('Add', '/admin/coupons/add', <TagOutlined />),
     getItem('View', '/admin/coupons/view', <TagOutlined />),
@@ -58,9 +58,9 @@ const items: MenuItem[] = [
   ]),
   getItem('Payment Overview', '/admin/payment-overview', <DollarOutlined />),
   getItem('Reports', '/admin/reports', <FileTextOutlined />),
-  getItem('Notifications', '/admin/notifications', <NotificationOutlined />),
+  // getItem('Notifications', '/admin/notifications', <NotificationOutlined />),
   getItem('Delivery', '/admin/delivery', <CreditCardOutlined />),
-  getItem('Referrals', '/admin/referrals', <CreditCardOutlined />),
+  // getItem('Referrals', '/admin/referrals', <CreditCardOutlined />),
 ];
 
 // Account section items

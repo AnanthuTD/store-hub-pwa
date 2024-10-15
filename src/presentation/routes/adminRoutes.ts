@@ -107,6 +107,22 @@ const adminRoutes: AdminRoutes = {
     icon: LoginIcon,
     layoutType: 'admin',
   },
+  [AdminPages.AdminStoreListingPage]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/admin/stores/StoreListPage'),
+    ),
+    path: '/admin/stores',
+    title: 'Users List',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
+  [AdminPages.AdminStoreProductListingPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/admin/stores/StoreDetails')),
+    path: '/admin/store/details',
+    title: 'Users List',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
 };
 
 export default adminRoutes;
