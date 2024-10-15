@@ -39,7 +39,7 @@ const CompletedOrders: React.FC<OrderOverviewProps> = ({ data }) => {
       title: 'Amount',
       dataIndex: 'totalAmount',
       key: 'totalAmount',
-      render: (amount: Order['totalAmount']) => `$${amount.toFixed(2)} Rs`,
+      render: (amount: Order['totalAmount']) => `₹${amount.toFixed(2)} Rs`,
     },
     {
       title: 'Payment Method',
@@ -81,7 +81,7 @@ const CompletedOrders: React.FC<OrderOverviewProps> = ({ data }) => {
         title: 'Price',
         dataIndex: 'price',
         key: 'price',
-        render: (price: OrderItem['price']) => `$${price.toFixed(2)} Rs`,
+        render: (price: OrderItem['price']) => `₹${price.toFixed(2)} Rs`,
       },
     ];
 

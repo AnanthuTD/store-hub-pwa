@@ -93,7 +93,7 @@ const OrderSuccessComponent: React.FC = () => {
             <Descriptions.Item label="Payment ID">
               <Text copyable>{order?.paymentId}</Text>
             </Descriptions.Item>
-            <Descriptions.Item label="Total Amount">{`$${order?.totalAmount}`}</Descriptions.Item>
+            <Descriptions.Item label="Total Amount">{`₹${order?.totalAmount}`}</Descriptions.Item>
             <Descriptions.Item label="Order Created At">
               {new Date(order.createdAt).toLocaleString()}
             </Descriptions.Item>
