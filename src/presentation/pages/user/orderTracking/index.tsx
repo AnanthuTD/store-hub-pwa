@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { LoadScript } from '@react-google-maps/api';
 import TrackPage from './TrackPage';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import axiosInstance from '@/config/axios';
 import { Modal, Spin } from 'antd';
 import { io } from 'socket.io-client';
@@ -71,6 +71,9 @@ function Page() {
               'No delivery partners available. Amount will be refunded to your wallet.') ||
             (order.deliveryStatus === 'Delivered' && 'Your order has been successfully delivered.')}
           {order?.deliveryStatus}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Link to={'/orders'}>Back to orders</Link>
         </div>
       </Modal>
 
