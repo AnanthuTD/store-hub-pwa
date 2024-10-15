@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Typography } from 'antd';
+import { useLocation } from 'react-router-dom';
 
 const AppHeader: React.FC = () => {
+  const location = useLocation();
+  const [pageTitle, setPageTitle] = useState('');
+  const [icon, setIcon] = useState(<></>);
+
+  useEffect(() => {
+    const { pathname } = location;
+
+    if (pathname.includes('/account')) {
+      setPageTitle('Account');
+      setIcon(<img src="/User.svg" alt="logo" style={{ marginRight: 10 }} />);
+    } else if (pathname.includes('/order')) {
+      setPageTitle('Orders');
+      setIcon(<img src="/Bag.svg" alt="logo" style={{ marginRight: 10 }} />);
+    }
+  }, [location]);
+
   return (
     <div
       style={{
@@ -15,7 +32,7 @@ const AppHeader: React.FC = () => {
         width: '100%',
       }}
     >
-      <img src="/Bag.svg" alt="logo" style={{ marginRight: 10 }} />
+      {icon}
       <Typography.Title
         level={3}
         style={{
@@ -26,7 +43,7 @@ const AppHeader: React.FC = () => {
           fontSize: 24,
         }}
       >
-        Orders
+        {pageTitle}
       </Typography.Title>
     </div>
   );

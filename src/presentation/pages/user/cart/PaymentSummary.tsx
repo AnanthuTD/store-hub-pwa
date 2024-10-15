@@ -27,11 +27,11 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({ totalPrice, itemCount }
           style={{ background: '#22d3ee' }}
           onClick={() => navigate('/checkout')}
         >
-          Pay Now & Collect Later
+          Checkout
         </Button>
-        <Button block type="default" style={{ background: '#a7f3d0' }}>
+        {/*  <Button block type="default" style={{ background: '#a7f3d0' }}>
           Home Deliver + $10 delivery
-        </Button>
+        </Button> */}
 
         {/*  <Card style={{ borderRadius: '8px' }}>
           <Text>Shops to Visit</Text>
