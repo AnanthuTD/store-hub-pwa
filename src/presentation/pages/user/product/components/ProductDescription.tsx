@@ -13,6 +13,9 @@ import {
 } from '@mui/material';
 import { AddShoppingCart, FavoriteBorder, ExpandMore, ExpandLess } from '@mui/icons-material';
 import { IProduct } from '@/domain/entities/IProduct';
+import ReviewList from '../../reviews/ReviewList';
+import { Modal } from 'antd';
+import ReviewForm from '../../reviews/ReviewForm';
 
 interface ProductDescriptionProps {
   product: IProduct;
@@ -22,6 +25,7 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({ product }) => {
   const [expanded, setExpanded] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
+  const [openPostReviewModal, setOpenPostReviewModal] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded((prev) => !prev);
@@ -123,14 +127,24 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({ product }) => {
             </Box>
           )}
 
+          {/* Review */}
           {tabIndex === 1 && (
             <Box sx={{ padding: 2 }}>
               <Typography variant="h6" gutterBottom>
                 Reviews
               </Typography>
               <Typography variant="body1">
-                This is where you can display reviews for the product. You might want to use a list
-                or a grid to show multiple reviews.
+                <Button variant="contained" onClick={() => setOpenPostReviewModal(true)}>
+                  Post Review
+                </Button>
+                <Modal
+                  open={openPostReviewModal}
+                  footer={null}
+                  onCancel={() => setOpenPostReviewModal(false)}
+                >
+                  <ReviewForm productId={product._id} />
+                </Modal>
+                <ReviewList productId={product._id} />
               </Typography>
             </Box>
           )}
