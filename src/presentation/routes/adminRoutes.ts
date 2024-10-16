@@ -123,6 +123,13 @@ const adminRoutes: AdminRoutes = {
     icon: LoginIcon,
     layoutType: 'admin',
   },
+  [AdminPages.AdminOrderListingPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/admin/orders')),
+    path: '/admin/orders',
+    title: 'Order List',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
 };
 
 export default adminRoutes;

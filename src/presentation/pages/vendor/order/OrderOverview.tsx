@@ -28,14 +28,14 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
 
   // Function to update the order status
   const updateStatus = async (order) => {
-    if (!selectedOrder || !order) {
+    if (!selectedOrder && !order) {
       message.error('No order selected');
       return;
     }
 
     console.log(order);
 
-    const { _id: orderId, storeStatus } = selectedOrder || order;
+    const { _id: orderId, storeStatus } = order || selectedOrder;
 
     if (storeStatus === 'ReadyForPickup' && !otp) {
       message.warning('Please enter OTP');
@@ -99,9 +99,9 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
     },
     {
       title: 'Amount',
-      dataIndex: 'totalAmount',
+      dataIndex: 'storeAmount',
       key: 'totalAmount',
-      render: (amount: Order['totalAmount']) => `₹${amount.toFixed(2)} Rs`,
+      render: (amount: Order['storeAmount']) => `₹${amount.toFixed(2)} Rs`,
     },
     {
       title: 'Payment Method',
@@ -194,6 +194,9 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
             Verify
           </Button>,
         ]}
+        closable={true}
+        onClose={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
       >
         <Typography.Text>
           please call and verify the user before delivering the product +91xxxxxxxxxx

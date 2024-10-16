@@ -59,7 +59,7 @@ const items: MenuItem[] = [
   getItem('Payment Overview', '/admin/payment-overview', <DollarOutlined />),
   getItem('Reports', '/admin/reports', <FileTextOutlined />),
   // getItem('Notifications', '/admin/notifications', <NotificationOutlined />),
-  getItem('Delivery', '/admin/delivery', <CreditCardOutlined />),
+  getItem('Orders', '/admin/orders', <CreditCardOutlined />),
   // getItem('Referrals', '/admin/referrals', <CreditCardOutlined />),
 ];
 

@@ -66,6 +66,8 @@ enum AdminPages {
 
   AdminStoreProductListingPage,
   AdminStoreListingPage,
+
+  AdminOrderListingPage,
 }
 
 // Vendor Pages Enum
