@@ -2,6 +2,7 @@ import React from 'react';
 import { Drawer, Spin, Typography, Table, Button, notification } from 'antd';
 import { Order } from './types';
 import axiosInstance from '@/config/axios';
+import DownloadInvoiceButton from './DownloadInvoice';
 
 const { Title, Paragraph } = Typography;
 
@@ -148,6 +149,7 @@ const OrderDetailsDrawer: React.FC<OrderDetailsDrawerProps> = ({
                 }
               />
             </Table>
+            <DownloadInvoiceButton orderId={selectedOrder._id} />
           </>
         )
       )}
