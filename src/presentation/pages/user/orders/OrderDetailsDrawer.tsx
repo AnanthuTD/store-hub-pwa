@@ -1,8 +1,9 @@
 import React from 'react';
-import { Drawer, Spin, Typography, Table, Button, notification } from 'antd';
+import { Drawer, Spin, Typography, Table, Button, notification, Space } from 'antd';
 import { Order } from './types';
 import axiosInstance from '@/config/axios';
 import DownloadInvoiceButton from './DownloadInvoice';
+import { Link } from 'react-router-dom';
 
 const { Title, Paragraph } = Typography;
 
@@ -22,8 +23,8 @@ const isReturnable = (item: any, order: any): boolean => {
   );
 };
 
-const isCancelable = (item: any, order: any): boolean => {
-  return !order.isCancelled && order.storeStatus === 'Pending';
+const isCancelable = (item: any): boolean => {
+  return !item.isCancelled;
 };
 
 const isReturned = (item: any): boolean => {
@@ -35,6 +36,7 @@ const isReturnRequested = (item: any): boolean => {
 };
 
 const isCancelled = (order): boolean => {
+  console.log(order);
   return order.isCancelled;
 };
 
@@ -71,17 +73,27 @@ const OrderDetailsDrawer: React.FC<OrderDetailsDrawerProps> = ({
   };
 
   const handleCancelRequest = (itemId: string) => {
-    const { data } = axiosInstance.post('/user/order/cancel-item', {
-      orderId: selectedOrder._id,
-      itemId,
-    });
+    const { data } = axiosInstance
+      .post('/user/order/cancel-item', {
+        orderId: selectedOrder._id,
+        itemId,
+      })
+      .then(() => {
+        console.log(data);
 
-    console.log(data);
+        setSelectedOrder((prev) => ({ ...prev, isCancelled: true }));
 
-    notification.success({
-      message: 'Cancel Request Sent',
-      description: `Cancel request for product ID ${productId} has been successfully sent.`,
-    });
+        notification.success({
+          message: 'Cancel Request Sent',
+          description: `Cancel request for product has been successfully sent.`,
+        });
+      })
+      .catch(() => {
+        notification.error({
+          message: 'Failed to cancel item',
+          description: 'Something went wrong while cancelling item. Please try again.',
+        });
+      });
   };
 
   return (
@@ -143,13 +155,20 @@ const OrderDetailsDrawer: React.FC<OrderDetailsDrawerProps> = ({
                     <span>Return Requested</span>
                   ) : isReturned(item, selectedOrder) ? (
                     <span>{item.refundMessage} Returned</span>
-                  ) : isCancelled(selectedOrder) ? (
+                  ) : isCancelled(item) ? (
                     <span>Cancelled</span>
                   ) : null
                 }
               />
             </Table>
-            <DownloadInvoiceButton orderId={selectedOrder._id} />
+            <Space>
+              <Link to={`/orderTracking?orderId=${selectedOrder._id}`}>
+                <Button key="track" type="primary">
+                  Track your order
+                </Button>
+              </Link>
+              <DownloadInvoiceButton orderId={selectedOrder._id} />
+            </Space>
           </>
         )
       )}

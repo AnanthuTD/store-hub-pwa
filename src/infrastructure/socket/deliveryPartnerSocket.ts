@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import { io } from 'socket.io-client';
 
-function getCookies() {
+export function getCookies() {
   return Cookies.get('authToken');
 }
 

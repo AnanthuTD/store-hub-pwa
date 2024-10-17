@@ -8,6 +8,7 @@ import { io } from 'socket.io-client';
 import OrderDetails from './OrderDetails';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
+import { message } from 'antd';
 
 const socket = io('http://localhost:4000/track');
 
@@ -77,7 +78,6 @@ const Map = () => {
         {
           enableHighAccuracy: true,
           maximumAge: 0,
-          timeout: 5000,
         },
       );
     }
@@ -97,7 +97,7 @@ const Map = () => {
         setDirections(direction);
       } catch (error) {
         console.error('Error fetching directions:', error);
-        alert('Failed to fetch directions. Please try again.');
+        message.error('Failed to fetch directions. Please try again.');
       }
     };
 

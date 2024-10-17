@@ -43,7 +43,7 @@ const CartComponent = () => {
                   </Text>
                 ) : null,
 
-                <Text key={'avg-price' + item._id}>${item.totalPrice}</Text>,
+                <Text key={'avg-price' + item._id}>Rs{item.totalPrice}</Text>,
                 <Button
                   key={'delete-button' + item._id}
                   type="text"

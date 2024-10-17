@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
 import { RootState } from '@/infrastructure/redux/store';
 import { useSelector } from 'react-redux';
 import { notification, Button, Spin } from 'antd';
@@ -8,8 +7,7 @@ import useFetchOrders from './useFetchOrders'; // Import your hook
 import OrderFilter from './Filter';
 import { Dayjs } from 'dayjs';
 import { LoadingOutlined } from '@ant-design/icons';
-
-const socket = io(import.meta.env.VITE_API_BASE_URL); // Adjust to your server's URL
+import { socket, StoreSocketEvents } from '@/infrastructure/socket/storeSocket';
 
 const Index = () => {
   const store = useSelector((state: RootState) => state.vendor.selectedStore);
@@ -38,7 +36,7 @@ const Index = () => {
     socket.emit('joinStoreRoom', store._id);
 
     // Listen for new orders from the socket
-    socket.on('newOrder', (data) => {
+    socket.on(StoreSocketEvents.StoreNewOrder, (data) => {
       notification.success({
         message: 'New Order Received',
         description: `Order #${data.orderId} has been placed.`,

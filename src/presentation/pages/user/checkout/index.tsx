@@ -167,8 +167,10 @@ const CheckoutPage = () => {
               selectedLocation={selectedLocation}
             />
           </Modal>
-          {basePrice === 0 ? (
-            <Button onClick={handleOrderCreation}>Pay</Button>
+          {useWallet ? (
+            <Button type="primary" onClick={handleOrderCreation}>
+              Pay From wallet
+            </Button>
           ) : (
             <PaymentButton
               onSuccess={onPaymentSuccess}
