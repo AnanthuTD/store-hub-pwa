@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import { fetchProfile } from '@/infrastructure/repositories/UserAuthRepository';
 import useFCM, { FCMRoles } from '@/hooks/useFCM';
 import useRegisterFCMToken from '@/hooks/useRegisterFCMToken';
+import CallComponent from '@/presentation/pages/CallComponent';
 
 // Create a Context for FCM messages
 export const OrderStatusContext = createContext<string | null>(null);
@@ -55,7 +56,7 @@ function UserLayout({ children }: { children: React.ReactNode }) {
     <OrderStatusContext.Provider value={message}>
       <div>
         <Header />
-        {children}
+        {user?.id ? <CallComponent userId={user?.id}>{children}</CallComponent> : null}
       </div>
     </OrderStatusContext.Provider>
   );

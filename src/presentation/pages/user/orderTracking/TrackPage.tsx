@@ -9,9 +9,10 @@ import {
   MarkerF,
 } from '@react-google-maps/api';
 import io from 'socket.io-client';
-import { Card, Typography, Row, Col, message as antdMessage, notification } from 'antd';
+import { Card, Typography, Row, Col, message as antdMessage, notification, Button } from 'antd';
 import axiosInstance from '@/config/axios';
 import { useOrderStatus } from '@/presentation/layouts/UserLayout';
+import { useCall } from '../../CallComponent';
 
 const { Title, Text } = Typography;
 
@@ -45,6 +46,7 @@ const TrackPage = ({
   orderId,
   initialLocation,
   deliveryOtp,
+  deliveryPartnerId,
 }: {
   orderId: string;
   initialLocation: {
@@ -56,6 +58,8 @@ const TrackPage = ({
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   });
+
+  const { initiateCall } = useCall();
 
   const [markerPosition, setMarkerPosition] = useState(
     initialLocation || {
@@ -181,6 +185,8 @@ const TrackPage = ({
             ) : (
               deliveryStatus && <Text>{deliveryStatus}</Text>
             )}
+
+            <Button onClick={() => initiateCall(deliveryPartnerId)}>Call partner</Button>
 
             <br />
             <Text strong>Delivery OTP: </Text>

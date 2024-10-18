@@ -5,9 +5,6 @@ import { Link, useSearchParams } from 'react-router-dom';
 import axiosInstance from '@/config/axios';
 import { Modal, Spin } from 'antd';
 import { io } from 'socket.io-client';
-import CallComponent from '../../CallComponent';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/infrastructure/redux/store';
 
 const socket = io('http://localhost:4000');
 
@@ -17,8 +14,6 @@ function Page() {
   const [order, setOrder] = useState(null);
   const [initialLocation, setInitialLocation] = useState(null);
   const [deliveryOtp, setDeliveryOtp] = useState(null);
-  const user = useSelector((state: RootState) => state.user.data);
-  console.log(user);
 
   const fetchOrder = async () => {
     if (!orderId) return;
@@ -59,11 +54,10 @@ function Page() {
     return <div>Order ID is missing</div>;
   }
 
-  if (!order && !user.id) return <div>No order id found</div>;
+  if (!order) return <div>No order id found</div>;
 
   return (
     <div>
-      <CallComponent to={order?.deliveryPartnerId} from={user?.id} />
       <Modal
         open={!order || ['Pending', 'Failed', 'Delivered'].includes(order.deliveryStatus)}
         closable={false}
@@ -86,7 +80,12 @@ function Page() {
       </Modal>
 
       <LoadScript googleMapsApiKey={import.meta.env.VITE_MAP_API_KEY} libraries={['geometry']}>
-        <TrackPage orderId={orderId} initialLocation={initialLocation} deliveryOtp={deliveryOtp} />
+        <TrackPage
+          orderId={orderId}
+          initialLocation={initialLocation}
+          deliveryOtp={deliveryOtp}
+          deliveryPartnerId={order?.deliveryPartnerId}
+        />
       </LoadScript>
     </div>
   );

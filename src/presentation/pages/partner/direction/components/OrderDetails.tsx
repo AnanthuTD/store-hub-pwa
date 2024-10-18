@@ -19,9 +19,9 @@ import _ from 'lodash';
 import axiosInstance from '@/config/axios';
 import { dummyDistance, dummyDuration, dummyOrder } from './sampleOrderData';
 import { useNavigate } from 'react-router-dom';
-import CallComponent from '@/presentation/pages/CallComponent';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
+import { useCall } from '@/presentation/pages/CallComponent';
 
 function OrderDetails({
   distance = dummyDistance,
@@ -42,6 +42,8 @@ function OrderDetails({
   const navigate = useNavigate();
   const partner = useSelector((state: RootState) => state.partner.data);
   console.log('partner: ', partner);
+
+  const { initiateCall } = useCall();
 
   useEffect(() => {
     const data = localStorage.getItem('orderDetailsAndDirection');
@@ -237,7 +239,7 @@ function OrderDetails({
               </Typography.Text>
               <Typography.Text>User phone: {userPhone}</Typography.Text>
 
-              <CallComponent to={orderDetails?.user?._id} from={partner.id} />
+              <Button onClick={() => initiateCall(orderDetails?.user?._id)}>Call User</Button>
 
               <Divider />
 

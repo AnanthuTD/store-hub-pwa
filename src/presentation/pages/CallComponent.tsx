@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, createContext, useContext } from 'react';
 import { Button, Row, Col, Drawer, Divider } from 'antd';
 import { SocketService } from '@/infrastructure/services/SocketService';
 import { WebRTCService } from '@/infrastructure/services/WebRTCService';
@@ -8,8 +8,18 @@ import { EventNames } from './eventNames';
 const socketService = new SocketService();
 const webRTCService = new WebRTCService();
 
-const CallComponent: React.FC = ({ to, from }) => {
-  console.log(to, from);
+const CallContext = createContext(undefined);
+
+export const useCall = () => {
+  const context = useContext(CallContext);
+  if (!context) {
+    throw new Error('useCall must be used within a CallProvider');
+  }
+  return context;
+};
+
+const CallComponent: React.FC = ({ children, userId }) => {
+  console.log(userId);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [callAccepted, setCallAccepted] = useState<boolean>(false);
@@ -17,6 +27,7 @@ const CallComponent: React.FC = ({ to, from }) => {
   const [caller, setCaller] = useState<string>('');
   const [callerSignal, setCallerSignal] = useState<RTCSessionDescriptionInit | null>(null);
   const [iceCandidates, setIceCandidates] = useState<RTCIceCandidateInit[]>([]);
+  const [otherPeer, setOtherPeer] = useState(null);
 
   const callManager = new CallManager(webRTCService, socketService, setRemoteStream);
 
@@ -29,7 +40,7 @@ const CallComponent: React.FC = ({ to, from }) => {
       setStream(userStream);
     });
 
-    socketService.emit('me', { userId: from });
+    socketService.emit('me', { userId });
 
     socketService.on(
       EventNames.CALL_INCOMING,
@@ -73,7 +84,8 @@ const CallComponent: React.FC = ({ to, from }) => {
     };
   }, [callAccepted]);
 
-  const initiateCall = () => {
+  const initiateCall = (to) => {
+    setOtherPeer(to);
     if (stream) {
       callManager.initiateCall(to, stream);
     }
@@ -106,89 +118,82 @@ const CallComponent: React.FC = ({ to, from }) => {
     setCallAccepted(false);
     setCaller('');
     setIceCandidates([]);
-    socketService.emit(EventNames.END_CALL, { to });
+    socketService.emit(EventNames.END_CALL, { to: otherPeer });
     if (stream) stream.getTracks().forEach((track) => track.stop());
   };
 
   return (
-    <div style={{ padding: '20px', backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
-      {/* Centering the row */}
-      <Row justify="center" style={{ marginTop: '20px' }}>
-        <Button
-          type="primary"
-          onClick={() => initiateCall()}
+    <CallContext.Provider value={{ initiateCall }}>
+      <div style={{ padding: '20px', backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
+        <Drawer
+          closable={false}
+          destroyOnClose
+          placement="top"
+          open={incomingCall || callAccepted}
+          height={'25%'}
+          styles={{
+            body: {
+              backgroundColor: '#ffffff',
+              borderRadius: '20px 20px 20px 20px',
+              padding: '20px',
+              boxShadow: '0px -5px 15px rgba(0, 0, 0, 0.1)',
+            },
+          }}
           style={{
-            backgroundColor: '#1890ff',
-            borderColor: '#1890ff',
-            borderRadius: '8px',
-            padding: '0 20px',
+            top: 0,
+            borderRadius: '20px 20px 20px 20px',
+            marginTop: '5px',
           }}
         >
-          Initiate Call
-        </Button>
-      </Row>
-
-      <Drawer
-        closable={false}
-        destroyOnClose
-        placement="top"
-        open={incomingCall || callAccepted}
-        height={'25%'}
-        styles={{
-          body: {
-            backgroundColor: '#ffffff',
-            borderRadius: '20px 20px 20px 20px',
-            padding: '20px',
-            boxShadow: '0px -5px 15px rgba(0, 0, 0, 0.1)',
-          },
-        }}
-        style={{
-          top: 0,
-          borderRadius: '20px 20px 20px 20px',
-          marginTop: '5px',
-        }}
-      >
-        <p
-          style={{ fontSize: '16px', fontWeight: '500', textAlign: 'center', marginBottom: '10px' }}
-        >
-          {incomingCall ? 'An incoming call is waiting...' : 'Call is in progress...'}
-        </p>
-        <Divider style={{ margin: '10px 0' }} />
-
-        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-          <Button
-            type="primary"
+          <p
             style={{
-              backgroundColor: '#28a745',
-              borderColor: '#28a745',
-              borderRadius: '8px',
-              padding: '0 20px',
+              fontSize: '16px',
+              fontWeight: '500',
+              textAlign: 'center',
+              marginBottom: '10px',
             }}
-            onClick={answerCall}
           >
-            Accept Call
-          </Button>
-          <Button
-            onClick={hangupCall}
-            style={{
-              backgroundColor: '#dc3545',
-              borderColor: '#dc3545',
-              borderRadius: '8px',
-              padding: '0 20px',
-            }}
-            type="primary"
-          >
-            Hang Up
-          </Button>
-        </div>
+            {incomingCall ? 'An incoming call is waiting...' : 'Call is in progress...'}
+          </p>
+          <Divider style={{ margin: '10px 0' }} />
 
-        <Row gutter={16} style={{ marginTop: '20px' }}>
-          <Col span={24} style={{ textAlign: 'center' }}>
-            <audio ref={remoteAudioRef} autoPlay controls={false} />
-          </Col>
-        </Row>
-      </Drawer>
-    </div>
+          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <Button
+              type="primary"
+              style={{
+                backgroundColor: '#28a745',
+                borderColor: '#28a745',
+                borderRadius: '8px',
+                padding: '0 20px',
+              }}
+              onClick={answerCall}
+            >
+              Accept Call
+            </Button>
+            <Button
+              onClick={hangupCall}
+              style={{
+                backgroundColor: '#dc3545',
+                borderColor: '#dc3545',
+                borderRadius: '8px',
+                padding: '0 20px',
+              }}
+              type="primary"
+            >
+              Hang Up
+            </Button>
+          </div>
+
+          <Row gutter={16} style={{ marginTop: '20px' }}>
+            <Col span={24} style={{ textAlign: 'center' }}>
+              <audio ref={remoteAudioRef} autoPlay controls={false} />
+            </Col>
+          </Row>
+        </Drawer>
+      </div>
+
+      {children}
+    </CallContext.Provider>
   );
 };
 
