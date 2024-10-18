@@ -25,6 +25,8 @@ export class CallManager {
     console.log('initiating call');
     this.webRTCService.createPeerConnection(
       (remoteStream) => {
+        console.log('setting remote stream .....', remoteStream);
+
         // Set the remote stream to be used in UI
         this.setRemoteStream(remoteStream);
       },
@@ -44,6 +46,7 @@ export class CallManager {
     callerSignal: RTCSessionDescriptionInit,
     stream: MediaStream,
     iceCandidates: RTCIceCandidateInit[],
+    caller,
   ): Promise<void> {
     try {
       console.log('answering call');
@@ -56,7 +59,7 @@ export class CallManager {
         },
         (iceCandidate) => {
           // Send the ICE candidate to the caller
-          this.socketService.emit(EVENT_CANDIDATE, { candidate: iceCandidate });
+          this.socketService.emit(EVENT_CANDIDATE, { to: caller, candidate: iceCandidate });
         },
       );
 
@@ -79,7 +82,7 @@ export class CallManager {
 
       // Create answer SDP and send it to the caller
       const answer = await this.webRTCService.createAnswer();
-      this.socketService.emit(EVENT_ANSWER_CALL, { signal: answer });
+      this.socketService.emit(EVENT_ANSWER_CALL, { to: caller, signal: answer });
     } catch (error) {
       console.error('Error answering call:', error);
     }
@@ -87,5 +90,16 @@ export class CallManager {
 
   acceptedCall(receiverSignal: RTCSessionDescriptionInit) {
     this.webRTCService.setRemoteDescription(new RTCSessionDescription(receiverSignal));
+  }
+
+  hangupCall() {
+    console.log('hanging up call');
+    this.webRTCService.close(); // Close the peer connection
+    this.callAccepted = false;
+    this.setRemoteStream(null); // Reset remote stream in UI
+
+    // Clean up ICE candidates or any other call-related state
+    this.socketService.emit('call:endCall', null); // Inform others about call hangup
+    this.socketService.off(EVENT_CANDIDATE); // Remove ICE candidate listeners if needed
   }
 }

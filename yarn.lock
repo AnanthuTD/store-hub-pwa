@@ -2966,6 +2966,11 @@ at-least-node@^1.0.0:
   resolved "https://registry.npmjs.org/at-least-node/-/at-least-node-1.0.0.tgz"
   integrity sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==
 
+audiomotion-analyzer@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/audiomotion-analyzer/-/audiomotion-analyzer-4.5.0.tgz#6f575b3e704a953b6cf6f25f942c1f335675894c"
+  integrity sha512-qnmB8TSbrxYkTbFgsQeeym0Z/suQx4c0jFg9Yh5+gaPw6J4AFLdfFpagdnDbtNEsj6K7BntgsC3bkdut5rxozg==
+
 available-typed-arrays@^1.0.7:
   version "1.0.7"
   resolved "https://registry.npmjs.org/available-typed-arrays/-/available-typed-arrays-1.0.7.tgz"
@@ -6028,6 +6033,11 @@ rc-virtual-list@^3.14.2, rc-virtual-list@^3.5.1, rc-virtual-list@^3.5.2:
     rc-resize-observer "^1.0.0"
     rc-util "^5.36.0"
 
+react-audio-visualize@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-audio-visualize/-/react-audio-visualize-1.2.0.tgz#b53f79223da2e4117ffbb37cdfd5b5ceb1d1dd4e"
+  integrity sha512-rfO5nmT0fp23gjU0y2WQT6+ZOq2ZsuPTMphchwX1PCz1Di4oaIr6x7JZII8MLrbHdG7UB0OHfGONTIsWdh67kQ==
+
 react-cursor-position@2.5.3:
   version "2.5.3"
   resolved "https://registry.yarnpkg.com/react-cursor-position/-/react-cursor-position-2.5.3.tgz#683acdeeba0e225d856fa8a26ae3b4333de7b294"
@@ -6164,6 +6174,11 @@ react-transition-group@^4.4.5:
     dom-helpers "^5.0.1"
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
+
+react-voice-visualizer@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-voice-visualizer/-/react-voice-visualizer-2.0.4.tgz#4c139b74f1956435bc8ce2a8f4b034672ba9edfb"
+  integrity sha512-YAdHVD/itgMsq7eLaoSX1dhl97PYHyRn1HnutuV4poygAhCXU/++BsEkmZMkxItpD7wadmayiVNX0BgMhuMgSg==
 
 react@^18.2.0:
   version "18.3.1"

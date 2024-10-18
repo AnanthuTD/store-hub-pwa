@@ -26,6 +26,8 @@ export class WebRTCService {
   addStream(stream: MediaStream): void {
     if (!this.peerConnection) throw new Error('PeerConnection is not initialized');
 
+    console.log('stream: ', stream);
+
     stream.getTracks().forEach((track) => {
       this.peerConnection?.addTrack(track, stream);
     });
@@ -58,5 +60,10 @@ export class WebRTCService {
     if (!this.peerConnection) throw new Error('PeerConnection is not initialized');
 
     return this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+  }
+
+  close() {
+    if (this.peerConnection) this.peerConnection.close();
+    this.peerConnection = null;
   }
 }
