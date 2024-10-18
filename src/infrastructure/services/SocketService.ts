@@ -3,14 +3,16 @@ import { io, Socket } from 'socket.io-client';
 export class SocketService {
   private socket: Socket;
 
-  constructor(userId) {
+  constructor() {
     console.log(import.meta.env.VITE_API_BASE_URL + '/call');
-    this.socket = io(import.meta.env.VITE_API_BASE_URL + '/call', {
+    this.socket = io(
+      import.meta.env.VITE_API_BASE_URL + '/call' /* , {
       auth: {
         token: userId,
       },
       transports: ['websocket'],
-    });
+    } */,
+    );
   }
 
   on(event: string, callback: (data: any) => void): void {

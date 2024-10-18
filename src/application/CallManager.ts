@@ -21,7 +21,7 @@ export class CallManager {
     this.setRemoteStream = setRemoteStream;
   }
 
-  initiateCall(userId: string, stream: MediaStream): void {
+  initiateCall(to: string, stream: MediaStream): void {
     console.log('initiating call');
     this.webRTCService.createPeerConnection(
       (remoteStream) => {
@@ -31,14 +31,14 @@ export class CallManager {
         this.setRemoteStream(remoteStream);
       },
       (iceCandidate) => {
-        this.socketService.emit(EVENT_CANDIDATE, { candidate: iceCandidate, to: userId });
+        this.socketService.emit(EVENT_CANDIDATE, { candidate: iceCandidate, to: to });
       },
     );
 
     this.webRTCService.addStream(stream);
 
     this.webRTCService.createOffer().then((offer) => {
-      this.socketService.emit(EVENT_CALL_USER, { userToCall: userId, signalData: offer });
+      this.socketService.emit(EVENT_CALL_USER, { userToCall: to, signalData: offer });
     });
   }
 
