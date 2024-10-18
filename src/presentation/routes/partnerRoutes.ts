@@ -118,6 +118,13 @@ const partnerRoutes: PartnerRoutes = {
     icon: LoginIcon,
     layoutType: 'deliveryPartner',
   },
+  [PartnerPages.CallUserPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/call/CallComponent')),
+    path: '/partner/call',
+    title: 'Transactions',
+    icon: LoginIcon,
+    // layoutType: 'vendor',
+  },
 };
 
 export default partnerRoutes;

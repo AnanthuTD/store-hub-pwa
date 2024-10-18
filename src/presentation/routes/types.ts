@@ -41,6 +41,8 @@ enum PartnerPages {
   PartnerAccountPage,
   PartnerEditProfilePage,
   PartnerWalletPage,
+
+  CallUserPage,
 }
 
 // Admin Pages Enum
