@@ -21,7 +21,7 @@ import { dummyDistance, dummyDuration, dummyOrder } from './sampleOrderData';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
-import { useCall } from '@/presentation/pages/CallComponent';
+import { useCall } from '@/presentation/components/call/CallComponent';
 
 function OrderDetails({
   distance = dummyDistance,

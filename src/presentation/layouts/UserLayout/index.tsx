@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 import { fetchProfile } from '@/infrastructure/repositories/UserAuthRepository';
 import useFCM, { FCMRoles } from '@/hooks/useFCM';
 import useRegisterFCMToken from '@/hooks/useRegisterFCMToken';
-import CallComponent from '@/presentation/pages/CallComponent';
+import CallComponent from '@/presentation/components/call/CallComponent';
 
 // Create a Context for FCM messages
 export const OrderStatusContext = createContext<string | null>(null);

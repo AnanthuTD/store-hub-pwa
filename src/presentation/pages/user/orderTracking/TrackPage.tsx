@@ -12,7 +12,7 @@ import io from 'socket.io-client';
 import { Card, Typography, Row, Col, message as antdMessage, notification, Button } from 'antd';
 import axiosInstance from '@/config/axios';
 import { useOrderStatus } from '@/presentation/layouts/UserLayout';
-import { useCall } from '../../CallComponent';
+import { useCall } from '../../../components/call/CallComponent';
 
 const { Title, Text } = Typography;
 

@@ -3,7 +3,7 @@ import Map from './components/Map';
 import { LoadScript } from '@react-google-maps/api';
 import useRegisterFCMToken from '@/hooks/useRegisterFCMToken';
 import useFCM, { FCMRoles } from '@/hooks/useFCM';
-import CallComponent from '../../CallComponent';
+import CallComponent from '../../../components/call/CallComponent';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
 
