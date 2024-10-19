@@ -124,74 +124,71 @@ const CallComponent: React.FC = ({ children, userId }) => {
 
   return (
     <CallContext.Provider value={{ initiateCall }}>
-      <div style={{ padding: '20px', backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
-        <Drawer
-          closable={false}
-          destroyOnClose
-          placement="top"
-          open={incomingCall || callAccepted}
-          height={'25%'}
-          styles={{
-            body: {
-              backgroundColor: '#ffffff',
-              borderRadius: '20px 20px 20px 20px',
-              padding: '20px',
-              boxShadow: '0px -5px 15px rgba(0, 0, 0, 0.1)',
-            },
-          }}
-          style={{
-            top: 0,
+      <Drawer
+        closable={false}
+        destroyOnClose
+        placement="top"
+        open={incomingCall || callAccepted}
+        height={'25%'}
+        styles={{
+          body: {
+            backgroundColor: '#ffffff',
             borderRadius: '20px 20px 20px 20px',
-            marginTop: '5px',
+            padding: '20px',
+            boxShadow: '0px -5px 15px rgba(0, 0, 0, 0.1)',
+          },
+        }}
+        style={{
+          top: 0,
+          borderRadius: '20px 20px 20px 20px',
+          marginTop: '5px',
+        }}
+      >
+        <p
+          style={{
+            fontSize: '16px',
+            fontWeight: '500',
+            textAlign: 'center',
+            marginBottom: '10px',
           }}
         >
-          <p
+          {incomingCall ? 'An incoming call is waiting...' : 'Call is in progress...'}
+        </p>
+        <Divider style={{ margin: '10px 0' }} />
+
+        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+          <Button
+            type="primary"
             style={{
-              fontSize: '16px',
-              fontWeight: '500',
-              textAlign: 'center',
-              marginBottom: '10px',
+              backgroundColor: '#28a745',
+              borderColor: '#28a745',
+              borderRadius: '8px',
+              padding: '0 20px',
             }}
+            onClick={answerCall}
           >
-            {incomingCall ? 'An incoming call is waiting...' : 'Call is in progress...'}
-          </p>
-          <Divider style={{ margin: '10px 0' }} />
+            Accept Call
+          </Button>
+          <Button
+            onClick={hangupCall}
+            style={{
+              backgroundColor: '#dc3545',
+              borderColor: '#dc3545',
+              borderRadius: '8px',
+              padding: '0 20px',
+            }}
+            type="primary"
+          >
+            Hang Up
+          </Button>
+        </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-            <Button
-              type="primary"
-              style={{
-                backgroundColor: '#28a745',
-                borderColor: '#28a745',
-                borderRadius: '8px',
-                padding: '0 20px',
-              }}
-              onClick={answerCall}
-            >
-              Accept Call
-            </Button>
-            <Button
-              onClick={hangupCall}
-              style={{
-                backgroundColor: '#dc3545',
-                borderColor: '#dc3545',
-                borderRadius: '8px',
-                padding: '0 20px',
-              }}
-              type="primary"
-            >
-              Hang Up
-            </Button>
-          </div>
-
-          <Row gutter={16} style={{ marginTop: '20px' }}>
-            <Col span={24} style={{ textAlign: 'center' }}>
-              <audio ref={remoteAudioRef} autoPlay controls={false} />
-            </Col>
-          </Row>
-        </Drawer>
-      </div>
-
+        <Row gutter={16} style={{ marginTop: '20px' }}>
+          <Col span={24} style={{ textAlign: 'center' }}>
+            <audio ref={remoteAudioRef} autoPlay controls={false} />
+          </Col>
+        </Row>
+      </Drawer>
       {children}
     </CallContext.Provider>
   );
