@@ -54,9 +54,15 @@ function UserLayout({ children }: { children: React.ReactNode }) {
   return (
     // Provide the FCM message to all child components via Context
     <OrderStatusContext.Provider value={message}>
-      <div>
+      <div
+        style={{ height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+      >
         <Header />
-        {user?.id ? <CallComponent userId={user?.id}>{children}</CallComponent> : null}
+        {user?.id ? (
+          <CallComponent userId={user?.id}>
+            <div style={{ flexGrow: 1, overflow: 'hidden', overflowY: 'scroll' }}>{children}</div>
+          </CallComponent>
+        ) : null}
       </div>
     </OrderStatusContext.Provider>
   );
