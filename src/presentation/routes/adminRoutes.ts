@@ -130,6 +130,13 @@ const adminRoutes: AdminRoutes = {
     icon: LoginIcon,
     layoutType: 'admin',
   },
+  [AdminPages.AdminChatPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/admin/chat/ChatPage')),
+    path: '/admin/chat',
+    title: 'Order List',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
 };
 
 export default adminRoutes;

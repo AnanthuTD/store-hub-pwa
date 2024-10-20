@@ -2,41 +2,31 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
 import { Button, Input, List, message as antdMessage } from 'antd';
-import { io, Socket } from 'socket.io-client';
-import Message from './message';
+import { io } from 'socket.io-client';
+import Message from './Message';
 // import { Chat } from "@/utils/Interfaces";
 import { TextAreaRef } from 'antd/es/input/TextArea';
-import axiosInstance from '@/config/axios';
-
-// Socket.IO types for better typing (optional)
-interface ServerToClientEvents {
-  message: (data: Chat) => void;
-}
-
-interface ClientToServerEvents {
-  sendMessage: (data: { message: string }) => void;
-}
 
 interface ChatBoxProps {
-  recipient: string; // username
+  recipient: string;
+  pastChats?: Chat[];
 }
 
-const socketConnection = io('http://localhost:4000');
+const socketConnection = io('http://localhost:4000/adminChat');
 
-const ChatBox: React.FC<ChatBoxProps> = ({ recipient }) => {
+const ChatBox: React.FC<ChatBoxProps> = ({ recipient, pastChats = [], senderId }) => {
   const chatLogRef = useRef<HTMLDivElement>(null);
   const textAreaRef = useRef<TextAreaRef>(null);
-  const [socket, setSocket] = useState<Socket<ServerToClientEvents, ClientToServerEvents> | null>(
-    null,
-  );
   const [chats, setChats] = useState<Chat[]>([]);
   const [message, setMessage] = useState('');
 
   // Initialize Socket.IO
   useEffect(() => {
-    setSocket(socketConnection);
-
     socketConnection.on('message', (newMessage: Chat) => {
+      const array = [...chats, newMessage];
+
+      console.log(array);
+
       setChats((prevChats) => [...prevChats, newMessage]);
 
       if (chatLogRef.current) {
@@ -44,38 +34,23 @@ const ChatBox: React.FC<ChatBoxProps> = ({ recipient }) => {
       }
     });
 
+    socketConnection.emit('initiate', senderId, recipient);
+
     socketConnection.on('disconnect', () => {
       antdMessage.error('Chat disconnected unexpectedly.');
     });
 
     return () => {
-      // socketConnection.disconnect();
+      console.log('unmounting chat');
+      socketConnection.off('message');
+      socketConnection.off('me');
     };
-  }, [recipient]);
-
-  // Load previous messages
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        if (!recipient) return;
-
-        const { data }: { data: { message_list: Chat[] } } = await axiosInstance.get(
-          `/user/chat/${recipient}/load_messages/`,
-        );
-        setChats(data.message_list);
-      } catch (error) {
-        console.error('Error during Axios request:', error);
-        antdMessage.warning('Unable to load messages!');
-      }
-    };
-
-    fetchMessages();
   }, [recipient]);
 
   // Send message
   const handleSendMessage = () => {
-    if (socket && message) {
-      socket.emit('sendMessage', { message });
+    if (socketConnection && message) {
+      socketConnection.emit('sendMessage', { message });
       setMessage('');
     }
   };
@@ -106,6 +81,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ recipient }) => {
     return new Date(timestamp).toLocaleString('en-IN', options);
   };
 
+  useEffect(() => {
+    setChats(pastChats);
+  }, [pastChats]);
+
   return (
     <div
       style={{
@@ -129,8 +108,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({ recipient }) => {
           renderItem={(chat, index) => (
             <List.Item key={chat.id} style={{ padding: '10px 0' }}>
               <Message
+                endNoneRounded={[true]}
                 chat={chat}
-                position={chat.sender_username === recipient ? 'left' : 'right'}
+                position={chat.senderId === recipient ? 'left' : 'right'}
                 displayTime={index === chats.length - 1}
               />
               {index === chats.length - 1 && (

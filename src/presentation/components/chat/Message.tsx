@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Popover, Button, Typography } from 'antd';
-import axiosInstance from '@/config/axios';
+import { Typography } from 'antd';
 
 const { Text } = Typography;
 
@@ -15,8 +14,8 @@ function Message({
   displayTime?: boolean;
   endNoneRounded: boolean[]; // [start-end, end-end]
 }) {
-  const [optionsVisible, setOptionsVisible] = useState(false);
-  const [unmounted, setUnmounted] = useState(false); // State to track if the component should be unmounted
+  const [, setOptionsVisible] = useState(false);
+  const [unmounted] = useState(false); // State to track if the component should be unmounted
   const messageContainerRef = useRef<HTMLDivElement>(null);
   const messageChildContainerRef = useRef<HTMLDivElement>(null);
   const [rounded, setRounded] = useState('border-radius: 50%'); // Changed to inline style for rounded corners
@@ -29,25 +28,6 @@ function Message({
       hour12: true,
     });
   }
-
-  const handleUnsend = async () => {
-    try {
-      const response = await axiosInstance.delete('/user/chat/unsend/', {
-        data: { id: chat.id },
-        withCredentials: true,
-      });
-      const responseData = response.data;
-
-      if (responseData.status) {
-        setOptionsVisible(false);
-        setUnmounted(true); // Update the state to indicate that the component should be unmounted
-      } else {
-        alert('Cannot unsend');
-      }
-    } catch (error) {
-      console.error('Failed to unsend:', error);
-    }
-  };
 
   useEffect(() => {
     if (messageContainerRef.current && messageChildContainerRef.current) {
@@ -101,15 +81,6 @@ function Message({
     color: '#888', // Secondary color
   };
 
-  // Popup content
-  const content = (
-    <div>
-      <Button onClick={handleUnsend} type="text">
-        Unsend
-      </Button>
-    </div>
-  );
-
   return (
     <div
       style={messageContainerStyle}
@@ -120,7 +91,7 @@ function Message({
       {/* Message Content */}
       <div style={messageContentStyle} ref={messageChildContainerRef}>
         <div style={messageBubbleStyle}>
-          <Text style={{ overflowWrap: 'anywhere', fontSize: '1.25rem' }}>{chat.message}</Text>
+          <Text style={{ overflowWrap: 'anywhere', fontSize: '1.25rem' }}>{chat.content}</Text>
         </div>
         {displayTime && (
           <div style={timeStyle}>
@@ -130,7 +101,7 @@ function Message({
       </div>
 
       {/* Options Pop-up */}
-      <Popover
+      {/* <Popover
         content={content}
         open={optionsVisible}
         placement="topRight"
@@ -138,10 +109,9 @@ function Message({
         onOpenChange={setOptionsVisible}
       >
         <div style={{ cursor: 'pointer' }}>
-          {/* Trigger to show options, can be an icon or text */}
           <Button type="text">Options</Button>
         </div>
-      </Popover>
+      </Popover> */}
     </div>
   );
 }
