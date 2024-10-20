@@ -92,6 +92,7 @@ enum VendorPages {
   VendorCollectedItemPage,
 
   VendorTransactionsPage,
+  VendorSubscriptionPage,
 }
 
 // Common Pages Enum
