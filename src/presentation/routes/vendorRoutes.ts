@@ -97,6 +97,13 @@ const vendorRoutes: VendorRoutes = {
     icon: LoginIcon,
     layoutType: 'vendor',
   },
+  [VendorPages.VendorReportPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/vendor/report')),
+    path: '/vendor/reports',
+    title: 'Report',
+    icon: LoginIcon,
+    layoutType: 'vendor',
+  },
 };
 
 export default vendorRoutes;
