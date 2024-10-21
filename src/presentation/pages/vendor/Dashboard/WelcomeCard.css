@@ -1,0 +1,37 @@
+.custom-card {
+  background: url('/Big Card.svg') no-repeat center center;
+  background-size: cover;
+  color: white;
+  border-radius: 16px;
+  padding: 20px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+}
+
+.card-content {
+  max-width: 50%;
+}
+
+.welcome-text {
+  font-size: 16px;
+  color: #ffffff99;
+}
+
+.name-text {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 0;
+  color: #ffffff;
+}
+
+.description-text {
+  font-size: 18px;
+  color: #ffffff;
+  margin: 16px 0;
+}
+
+.record-button {
+  color: white;
+  font-size: 16px;
+}
