@@ -1,66 +1,90 @@
-import { Row, Space, Col, Avatar } from 'antd';
-import React from 'react';
+import { Row, Space, Col, message } from 'antd';
+import React, { useEffect, useState } from 'react';
 import AnalyticsCards from './AnalyticsCards';
 import WelcomeCard from './WelcomeCard';
 import SatisfactionRateCard from './SatisfactionRateCard';
-import { SketchOutlined } from '@ant-design/icons';
 import MostViewedProductsCard from './MostViewedProductsCard';
 import useUserProfile from '@/hooks/useUserProfile';
-
-const products = [
-  {
-    id: 1,
-    name: 'product 1',
-    icon: <Avatar icon={<SketchOutlined />} />,
-    viewedAt: '22 DEC 7:20 PM',
-  },
-  {
-    id: 2,
-    name: 'product 2',
-    icon: <Avatar icon={<SketchOutlined />} />,
-    viewedAt: '21 DEC 11:21 PM',
-  },
-  {
-    id: 3,
-    name: 'product 3',
-    icon: <Avatar icon={<SketchOutlined />} />,
-    viewedAt: '21 DEC 9:28 PM',
-  },
-  {
-    id: 4,
-    name: 'product 4',
-    icon: <Avatar icon={<SketchOutlined />} />,
-    viewedAt: '20 DEC 3:52 PM',
-  },
-  {
-    id: 5,
-    name: 'product 2',
-    icon: <Avatar icon={<SketchOutlined />} />,
-    viewedAt: '19 DEC 11:35 PM',
-  },
-  {
-    id: 6,
-    name: 'product 6',
-    icon: <Avatar icon={<SketchOutlined />} />,
-    viewedAt: '18 DEC 4:41 PM',
-  },
-];
+import axiosInstance from '@/config/axios';
+import { RootState } from '@/infrastructure/redux/store';
+import { useSelector } from 'react-redux';
+import CouponCard from './CouponCard';
+import RevenueGraph from './RevenueGraph';
 
 const App = () => {
+  const store = useSelector((state: RootState) => state.vendor.selectedStore);
+  const [analytics, setAnalytics] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
+  const [coupons, setCoupons] = useState([]);
+  const [satisfactionRate, setSatisfactionRate] = useState(0);
+  const [revenueData, setRevenueData] = useState({ daily: [], monthly: [], yearly: [] });
+
   const handleRecord = () => {
     console.log('Recording...');
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [
+          revenueData,
+          returnsData,
+          cancellationsData,
+          averageOrderValueData,
+          topProductsData,
+          couponsData,
+          satisfactionRating,
+          revenueChartsData,
+        ] = await Promise.all([
+          axiosInstance.get(`/vendor/dashboard/store/${store?._id}/revenue`),
+          axiosInstance.get(`/vendor/dashboard/store/${store?._id}/returns`),
+          axiosInstance.get(`/vendor/dashboard/store/${store?._id}/cancellations`),
+          axiosInstance.get(`/vendor/dashboard/store/${store?._id}/average-order-value`),
+          axiosInstance.get(`/vendor/dashboard/store/${store?._id}/top-products`),
+          axiosInstance.get(`/vendor/dashboard/store/${store?._id}/coupons`),
+          axiosInstance.get(`/vendor/dashboard/store/${store?._id}/satisfaction-rate`),
+          axiosInstance.get(`/vendor/dashboard/store/${store?._id}/revenue-charts`),
+        ]);
+
+        const newAnalytics = [
+          { label: 'Total Revenue', data: revenueData.data.totalRevenue },
+          { label: 'Total Returns Requests', data: returnsData.data.totalReturnRequests },
+          { label: 'Completed Returns', data: returnsData.data.completedReturns },
+          { label: 'Cancelled Orders', data: cancellationsData.data.cancelledOrders },
+          {
+            label: 'Average Order Value',
+            data: averageOrderValueData.data.averageOrderValue.toFixed(2),
+          },
+        ];
+
+        setAnalytics(newAnalytics);
+        setTopProducts(topProductsData.data);
+        setCoupons(couponsData.data);
+        setSatisfactionRate(satisfactionRating.data);
+        setRevenueData(revenueChartsData.data);
+      } catch (error) {
+        message.error('Fetching data failed');
+      }
+    };
+
+    fetchData();
+  }, [store?._id]);
+
   const vendor = useUserProfile('vendor')!;
 
   return (
-    <Space style={{ width: '100%' }} styles={{ item: { width: '100%' } }} direction="vertical">
+    <Space
+      style={{ width: '100%', userSelect: 'none' }}
+      styles={{ item: { width: '100%' } }}
+      direction="vertical"
+      size={'large'}
+    >
       <Row justify={'space-evenly'}>
-        {[1, 2, 3, 4].map((row) => (
-          <Col key={row}>
+        {analytics.map((data, index) => (
+          <Col key={index}>
             <AnalyticsCards
-              data={'₹50000'}
-              label="Today's Revenue"
+              data={`${data.data}`}
+              label={data.label}
               secondaryData={{ type: 'success', value: '+55%' }}
             />
           </Col>
@@ -74,9 +98,18 @@ const App = () => {
         onButtonClick={handleRecord}
       />
 
-      <SatisfactionRateCard rate={95} />
+      <SatisfactionRateCard rate={satisfactionRate} />
 
-      <MostViewedProductsCard growthPercentage={30} products={products} />
+      <Row justify={'space-evenly'}>
+        <Col>
+          <MostViewedProductsCard growthPercentage={30} products={topProducts} />
+        </Col>
+        <Col>
+          <CouponCard coupon={coupons} />
+        </Col>
+      </Row>
+
+      <RevenueGraph revenueData={revenueData} />
     </Space>
   );
 };

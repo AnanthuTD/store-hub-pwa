@@ -41,7 +41,7 @@ const SatisfactionRateCard: React.FC<SatisfactionRateCardProps> = ({
       />
       <div style={{ marginTop: 20 }}>
         <Title level={2} style={{ color: 'white', margin: 0 }}>
-          {rate}%
+          {rate.toFixed(2)}%
         </Title>
         <Text style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{description}</Text>
       </div>

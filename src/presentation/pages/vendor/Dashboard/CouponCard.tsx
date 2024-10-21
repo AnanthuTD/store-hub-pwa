@@ -4,7 +4,7 @@ import { RiseOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
-interface Product {
+interface data {
   id: number;
   name: string;
   icon: React.ReactNode;
@@ -14,13 +14,13 @@ interface Product {
 interface MostViewedProductsCardProps {
   title?: string;
   growthPercentage: number;
-  products: Product[];
+  coupon: data[];
 }
 
-const MostViewedProductsCard: React.FC<MostViewedProductsCardProps> = ({
+const CouponCard: React.FC<MostViewedProductsCardProps> = ({
   title = 'Most Viewed Products',
   growthPercentage,
-  products,
+  coupon,
 }) => {
   return (
     <Card
@@ -43,18 +43,20 @@ const MostViewedProductsCard: React.FC<MostViewedProductsCardProps> = ({
 
         <List
           itemLayout="horizontal"
-          dataSource={products}
-          renderItem={(product) => (
+          dataSource={coupon}
+          renderItem={(data) => (
             <List.Item style={{ borderBottom: 'none', padding: '8px 0' }}>
               <List.Item.Meta
-                // avatar={product?.image[0]}
-                title={<Text style={{ color: 'white' }}>{product.productName}</Text>}
-                /*  description={
+                // avatar={data?.image[0]}
+                title={<Text style={{ color: 'white' }}>{data._id}</Text>}
+                description={
                   <Space>
-                    <ClockCircleOutlined style={{ color: 'lightgray' }} />
-                    <Text style={{ color: 'rgba(255, 255, 255, 0.6)' }}>{product.viewedAt}</Text>
+                    <Text style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                      Total discount: {data.totalDiscount}
+                    </Text>
+                    <Text style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Count: {data.count}</Text>
                   </Space>
-                } */
+                }
               />
             </List.Item>
           )}
@@ -64,4 +66,4 @@ const MostViewedProductsCard: React.FC<MostViewedProductsCardProps> = ({
   );
 };
 
-export default MostViewedProductsCard;
+export default CouponCard;
