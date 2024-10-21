@@ -1,172 +1,215 @@
 import React, { useState } from 'react';
-import { Table, DatePicker, Button, Select, message } from 'antd';
+import { Table, Button, DatePicker, Select, message, Space, Typography, Row, Col } from 'antd';
+import axiosInstance from '@/config/axios';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
-import axiosInstance from '@/config/axios';
-import Papa from 'papaparse';
-import * as XLSX from 'xlsx';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+const { Title, Text } = Typography;
 
-const SalesReport = () => {
-  const [reportData, setReportData] = useState([]);
+const AdminSalesReport = () => {
+  const [salesData, setSalesData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [reportType, setReportType] = useState('daily');
-  const [dateRange, setDateRange] = useState([]);
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [totalSales, setTotalSales] = useState(0);
+  const [totalDiscounts, setTotalDiscounts] = useState(0);
+  const [platformFees, setPlatformFees] = useState(0);
   const storeId = useSelector((state: RootState) => state.vendor.selectedStore?._id);
 
-  const downloadCSV = () => {
-    // Transform reportData to the format suitable for CSV
-    const csvData = reportData.map((item) => ({
-      'Product ID': item.productId,
-      'Product Name': item.productName,
-      'Total Revenue': `$${item.totalRevenue.toFixed(2)}`,
-      'Total Quantity Sold': item.totalQuantity,
-      'Total Orders': item.totalOrders,
-      'Order Date': item.orderDate,
-    }));
-
-    // Generate CSV file
-    const csv = Papa.unparse(csvData);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'sales_report.csv');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    message.success('CSV file downloaded successfully!');
-  };
-
-  const downloadXLSX = () => {
-    // Transform reportData to the format suitable for XLSX
-    const xlsxData = reportData.map((item) => ({
-      'Product ID': item.productId,
-      'Product Name': item.productName,
-      'Total Revenue': item.totalRevenue.toFixed(2),
-      'Total Quantity Sold': item.totalQuantity,
-      'Total Orders': item.totalOrders,
-      'Order Date': item.orderDate,
-    }));
-
-    // Create a new workbook
-    const ws = XLSX.utils.json_to_sheet(xlsxData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sales Report');
-
-    // Generate XLSX file
-    XLSX.writeFile(wb, 'sales_report.xlsx');
-    message.success('XLSX file downloaded successfully!');
-  };
-
-  const fetchSalesReport = async () => {
+  const fetchSalesData = async () => {
     setLoading(true);
-    const [startDate, endDate] = dateRange;
+    const [startDate, endDate] = dateRange.map((date) => date?.toISOString());
+
+    if (new Date(startDate) > new Date(endDate)) {
+      message.error('Start date cannot be later than end date.');
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await axiosInstance.get(`/vendor/dashboard/store/${storeId}/sales-report`, {
-        params: {
-          startDate: startDate ? startDate.format('YYYY-MM-DD') : undefined,
-          endDate: endDate ? endDate.format('YYYY-MM-DD') : undefined,
-          reportType,
-        },
+        params: { startDate, endDate, reportType },
       });
-
-      setReportData(response.data.salesData);
-      message.success('Sales report fetched successfully!');
+      if (response.data.success) {
+        setSalesData(response.data.salesData);
+        setTotalSales(response.data.totalSales);
+        setTotalDiscounts(response.data.totalDiscountsGiven);
+        setPlatformFees(response.data.totalPlatformFeesCollected);
+      } else {
+        message.error('No data found for the selected range.');
+      }
     } catch (error) {
-      message.error('Failed to fetch sales report!');
-      console.error(error);
+      message.error('Error fetching sales data');
     } finally {
       setLoading(false);
     }
   };
 
-  const columns = [
-    {
-      title: 'Product ID',
-      dataIndex: 'productId',
-      key: 'productId',
-    },
-    {
-      title: 'Product Name',
-      dataIndex: 'productName',
-      key: 'productName',
-    },
-    {
-      title: 'Total Revenue',
-      dataIndex: 'totalRevenue',
-      key: 'totalRevenue',
-      render: (text) => `$${text.toFixed(2)}`, // Format as currency
-    },
-    {
-      title: 'Total Quantity Sold',
-      dataIndex: 'totalQuantity',
-      key: 'totalQuantity',
-    },
-    {
-      title: 'Total Orders',
-      dataIndex: 'totalOrders',
-      key: 'totalOrders',
-    },
-    {
-      title: 'Order Date',
-      dataIndex: 'orderDate',
-      key: 'orderDate',
-    },
-  ];
+  const downloadCSV = () => {
+    const csvContent = [
+      ['Summary'],
+      ['Total Sales', `₹${totalSales.toFixed(2)}`],
+      ['Total Discounts Given', `₹${totalDiscounts.toFixed(2)}`],
+      ['Total Platform Fees Collected', `₹${platformFees.toFixed(2)}`],
+      [],
+      [
+        'Product ID',
+        'Product Name',
+        'Store ID',
+        'Order Date',
+        'Total Revenue',
+        'Total Quantity',
+        'Total Orders',
+      ],
+      ...salesData.map((item) => [
+        item.productId,
+        item.productName,
+        item.storeId,
+        item.orderDate,
+        item.totalRevenue,
+        item.totalQuantity,
+        item.totalOrders,
+      ]),
+    ]
+      .map((row) => row.join(','))
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'admin_sales_report.csv';
+    a.click();
+  };
+
+  const downloadXLSX = () => {
+    const summarySheet = [
+      { A: 'Summary', B: '' },
+      { A: 'Total Sales', B: `₹${totalSales.toFixed(2)}` },
+      { A: 'Total Discounts Given', B: `₹${totalDiscounts.toFixed(2)}` },
+      { A: 'Total Platform Fees Collected', B: `₹${platformFees.toFixed(2)}` },
+      {},
+    ];
+
+    const dataSheet = salesData.map((item) => ({
+      ProductId: item.productId,
+      ProductName: item.productName,
+      StoreId: item.storeId,
+      OrderDate: item.orderDate,
+      TotalRevenue: item.totalRevenue,
+      TotalQuantity: item.totalQuantity,
+      TotalOrders: item.totalOrders,
+    }));
+
+    const workbook = XLSX.utils.book_new();
+    const summaryWS = XLSX.utils.json_to_sheet(summarySheet, { skipHeader: true });
+    const dataWS = XLSX.utils.json_to_sheet(dataSheet);
+
+    XLSX.utils.book_append_sheet(workbook, summaryWS, 'Summary');
+    XLSX.utils.book_append_sheet(workbook, dataWS, 'Sales Report');
+    XLSX.writeFile(workbook, 'admin_sales_report.xlsx');
+  };
+
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    doc.text('Admin Sales Report', 14, 15);
+
+    doc.autoTable({
+      startY: 20,
+      head: [['Summary', '']],
+      body: [
+        ['Total Sales', `₹${totalSales.toFixed(2)}`],
+        ['Total Discounts Given', `₹${totalDiscounts.toFixed(2)}`],
+        ['Total Platform Fees Collected', `₹${platformFees.toFixed(2)}`],
+      ],
+    });
+
+    doc.autoTable({
+      startY: doc.lastAutoTable.finalY + 10,
+      head: [
+        [
+          'Product ID',
+          'Product Name',
+          'Store ID',
+          'Order Date',
+          'Total Revenue',
+          'Total Quantity',
+          'Total Orders',
+        ],
+      ],
+      body: salesData.map((item) => [
+        item.productId,
+        item.productName,
+        item.storeId,
+        item.orderDate,
+        item.totalRevenue,
+        item.totalQuantity,
+        item.totalOrders,
+      ]),
+    });
+
+    doc.save('admin_sales_report.pdf');
+  };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Sales Report</h2>
-      <Select
-        defaultValue="daily"
-        style={{ width: 120, marginBottom: 20 }}
-        onChange={(value) => setReportType(value)}
-      >
-        <Option value="daily">Daily</Option>
-        <Option value="monthly">Monthly</Option>
-        <Option value="custom">Custom Date Range</Option>
-      </Select>
-      {reportType === 'custom' && (
-        <RangePicker style={{ marginBottom: 20 }} onChange={(dates) => setDateRange(dates)} />
-      )}
+    <div style={{ padding: '30px', background: '#f5f5f5', borderRadius: '8px' }}>
+      <Title level={2}>Admin Sales Report</Title>
+      <Row gutter={16} style={{ marginBottom: '20px' }}>
+        <Col>
+          <Select defaultValue="daily" onChange={setReportType} style={{ width: 200 }}>
+            <Option value="daily">Daily</Option>
+            <Option value="monthly">Monthly</Option>
+            <Option value="yearly">Yearly</Option>
+            <Option value="custom">Custom</Option>
+          </Select>
+        </Col>
+        <Col>
+          <RangePicker onChange={(dates) => setDateRange(dates)} />
+        </Col>
+        <Col>
+          <Button type="primary" onClick={fetchSalesData} loading={loading}>
+            Generate Report
+          </Button>
+        </Col>
+      </Row>
 
-      <Button
-        type="primary"
-        loading={loading}
-        onClick={fetchSalesReport}
-        style={{ marginRight: 10 }}
-      >
-        Fetch Report
-      </Button>
-      <Button
-        type="default"
-        onClick={downloadCSV}
-        disabled={reportData.length === 0} // Disable if no data to download
-        style={{ marginRight: 10 }}
-      >
-        Download CSV
-      </Button>
-      <Button
-        type="default"
-        onClick={downloadXLSX}
-        disabled={reportData.length === 0} // Disable if no data to download
-      >
-        Download XLSX
-      </Button>
+      <div style={{ marginBottom: '20px' }}>
+        <Title level={3}>Summary</Title>
+        <Text>Total Sales: ₹{totalSales.toFixed(2)}</Text>
+      </div>
 
       <Table
-        dataSource={reportData}
-        columns={columns}
-        rowKey="productId" // Assuming productId is unique
-        style={{ marginTop: 20 }}
+        dataSource={salesData}
+        loading={loading}
+        rowKey={(record) => `${record.productId}-${record.orderDate}`}
+        columns={[
+          { title: 'Product ID', dataIndex: 'productId' },
+          { title: 'Product Name', dataIndex: 'productName' },
+          { title: 'Store ID', dataIndex: 'storeId' },
+          { title: 'Order Date', dataIndex: 'orderDate' },
+          { title: 'Total Revenue', dataIndex: 'totalRevenue' },
+          { title: 'Total Quantity', dataIndex: 'totalQuantity' },
+          { title: 'Total Orders', dataIndex: 'totalOrders' },
+          { title: 'Total Discount', dataIndex: 'totalDiscount' },
+          { title: 'Platform Fees', dataIndex: 'totalPlatformFees' },
+        ]}
+        pagination={salesData.length > 0 ? { pageSize: 10 } : false}
       />
+
+      {salesData.length > 0 && (
+        <Space style={{ marginTop: 20 }}>
+          <Button onClick={downloadCSV}>Download CSV</Button>
+          <Button onClick={downloadXLSX}>Download XLSX</Button>
+          <Button onClick={downloadPDF}>Download PDF</Button>
+        </Space>
+      )}
     </div>
   );
 };
 
-export default SalesReport;
+export default AdminSalesReport;
