@@ -11,15 +11,19 @@ interface AnalyticsCardsProps {
   };
 }
 
-const AnalyticsCards: React.FC<AnalyticsCardsProps> = ({ label, data, secondaryData }) => {
+const AnalyticsCards: React.FC<AnalyticsCardsProps> = ({ label, data /* , secondaryData */ }) => {
   return (
     <Card size="small">
-      <Space align="center" size={100}>
+      <Space
+        align="center"
+        size={'large'}
+        style={{ width: '100%', justifyContent: 'space-between' }}
+      >
         <Space.Compact direction="vertical" size={'small'}>
           <Typography.Text type="secondary">{label}</Typography.Text>
           <Space align="baseline">
             <Typography.Title level={4}>{data}</Typography.Title>
-            <Typography.Text type={secondaryData.type}>{secondaryData.value}</Typography.Text>
+            {/* <Typography.Text type={secondaryData.type}>{secondaryData.value}</Typography.Text> */}
           </Space>
         </Space.Compact>
         <Card size="small" style={{ backgroundColor: '#0075FF' }}>
