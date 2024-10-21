@@ -1,16 +1,66 @@
 import React, { useState } from 'react';
 import { Modal, Button, Typography, message } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
+import axiosInstance from '@/config/axios';
 
 const { Title, Text, Paragraph } = Typography;
 
 const SubscriptionPaymentModal = ({ subscriptionData, onClose }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
+  const [subscriptionStatus, setSubscriptionStatus] = useState(subscriptionData.status);
 
-  const handlePayment = () => {
-    if (subscriptionData && subscriptionData.shortUrl) {
-      window.open(subscriptionData.shortUrl, '_blank');
+  function loadScript(src) {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  }
+
+  const handlePayment = async () => {
+    const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+
+    if (!res) {
+      alert('Razorpay SDK failed to load. Are you online?');
+      return;
     }
+
+    const options = {
+      key: subscriptionData.razorpayKeyId,
+      subscription_id: subscriptionData.razorpaySubscriptionId,
+      description: subscriptionData.description || 'Subscription Plan',
+      callback_url: subscriptionData.callbackUrl,
+      prefill: subscriptionData.prefill || {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        contact: '+919876543210',
+      },
+      notes: subscriptionData.notes || {},
+      theme: {
+        color: '#F37254',
+      },
+      handler: function (response) {
+        message.success('Payment successful: ' + response.razorpay_payment_id);
+        // You can update your backend or state here to reflect the payment status
+        axiosInstance.post('/vendor/subscriptions/payment-success', response).then(() => {
+          setSubscriptionStatus('active');
+        });
+      },
+      modal: {
+        ondismiss: function () {
+          message.warning('Payment was closed by the user');
+        },
+      },
+    };
+
+    const rzp1 = new window.Razorpay(options);
+    rzp1.open();
   };
 
   const handleCopyLink = () => {
@@ -38,11 +88,11 @@ const SubscriptionPaymentModal = ({ subscriptionData, onClose }) => {
         </Paragraph>
         <Paragraph>
           <Text strong>Status: </Text>
-          <Text type={subscriptionData.status === 'pending' ? 'warning' : 'success'}>
-            {subscriptionData.status.charAt(0).toUpperCase() + subscriptionData.status.slice(1)}
+          <Text type={subscriptionStatus === 'pending' ? 'warning' : 'success'}>
+            {subscriptionStatus.charAt(0).toUpperCase() + subscriptionStatus.slice(1)}
           </Text>
         </Paragraph>
-        {(subscriptionData.status === 'pending' || subscriptionData.status === 'created') && (
+        {(subscriptionStatus === 'pending' || subscriptionStatus === 'created') && (
           <>
             <Button type="primary" onClick={handlePayment} style={{ marginRight: '10px' }}>
               Complete Payment
@@ -52,9 +102,9 @@ const SubscriptionPaymentModal = ({ subscriptionData, onClose }) => {
             </Button>
           </>
         )}
-        {subscriptionData.status !== 'pending' && (
+        {subscriptionStatus !== 'pending' && (
           <Paragraph>
-            Your subscription is currently <Text strong>{subscriptionData.status}</Text>.
+            Your subscription is currently <Text strong>{subscriptionStatus}</Text>.
           </Paragraph>
         )}
       </Typography>
