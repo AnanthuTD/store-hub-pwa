@@ -89,7 +89,7 @@ const SubscriptionPaymentModal = ({ subscriptionData, onClose }) => {
         <Paragraph>
           <Text strong>Status: </Text>
           <Text type={subscriptionStatus === 'pending' ? 'warning' : 'success'}>
-            {subscriptionStatus.charAt(0).toUpperCase() + subscriptionStatus.slice(1)}
+            {subscriptionStatus?.charAt(0).toUpperCase() + subscriptionStatus?.slice(1)}
           </Text>
         </Paragraph>
         {(subscriptionStatus === 'pending' || subscriptionStatus === 'created') && (
