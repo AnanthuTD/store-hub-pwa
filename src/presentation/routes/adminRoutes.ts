@@ -18,6 +18,13 @@ const adminRoutes: AdminRoutes = {
     icon: LoginIcon,
     layoutType: 'admin',
   },
+  [AdminPages.AdminSalesReportPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/admin/report/SalesReport')),
+    path: '/admin/reports',
+    title: 'Sales Report',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
   [AdminPages.AdminUnverifiedPartnerListPage]: {
     component: asyncComponentLoader(
       () => import('@/presentation/pages/admin/deliveryPartner/verification/Unverified'),
