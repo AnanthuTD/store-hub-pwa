@@ -104,6 +104,16 @@ const vendorRoutes: VendorRoutes = {
     icon: LoginIcon,
     layoutType: 'vendor',
   },
+
+  [VendorPages.VendorSubscriptionPage]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/vendor/subscription/SubscriptionPage'),
+    ),
+    path: '/vendor/subscription',
+    title: 'Subscription',
+    icon: LoginIcon,
+    layoutType: 'vendor',
+  },
 };
 
 export default vendorRoutes;
