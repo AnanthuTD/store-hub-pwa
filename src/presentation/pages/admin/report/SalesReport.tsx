@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, DatePicker, Select, message } from 'antd';
+import { Table, Button, DatePicker, Select, message, Space, Typography, Row, Col } from 'antd';
 import axiosInstance from '@/config/axios';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
@@ -7,23 +7,20 @@ import 'jspdf-autotable';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+const { Title, Text } = Typography;
 
 const AdminSalesReport = () => {
   const [salesData, setSalesData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [reportType, setReportType] = useState('daily');
   const [dateRange, setDateRange] = useState([null, null]);
+  const [totalSales, setTotalSales] = useState(0);
+  const [totalDiscounts, setTotalDiscounts] = useState(0);
+  const [platformFees, setPlatformFees] = useState(0);
 
   const fetchSalesData = async () => {
     setLoading(true);
     const [startDate, endDate] = dateRange.map((date) => date?.toISOString());
-
-    // Validate date range
-    /* if (!startDate || !endDate) {
-      message.error('Please select a valid date range.');
-      setLoading(false);
-      return;
-    } */
 
     if (new Date(startDate) > new Date(endDate)) {
       message.error('Start date cannot be later than end date.');
@@ -37,6 +34,9 @@ const AdminSalesReport = () => {
       });
       if (response.data.success) {
         setSalesData(response.data.salesData);
+        setTotalSales(response.data.totalSales);
+        setTotalDiscounts(response.data.totalDiscountsGiven);
+        setPlatformFees(response.data.totalPlatformFeesCollected);
       } else {
         message.error('No data found for the selected range.');
       }
@@ -48,17 +48,12 @@ const AdminSalesReport = () => {
   };
 
   const downloadCSV = () => {
-    const csvData = salesData.map((item) => ({
-      ProductId: item.productId,
-      ProductName: item.productName,
-      StoreId: item.storeId,
-      OrderDate: item.orderDate,
-      TotalRevenue: item.totalRevenue,
-      TotalQuantity: item.totalQuantity,
-      TotalOrders: item.totalOrders,
-    }));
-
     const csvContent = [
+      ['Summary'],
+      ['Total Sales', `₹${totalSales.toFixed(2)}`],
+      ['Total Discounts Given', `₹${totalDiscounts.toFixed(2)}`],
+      ['Total Platform Fees Collected', `₹${platformFees.toFixed(2)}`],
+      [],
       [
         'Product ID',
         'Product Name',
@@ -67,18 +62,22 @@ const AdminSalesReport = () => {
         'Total Revenue',
         'Total Quantity',
         'Total Orders',
+        'Total Discount',
+        'Platform Fees',
       ],
-      ...csvData.map((e) => [
-        e.ProductId,
-        e.ProductName,
-        e.StoreId,
-        e.OrderDate,
-        e.TotalRevenue,
-        e.TotalQuantity,
-        e.TotalOrders,
+      ...salesData.map((item) => [
+        item.productId,
+        item.productName,
+        item.storeId,
+        item.orderDate,
+        item.totalRevenue,
+        item.totalQuantity,
+        item.totalOrders,
+        item.totalDiscount,
+        item.totalPlatformFees,
       ]),
     ]
-      .map((e) => e.join(','))
+      .map((row) => row.join(','))
       .join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -90,7 +89,15 @@ const AdminSalesReport = () => {
   };
 
   const downloadXLSX = () => {
-    const xlsData = salesData.map((item) => ({
+    const summarySheet = [
+      { A: 'Summary', B: '' },
+      { A: 'Total Sales', B: `₹${totalSales.toFixed(2)}` },
+      { A: 'Total Discounts Given', B: `₹${totalDiscounts.toFixed(2)}` },
+      { A: 'Total Platform Fees Collected', B: `₹${platformFees.toFixed(2)}` },
+      {},
+    ];
+
+    const dataSheet = salesData.map((item) => ({
       ProductId: item.productId,
       ProductName: item.productName,
       StoreId: item.storeId,
@@ -98,57 +105,93 @@ const AdminSalesReport = () => {
       TotalRevenue: item.totalRevenue,
       TotalQuantity: item.totalQuantity,
       TotalOrders: item.totalOrders,
+      TotalDiscount: item.totalDiscount,
+      PlatformFees: item.totalPlatformFees,
     }));
 
-    const worksheet = XLSX.utils.json_to_sheet(xlsData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sales Report');
+    const summaryWS = XLSX.utils.json_to_sheet(summarySheet, { skipHeader: true });
+    const dataWS = XLSX.utils.json_to_sheet(dataSheet);
+
+    XLSX.utils.book_append_sheet(workbook, summaryWS, 'Summary');
+    XLSX.utils.book_append_sheet(workbook, dataWS, 'Sales Report');
     XLSX.writeFile(workbook, 'admin_sales_report.xlsx');
   };
 
   const downloadPDF = () => {
     const doc = new jsPDF();
-    const columns = [
-      'Product ID',
-      'Product Name',
-      'Store ID',
-      'Order Date',
-      'Total Revenue',
-      'Total Quantity',
-      'Total Orders',
-    ];
-    const rows = salesData.map((item) => [
-      item.productId,
-      item.productName,
-      item.storeId,
-      item.orderDate,
-      item.totalRevenue,
-      item.totalQuantity,
-      item.totalOrders,
-    ]);
+    doc.text('Admin Sales Report', 14, 15);
 
-    doc.autoTable(columns, rows);
+    doc.autoTable({
+      startY: 20,
+      head: [['Summary', '']],
+      body: [
+        ['Total Sales', `₹${totalSales.toFixed(2)}`],
+        ['Total Discounts Given', `₹${totalDiscounts.toFixed(2)}`],
+        ['Total Platform Fees Collected', `₹${platformFees.toFixed(2)}`],
+      ],
+    });
+
+    doc.autoTable({
+      startY: doc.lastAutoTable.finalY + 10,
+      head: [
+        [
+          'Product ID',
+          'Product Name',
+          'Store ID',
+          'Order Date',
+          'Total Revenue',
+          'Total Quantity',
+          'Total Orders',
+          'Total Discount',
+          'Platform Fees',
+        ],
+      ],
+      body: salesData.map((item) => [
+        item.productId,
+        item.productName,
+        item.storeId,
+        item.orderDate,
+        item.totalRevenue,
+        item.totalQuantity,
+        item.totalOrders,
+        item.totalDiscount,
+        item.totalPlatformFees,
+      ]),
+    });
+
     doc.save('admin_sales_report.pdf');
   };
 
   return (
-    <div style={{ padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-      <h2>Admin Sales Report</h2>
+    <div style={{ padding: '30px', background: '#f5f5f5', borderRadius: '8px' }}>
+      <Title level={2}>Admin Sales Report</Title>
+      <Row gutter={16} style={{ marginBottom: '20px' }}>
+        <Col>
+          <Select defaultValue="daily" onChange={setReportType} style={{ width: 200 }}>
+            <Option value="daily">Daily</Option>
+            <Option value="monthly">Monthly</Option>
+            <Option value="yearly">Yearly</Option>
+            <Option value="custom">Custom</Option>
+          </Select>
+        </Col>
+        <Col>
+          <RangePicker onChange={(dates) => setDateRange(dates)} />
+        </Col>
+        <Col>
+          <Button type="primary" onClick={fetchSalesData} loading={loading}>
+            Generate Report
+          </Button>
+        </Col>
+      </Row>
+
       <div style={{ marginBottom: '20px' }}>
-        <Select
-          defaultValue="daily"
-          onChange={setReportType}
-          style={{ width: 200, marginRight: 20 }}
-        >
-          <Option value="daily">Daily</Option>
-          <Option value="monthly">Monthly</Option>
-          <Option value="yearly">Yearly</Option>
-          <Option value="custom">Custom</Option>
-        </Select>
-        <RangePicker onChange={(dates) => setDateRange(dates)} style={{ marginRight: 20 }} />
-        <Button type="primary" onClick={fetchSalesData} loading={loading}>
-          Generate Report
-        </Button>
+        <Title level={3}>Summary</Title>
+        <Text>Total Sales: ₹{totalSales.toFixed(2)}</Text>
+        <br />
+        <Text>Total Discounts Given: ₹{totalDiscounts.toFixed(2)}</Text>
+        <br />
+        <Text>Total Platform Fees Collected: ₹{platformFees.toFixed(2)}</Text>
       </div>
 
       <Table
@@ -156,28 +199,25 @@ const AdminSalesReport = () => {
         loading={loading}
         rowKey={(record) => `${record.productId}-${record.orderDate}`}
         columns={[
-          { title: 'Product ID', dataIndex: 'productId', key: 'productId' },
-          { title: 'Product Name', dataIndex: 'productName', key: 'productName' },
-          { title: 'Store ID', dataIndex: 'storeId', key: 'storeId' },
-          { title: 'Order Date', dataIndex: 'orderDate', key: 'orderDate' },
-          { title: 'Total Revenue', dataIndex: 'totalRevenue', key: 'totalRevenue' },
-          { title: 'Total Quantity', dataIndex: 'totalQuantity', key: 'totalQuantity' },
-          { title: 'Total Orders', dataIndex: 'totalOrders', key: 'totalOrders' },
+          { title: 'Product ID', dataIndex: 'productId' },
+          { title: 'Product Name', dataIndex: 'productName' },
+          { title: 'Store ID', dataIndex: 'storeId' },
+          { title: 'Order Date', dataIndex: 'orderDate' },
+          { title: 'Total Revenue', dataIndex: 'totalRevenue' },
+          { title: 'Total Quantity', dataIndex: 'totalQuantity' },
+          { title: 'Total Orders', dataIndex: 'totalOrders' },
+          { title: 'Total Discount', dataIndex: 'totalDiscount' },
+          { title: 'Platform Fees', dataIndex: 'totalPlatformFees' },
         ]}
         pagination={salesData.length > 0 ? { pageSize: 10 } : false}
-        style={{ marginTop: 20 }}
       />
 
       {salesData.length > 0 && (
-        <div style={{ marginTop: 20 }}>
+        <Space style={{ marginTop: 20 }}>
           <Button onClick={downloadCSV}>Download CSV</Button>
-          <Button onClick={downloadXLSX} style={{ marginLeft: 10 }}>
-            Download XLSX
-          </Button>
-          <Button onClick={downloadPDF} style={{ marginLeft: 10 }}>
-            Download PDF
-          </Button>
-        </div>
+          <Button onClick={downloadXLSX}>Download XLSX</Button>
+          <Button onClick={downloadPDF}>Download PDF</Button>
+        </Space>
       )}
     </div>
   );
