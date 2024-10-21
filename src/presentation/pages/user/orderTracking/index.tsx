@@ -6,7 +6,7 @@ import axiosInstance from '@/config/axios';
 import { Modal, Spin } from 'antd';
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:4000');
+const socket = io(import.meta.env.VITE_API_BASE_URL);
 
 function Page() {
   const [useParams] = useSearchParams();

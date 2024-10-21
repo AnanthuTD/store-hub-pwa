@@ -12,7 +12,7 @@ interface ChatBoxProps {
   pastChats?: Chat[];
 }
 
-const socketConnection = io('http://localhost:4000/adminChat');
+const socketConnection = io(`${import.meta.env.VITE_API_BASE_URL}/adminChat`);
 
 const ChatBox: React.FC<ChatBoxProps> = ({ recipient, pastChats = [], senderId }) => {
   const chatLogRef = useRef<HTMLDivElement>(null);

@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
 import { message } from 'antd';
 
-const socket = io('http://localhost:4000/track');
+const socket = io(`${import.meta.env.VITE_API_BASE_URL}/track`);
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_MAP_API_KEY;
 const REACH_DISTANCE_THRESHOLD = 50;

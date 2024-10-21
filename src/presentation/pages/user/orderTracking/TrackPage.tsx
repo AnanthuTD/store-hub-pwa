@@ -17,7 +17,7 @@ import { useCall } from '../../../components/call/CallComponent';
 const { Title, Text } = Typography;
 
 // Socket connection to the /track namespace
-const socket = io('http://localhost:4000/track');
+const socket = io(`${import.meta.env.VITE_API_BASE_URL}/track`);
 
 const lerp = (start: number, end: number, t: number) => start + (end - start) * t; // Linear interpolation function
 
