@@ -60,6 +60,7 @@ const items: MenuItem[] = [
   getItem('Reports', '/admin/reports', <FileTextOutlined />),
   // getItem('Notifications', '/admin/notifications', <NotificationOutlined />),
   getItem('Orders', '/admin/orders', <CreditCardOutlined />),
+  getItem('Subscription Management', '/admin/subscription', <CreditCardOutlined />),
   // getItem('Referrals', '/admin/referrals', <CreditCardOutlined />),
 ];
 

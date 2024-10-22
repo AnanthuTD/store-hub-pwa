@@ -144,6 +144,13 @@ const adminRoutes: AdminRoutes = {
     icon: LoginIcon,
     layoutType: 'admin',
   },
+  [AdminPages.AdminSubscriptionManagementPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/admin/subscription')),
+    path: '/admin/subscription',
+    title: 'Subscription',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
 };
 
 export default adminRoutes;
