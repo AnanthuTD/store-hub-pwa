@@ -65,7 +65,7 @@ const AddProductForm: React.FC = () => {
       notification.success({ message: 'Product added successfully!' });
       setImageFiles([]); // Clear images after submission
     } catch (error) {
-      notification.error({ message: 'Error adding product' });
+      notification.error({ message: error.response.data.message || 'Error adding product' });
       console.error(error);
     }
   };
