@@ -54,8 +54,8 @@ function SubscriptionPage() {
                   padding: '1rem',
                   width: '300px',
                   textAlign: 'center',
-                  opacity: plan.active ? 1 : 0.5, // Opacity based on whether the plan is active
-                  pointerEvents: plan.active ? 'auto' : 'none', // Enable pointer events only for active plans
+                  opacity: activePlan ? (plan.active ? 1 : 0.5) : 1, // Opacity based on whether the plan is active
+                  pointerEvents: activePlan ? (plan.active ? 'auto' : 'none') : 'auto', // Enable pointer events only for active plans
                 }}
               >
                 <Typography.Text type="secondary">{plan.name} Plan</Typography.Text>
@@ -81,7 +81,7 @@ function SubscriptionPage() {
                       }
                     }
                   }}
-                  disabled={!plan.active} // Disable if the plan is not active
+                  disabled={activePlan ? !plan.active : false} // Disable if the plan is not active
                 >
                   {activePlan?.planId === plan.planId ? 'Update Payment' : 'Pay Now'}
                 </Button>
