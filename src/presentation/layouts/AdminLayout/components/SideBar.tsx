@@ -10,6 +10,7 @@ import {
   // NotificationOutlined,
   CreditCardOutlined,
   ProfileOutlined,
+  NotificationOutlined,
 } from '@ant-design/icons';
 import { Menu, Layout, Divider, MenuProps, Typography } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -58,7 +59,7 @@ const items: MenuItem[] = [
   ]),
   getItem('Payment Overview', '/admin/payment-overview', <DollarOutlined />),
   getItem('Reports', '/admin/reports', <FileTextOutlined />),
-  // getItem('Notifications', '/admin/notifications', <NotificationOutlined />),
+  getItem('Notifications', '/admin/notifications', <NotificationOutlined />),
   getItem('Orders', '/admin/orders', <CreditCardOutlined />),
   getItem('Subscription Management', '/admin/subscription', <CreditCardOutlined />),
   // getItem('Referrals', '/admin/referrals', <CreditCardOutlined />),

@@ -11,6 +11,8 @@ import useRegisterFCMToken from '@/hooks/useRegisterFCMToken';
 import CallComponent from '@/presentation/components/call/CallComponent';
 import axiosInstance from '@/config/axios';
 import { message as antdMessage } from 'antd';
+import { NotificationProvider } from '@/presentation/components/NotificationContext';
+import { UserRole } from '@/infrastructure/repositories/NotificationRepository';
 
 // Create a Context for FCM messages
 export const OrderStatusContext = createContext<string | null>(null);
@@ -85,14 +87,18 @@ function UserLayout({ children }: { children: React.ReactNode }) {
         style={{ height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
       >
         <CartContext.Provider value={{ cartCount, refreshCartCount }}>
-          <Header />
-          {user?.id ? (
-            <CallComponent userId={user?.id}>
+          <NotificationProvider role={UserRole.USER}>
+            <Header />
+            {user?.id ? (
+              <CallComponent userId={user?.id}>
+                <div style={{ flexGrow: 1, overflow: 'hidden', overflowY: 'scroll' }}>
+                  {children}
+                </div>
+              </CallComponent>
+            ) : (
               <div style={{ flexGrow: 1, overflow: 'hidden', overflowY: 'scroll' }}>{children}</div>
-            </CallComponent>
-          ) : (
-            <div style={{ flexGrow: 1, overflow: 'hidden', overflowY: 'scroll' }}>{children}</div>
-          )}
+            )}
+          </NotificationProvider>
         </CartContext.Provider>
       </div>
     </OrderStatusContext.Provider>

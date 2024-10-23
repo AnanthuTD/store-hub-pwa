@@ -11,10 +11,12 @@ import {
   PlusOutlined,
   EditOutlined,
   CreditCardOutlined,
+  BellOutlined,
 } from '@ant-design/icons';
-import { Menu, Layout, Divider, Typography } from 'antd';
+import { Menu, Layout, Divider, Typography, message, Badge } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ItemType } from 'antd/es/menu/interface';
+import NotificationRepository from '@/infrastructure/repositories/NotificationRepository';
 
 const { Sider } = Layout;
 
@@ -39,6 +41,29 @@ function getItem(
   };
 }
 
+const NotificationIcon = () => {
+  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
+
+  useEffect(() => {
+    const loadUnreadNotificationCount = async () => {
+      try {
+        const count = await new NotificationRepository(UserRole.USER).getUnreadNotificationCount();
+        setUnreadNotificationCount(count);
+      } catch (error) {
+        message.error('Failed to fetch unread notification count');
+      }
+    };
+
+    loadUnreadNotificationCount();
+  }, []);
+
+  return (
+    <Badge size="small" count={unreadNotificationCount}>
+      <BellOutlined />
+    </Badge>
+  );
+};
+
 // Main menu items
 const items: MenuItem[] = [
   getItem('Dashboard', '/vendor/dashboard', <HomeOutlined />),
@@ -55,7 +80,7 @@ const items: MenuItem[] = [
   // getItem('Offers', '/vendor/offers', <PercentageOutlined />),
   getItem('Payment Overview', '/vendor/transactions', <DollarCircleOutlined />),
   getItem('Reports', '/vendor/reports', <FileTextOutlined />),
-  // getItem('Notifications', '/vendor/notifications', <BellOutlined />),
+  getItem('Notifications', '/vendor/notifications', <NotificationIcon />),
 ];
 
 // Account section items
@@ -68,7 +93,7 @@ const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [activeMenu, setActiveMenu] = useState(location.pathname); // Set default to current path
+  const [activeMenu, setActiveMenu] = useState(location.pathname);
 
   useEffect(() => {
     setActiveMenu(location.pathname); // Update active menu when the route changes

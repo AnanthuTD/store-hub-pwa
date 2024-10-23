@@ -9,6 +9,8 @@ import { AppDispatch, RootState } from '@/infrastructure/redux/store';
 import { fetchProfile } from '@/infrastructure/repositories/AdminRepository';
 import Cookies from 'js-cookie';
 import { login } from '@/infrastructure/redux/slices/admin/adminSlice';
+import { NotificationProvider } from '@/presentation/components/NotificationContext';
+import { UserRole } from '@/infrastructure/repositories/NotificationRepository';
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -59,13 +61,15 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
-      <Layout style={{ height: '100vh' }}>
-        <Sidebar collapsed={collapsed} />
-        <Layout>
-          <HeaderBar collapsed={collapsed} toggle={toggleCollapsed} />
-          <ContentArea>{children}</ContentArea>
+      <NotificationProvider role={UserRole.ADMIN}>
+        <Layout style={{ height: '100vh' }}>
+          <Sidebar collapsed={collapsed} />
+          <Layout>
+            <HeaderBar collapsed={collapsed} toggle={toggleCollapsed} />
+            <ContentArea>{children}</ContentArea>
+          </Layout>
         </Layout>
-      </Layout>
+      </NotificationProvider>
     </ConfigProvider>
   );
 };

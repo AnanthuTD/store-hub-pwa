@@ -14,6 +14,8 @@ import {
 import AppHeader from '@/presentation/layouts/DeliveryPartnerLayout/components/AppHeader';
 import BottomNavigationBar from '@/presentation/layouts/DeliveryPartnerLayout/components/BottomNavigationBar';
 import { useDeliveryPartnerSocket } from './components/useDeliveryPartnerSocket';
+import { UserRole } from '@/infrastructure/repositories/NotificationRepository';
+import { NotificationProvider } from '@/presentation/components/NotificationContext';
 
 const { Header, Content, Footer } = Layout;
 
@@ -85,48 +87,50 @@ const DeliveryPartnerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
   if (directionPage) return children;
 
   return (
-    <Layout style={{ maxHeight: '100vh' }}>
-      <Header
-        ref={headerRef}
-        style={{
-          backgroundColor: 'rgb(238 238 238)',
-          padding: '0',
-          display: 'flex',
-        }}
-      >
-        <AppHeader />
-      </Header>
-      <Content style={{ padding: '0px', overflow: 'clip', height: contentHeight }}>
-        <div
+    <NotificationProvider role={UserRole.VENDOR}>
+      <Layout style={{ maxHeight: '100vh' }}>
+        <Header
+          ref={headerRef}
           style={{
-            height: '100%',
-            overflowY: 'auto',
-            overflowX: 'hidden',
-            padding: '20px',
             backgroundColor: 'rgb(238 238 238)',
-            borderRadius: '8px',
+            padding: '0',
+            display: 'flex',
           }}
         >
-          {children}
-        </div>
-      </Content>
-      <Footer
-        ref={footerRef}
-        style={{
-          backgroundColor: 'white',
-          borderTop: '1px solid #e8e8e8',
-          boxShadow: '0px -2px 15px rgba(0, 0, 0, 0.1)',
-          padding: 0,
-        }}
-      >
-        <BottomNavigationBar />
-      </Footer>
-      <OrderAlertModal
-        newOrder={newOrder}
-        progress={progress}
-        handleOrderAcceptance={handleOrderAcceptance}
-      />
-    </Layout>
+          <AppHeader />
+        </Header>
+        <Content style={{ padding: '0px', overflow: 'clip', height: contentHeight }}>
+          <div
+            style={{
+              height: '100%',
+              overflowY: 'auto',
+              overflowX: 'hidden',
+              padding: '20px',
+              backgroundColor: 'rgb(238 238 238)',
+              borderRadius: '8px',
+            }}
+          >
+            {children}
+          </div>
+        </Content>
+        <Footer
+          ref={footerRef}
+          style={{
+            backgroundColor: 'white',
+            borderTop: '1px solid #e8e8e8',
+            boxShadow: '0px -2px 15px rgba(0, 0, 0, 0.1)',
+            padding: 0,
+          }}
+        >
+          <BottomNavigationBar />
+        </Footer>
+        <OrderAlertModal
+          newOrder={newOrder}
+          progress={progress}
+          handleOrderAcceptance={handleOrderAcceptance}
+        />
+      </Layout>
+    </NotificationProvider>
   );
 };
 

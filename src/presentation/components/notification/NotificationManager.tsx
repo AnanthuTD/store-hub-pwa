@@ -2,15 +2,17 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Table, Button, Popconfirm, message, Typography, Space } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 
-import './NotificationManager.css'; // Optional: Custom styles for better UI
+import './NotificationManager.css';
 import NotificationRepository, {
   UserRole,
 } from '@/infrastructure/repositories/NotificationRepository';
+import { useNotification } from '../NotificationContext';
 
 const { Text } = Typography;
 
 const NotificationManager: React.FC<{ role: UserRole }> = ({ role }) => {
   const notificationRepo = useMemo(() => new NotificationRepository(role), [role]);
+  const { refreshUnreadNotificationCount } = useNotification();
 
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -77,6 +79,10 @@ const NotificationManager: React.FC<{ role: UserRole }> = ({ role }) => {
       message.error('Failed to delete all notifications');
     }
   };
+
+  useEffect(() => {
+    refreshUnreadNotificationCount();
+  }, [notifications]);
 
   const columns: ColumnsType<any> = [
     {
