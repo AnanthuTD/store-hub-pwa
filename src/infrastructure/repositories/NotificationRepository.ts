@@ -45,6 +45,17 @@ class NotificationRepository {
     }
   }
 
+  async getUnreadNotificationCount(): Promise<number | never> {
+    try {
+      const response = await axiosInstance.get<NotificationResponse>(
+        `/${this.role}/notifications/unread/count`,
+      );
+      return response.data.count;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
   // Mark a specific notification as read
   async markAsRead(notificationId: string): Promise<Notification> {
     try {
