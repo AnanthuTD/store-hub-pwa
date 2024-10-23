@@ -16,6 +16,7 @@ const CartComponent = () => {
     totalPrice,
     itemCount,
   } = useCart();
+
   return (
     <Row gutter={[24, 16]} style={{ padding: '20px' }}>
       <Col span={16}>

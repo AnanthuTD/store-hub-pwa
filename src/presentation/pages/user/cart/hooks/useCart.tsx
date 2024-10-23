@@ -7,6 +7,7 @@ import {
   removeProduct,
   getCartTotal,
 } from '@/infrastructure/services/user/cart.service';
+import { useCartCount } from '@/presentation/layouts/UserLayout';
 
 export interface CartItem {
   _id: string;
@@ -24,6 +25,7 @@ export interface CartItem {
 
 const useCart = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const { refreshCartCount } = useCartCount();
 
   // State for cart total
   interface CartTotalState {
@@ -48,6 +50,10 @@ const useCart = () => {
     };
     fetchItems();
   }, []);
+
+  useEffect(() => {
+    refreshCartCount();
+  }, [cartItems]);
 
   // Function to fetch total price
   const fetchTotalPrice = async (useWallet = false, couponCode = '', deliveryCharge = 0) => {

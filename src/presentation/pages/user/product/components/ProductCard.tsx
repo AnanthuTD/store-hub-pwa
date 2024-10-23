@@ -17,6 +17,7 @@ import { IProduct } from '@/domain/entities/IProduct';
 import axiosInstance from '@/config/axios';
 import { message } from 'antd';
 import { AxiosError } from 'axios';
+import { useCartCount } from '@/presentation/layouts/UserLayout';
 
 interface ProductCardProps {
   product: IProduct;
@@ -45,6 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [inCart, setInCart] = useState(false);
   const [variant, setVariant] = useState<Variant | null>(null);
+  const { refreshCartCount } = useCartCount();
 
   // set the first variant as the selected variant
   useEffect(() => {
@@ -97,6 +99,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         console.error('Failed to add product to cart:', error);
       }
     }
+
+    refreshCartCount();
   };
 
   return (

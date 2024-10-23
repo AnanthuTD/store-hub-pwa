@@ -10,9 +10,11 @@ import { Badge, message } from 'antd';
 import NotificationRepository, {
   UserRole,
 } from '@/infrastructure/repositories/NotificationRepository';
+import { useCartCount } from '@/presentation/layouts/UserLayout';
 
 const MainHeader = () => {
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
+  const { cartCount } = useCartCount();
 
   useEffect(() => {
     const loadUnreadNotificationCount = async () => {
@@ -54,7 +56,9 @@ const MainHeader = () => {
         </Link>
         <Link to={'/cart'}>
           <IconButton>
-            <ShoppingCartIcon color="action" />
+            <Badge size="small" count={cartCount}>
+              <ShoppingCartIcon color="action" />
+            </Badge>
           </IconButton>
         </Link>
         <Link to={'/notifications'}>
