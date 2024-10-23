@@ -1,0 +1,10 @@
+.pro-tips {
+  margin-bottom: 16px;
+  padding: 8px;
+  background-color: #f7f7f7;
+  border-left: 4px solid #1890ff; /* Ant Design primary color */
+}
+
+.pro-tips strong {
+  color: #1890ff; /* Ant Design primary color */
+}
