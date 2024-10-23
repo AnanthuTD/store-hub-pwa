@@ -86,7 +86,7 @@ const NotificationManager: React.FC<{ role: UserRole }> = ({ role }) => {
     },
     {
       title: 'Status',
-      dataIndex: 'read',
+      dataIndex: 'readStatus',
       key: 'read',
       render: (text: boolean) => (text ? 'Read' : 'Unread'),
     },
@@ -95,10 +95,10 @@ const NotificationManager: React.FC<{ role: UserRole }> = ({ role }) => {
       key: 'actions',
       render: (_: any, record: any) => (
         <Space>
-          <Button onClick={() => handleMarkAsRead(record.id)}>Mark as Read</Button>
+          <Button onClick={() => handleMarkAsRead(record._id)}>Mark as Read</Button>
           <Popconfirm
             title="Are you sure you want to delete this notification?"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => handleDelete(record._id)}
           >
             <Button danger>Delete</Button>
           </Popconfirm>
@@ -106,6 +106,10 @@ const NotificationManager: React.FC<{ role: UserRole }> = ({ role }) => {
       ),
     },
   ];
+
+  const rowClassName = (record: any) => {
+    return record.readStatus ? 'read-notification' : ''; // Apply 'read-notification' class if read
+  };
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.shiftKey && event.key === 'U') {
@@ -131,6 +135,7 @@ const NotificationManager: React.FC<{ role: UserRole }> = ({ role }) => {
       <Table
         columns={columns}
         dataSource={notifications}
+        rowClassName={rowClassName}
         pagination={{
           current: page,
           pageSize,
