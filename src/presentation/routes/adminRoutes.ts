@@ -151,6 +151,15 @@ const adminRoutes: AdminRoutes = {
     icon: LoginIcon,
     layoutType: 'admin',
   },
+  [AdminPages.AdminNotificationPage]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/admin/AdminNotificationPage'),
+    ),
+    path: '/admin/notifications',
+    title: 'Notifications',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
 };
 
 export default adminRoutes;

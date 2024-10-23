@@ -120,6 +120,13 @@ const userRoutes: UserRoutes = {
     icon: LoginIcon,
     layoutType: 'user',
   },
+  [UserPages.UserNotificationPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/UserNotificationPage')),
+    path: '/notifications',
+    title: 'Chat Page',
+    icon: LoginIcon,
+    layoutType: 'user',
+  },
 };
 
 export default userRoutes;

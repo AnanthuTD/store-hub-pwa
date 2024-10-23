@@ -23,6 +23,7 @@ enum UserPages {
   UserShopDetailsPage,
 
   UserChatPagePage,
+  UserNotificationPage,
 }
 
 // Partner Pages Enum
@@ -45,6 +46,8 @@ enum PartnerPages {
   PartnerWalletPage,
 
   CallUserPage,
+
+  PartnerNotificationPage,
 }
 
 // Admin Pages Enum
@@ -77,6 +80,8 @@ enum AdminPages {
   AdminChatPage,
 
   AdminSubscriptionManagementPage,
+
+  AdminNotificationPage,
 }
 
 // Vendor Pages Enum
@@ -97,6 +102,7 @@ enum VendorPages {
   VendorTransactionsPage,
   VendorReportPage,
   VendorSubscriptionPage,
+  VendorNotificationPage,
 }
 
 // Common Pages Enum
