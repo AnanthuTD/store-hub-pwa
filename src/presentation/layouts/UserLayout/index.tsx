@@ -62,7 +62,9 @@ function UserLayout({ children }: { children: React.ReactNode }) {
           <CallComponent userId={user?.id}>
             <div style={{ flexGrow: 1, overflow: 'hidden', overflowY: 'scroll' }}>{children}</div>
           </CallComponent>
-        ) : null}
+        ) : (
+          <div style={{ flexGrow: 1, overflow: 'hidden', overflowY: 'scroll' }}>{children}</div>
+        )}
       </div>
     </OrderStatusContext.Provider>
   );
