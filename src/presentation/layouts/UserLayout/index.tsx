@@ -87,7 +87,7 @@ function UserLayout({ children }: { children: React.ReactNode }) {
         style={{ height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
       >
         <CartContext.Provider value={{ cartCount, refreshCartCount }}>
-          <NotificationProvider role={UserRole.USER}>
+          <NotificationProvider userId={user?.id} role={UserRole.USER}>
             <Header />
             {user?.id ? (
               <CallComponent userId={user?.id}>

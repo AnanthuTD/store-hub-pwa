@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { AppDispatch, RootState } from '@/infrastructure/redux/store';
+import { AppDispatch } from '@/infrastructure/redux/store';
 import { login } from '@/infrastructure/redux/slices/partner/partnerSlice';
 import { fetchProfile } from '@/infrastructure/repositories/PartnerAuthRepository';
 import { notification, Layout } from 'antd';
@@ -16,11 +16,12 @@ import BottomNavigationBar from '@/presentation/layouts/DeliveryPartnerLayout/co
 import { useDeliveryPartnerSocket } from './components/useDeliveryPartnerSocket';
 import { UserRole } from '@/infrastructure/repositories/NotificationRepository';
 import { NotificationProvider } from '@/presentation/components/NotificationContext';
+import useUserProfile from '@/hooks/useUserProfile';
 
 const { Header, Content, Footer } = Layout;
 
 const DeliveryPartnerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const deliveryPartner = useSelector<RootState>((state) => state.partner.data);
+  const deliveryPartner = useUserProfile('partner');
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -87,7 +88,7 @@ const DeliveryPartnerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
   if (directionPage) return children;
 
   return (
-    <NotificationProvider role={UserRole.VENDOR}>
+    <NotificationProvider userId={deliveryPartner.id} role={UserRole.VENDOR}>
       <Layout style={{ maxHeight: '100vh' }}>
         <Header
           ref={headerRef}

@@ -25,6 +25,14 @@ function ChatPage() {
     fetchMessages();
   }, [adminId]);
 
+  useEffect(() => {
+    const markAsRead = () => {
+      axiosInstance.put(`/user/chats/mark-as-read/${chats[0].conversationId}`).catch(() => {});
+    };
+
+    if (chats[0] && chats[0].conversationId) markAsRead();
+  }, [chats[0]?.conversationId]);
+
   return (
     <Row style={{ overflow: 'hidden', height: '100%' }}>
       <Col style={{ overflow: 'hidden', height: '100%' }} md={24} lg={24}>

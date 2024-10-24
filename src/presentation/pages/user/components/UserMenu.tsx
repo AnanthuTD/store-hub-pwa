@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
 import axiosInstance from '@/config/axios';
 import { logout } from '@/infrastructure/redux/slices/user/userSlice';
+import { Chat } from '@mui/icons-material';
 
 const UserMenu: React.FC = () => {
   const user = useSelector<RootState, RootState['user']['data']>((state) => state.user.data);
@@ -28,6 +29,11 @@ const UserMenu: React.FC = () => {
       <Menu.Item key="Profile" icon={<UserOutlined />} disabled>
         <Link to="/profile" target="_blank" rel="noopener noreferrer">
           Profile
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="Chat" icon={<Chat />}>
+        <Link to="/chat" target="_blank" rel="noopener noreferrer">
+          Chat
         </Link>
       </Menu.Item>
       <Menu.Item key="Orders" icon={<OrderedListOutlined />}>

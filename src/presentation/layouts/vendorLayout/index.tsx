@@ -10,12 +10,14 @@ import HeaderBar from './components/HeaderBar';
 import ContentArea from './components/ContentArea';
 import { NotificationProvider } from '@/presentation/components/NotificationContext';
 import { UserRole } from '@/infrastructure/repositories/NotificationRepository';
+import useUserProfile from '@/hooks/useUserProfile';
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { stores, refetch } = useVendorStores();
   const store = useSelector((state: RootState) => state.vendor.selectedStore);
+  const vendor = useUserProfile('vendor');
 
   useProfile(refetch);
 
@@ -29,7 +31,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
-      <NotificationProvider role={UserRole.VENDOR}>
+      <NotificationProvider userId={vendor.id} role={UserRole.VENDOR}>
         <Layout style={{ height: '100vh' }}>
           <Sidebar collapsed={collapsed} />
           <Layout>

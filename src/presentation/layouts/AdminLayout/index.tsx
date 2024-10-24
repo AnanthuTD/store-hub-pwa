@@ -61,7 +61,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
-      <NotificationProvider role={UserRole.ADMIN}>
+      <NotificationProvider userId={admin?.id} role={UserRole.ADMIN}>
         <Layout style={{ height: '100vh' }}>
           <Sidebar collapsed={collapsed} />
           <Layout>

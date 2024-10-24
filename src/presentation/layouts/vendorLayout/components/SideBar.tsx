@@ -13,10 +13,10 @@ import {
   CreditCardOutlined,
   BellOutlined,
 } from '@ant-design/icons';
-import { Menu, Layout, Divider, Typography, message, Badge } from 'antd';
+import { Menu, Layout, Divider, Typography, Badge } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ItemType } from 'antd/es/menu/interface';
-import NotificationRepository from '@/infrastructure/repositories/NotificationRepository';
+import { useNotification } from '@/presentation/components/NotificationContext';
 
 const { Sider } = Layout;
 
@@ -42,20 +42,7 @@ function getItem(
 }
 
 const NotificationIcon = () => {
-  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
-
-  useEffect(() => {
-    const loadUnreadNotificationCount = async () => {
-      try {
-        const count = await new NotificationRepository(UserRole.USER).getUnreadNotificationCount();
-        setUnreadNotificationCount(count);
-      } catch (error) {
-        message.error('Failed to fetch unread notification count');
-      }
-    };
-
-    loadUnreadNotificationCount();
-  }, []);
+  const { unreadNotificationCount } = useNotification();
 
   return (
     <Badge size="small" count={unreadNotificationCount}>
@@ -80,7 +67,12 @@ const items: MenuItem[] = [
   // getItem('Offers', '/vendor/offers', <PercentageOutlined />),
   getItem('Payment Overview', '/vendor/transactions', <DollarCircleOutlined />),
   getItem('Reports', '/vendor/reports', <FileTextOutlined />),
-  getItem('Notifications', '/vendor/notifications', <NotificationIcon />),
+  getItem(
+    <span>
+      Notifications <NotificationIcon />
+    </span>,
+    '/vendor/notifications', // Key for the notifications route
+  ),
 ];
 
 // Account section items

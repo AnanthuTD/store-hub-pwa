@@ -7,13 +7,16 @@ import {
   TagOutlined,
   DollarOutlined,
   FileTextOutlined,
-  // NotificationOutlined,
   CreditCardOutlined,
   ProfileOutlined,
-  NotificationOutlined,
+  WechatWorkOutlined,
+  BellOutlined,
 } from '@ant-design/icons';
-import { Menu, Layout, Divider, MenuProps, Typography } from 'antd';
+import { Menu, Layout, Divider, MenuProps, Typography, Badge } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useNotification } from '@/presentation/components/NotificationContext';
+import useChat from '@/hooks/fetchUnreadChatsStatus';
+import useUserProfile from '@/hooks/useUserProfile';
 
 const { Sider } = Layout;
 
@@ -32,6 +35,27 @@ function getItem(
     label,
   } as MenuItem;
 }
+
+const NotificationIcon = () => {
+  const { unreadNotificationCount } = useNotification();
+
+  return (
+    <Badge size="small" count={unreadNotificationCount}>
+      <BellOutlined style={{ fontSize: 17, marginInlineEnd: '10px' }} />
+    </Badge>
+  );
+};
+
+const ChatIcon = () => {
+  const admin = useUserProfile('admin');
+  const { hasUnreadChats } = useChat('admin', admin?.id);
+
+  return (
+    <Badge dot={hasUnreadChats} size="default">
+      <WechatWorkOutlined style={{ fontSize: 17, marginInlineEnd: '10px' }} />
+    </Badge>
+  );
+};
 
 const items: MenuItem[] = [
   getItem('Dashboard', '/admin/dashboard', <HomeOutlined />),
@@ -59,10 +83,10 @@ const items: MenuItem[] = [
   ]),
   getItem('Payment Overview', '/admin/payment-overview', <DollarOutlined />),
   getItem('Reports', '/admin/reports', <FileTextOutlined />),
-  getItem('Notifications', '/admin/notifications', <NotificationOutlined />),
+  getItem('Notifications ', '/admin/notifications', <NotificationIcon />),
   getItem('Orders', '/admin/orders', <CreditCardOutlined />),
   getItem('Subscription Management', '/admin/subscription', <CreditCardOutlined />),
-  // getItem('Referrals', '/admin/referrals', <CreditCardOutlined />),
+  getItem('Notifications', '/admin/chat', <ChatIcon />),
 ];
 
 // Account section items

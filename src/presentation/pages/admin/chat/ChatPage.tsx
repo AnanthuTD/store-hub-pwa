@@ -45,6 +45,8 @@ function ChatPage() {
     setSelectedRecipient(recipient[0]);
 
     fetchMessages(conversation._id);
+
+    axiosInstance.put(`/admin/chats/mark-as-read/${conversation._id}`).catch(() => {});
   };
 
   return (
