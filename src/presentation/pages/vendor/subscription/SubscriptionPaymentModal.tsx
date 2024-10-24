@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Modal, Button, Typography, message } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
-import axiosInstance from '@/config/axios';
+// import axiosInstance from '@/config/axios';
 
 const { Title, Text, Paragraph } = Typography;
 
 const SubscriptionPaymentModal = ({ subscriptionData, onClose }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
-  const [subscriptionStatus, setSubscriptionStatus] = useState(subscriptionData.status);
+  const [subscriptionStatus /* , setSubscriptionStatus */] = useState(subscriptionData.status);
 
-  function loadScript(src) {
+  /*  function loadScript(src) {
     return new Promise((resolve) => {
       const script = document.createElement('script');
       script.src = src;
@@ -21,9 +21,9 @@ const SubscriptionPaymentModal = ({ subscriptionData, onClose }) => {
       };
       document.body.appendChild(script);
     });
-  }
+  } */
 
-  const handlePayment = async () => {
+  /*   const handlePayment = async () => {
     const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
 
     if (!res) {
@@ -61,7 +61,7 @@ const SubscriptionPaymentModal = ({ subscriptionData, onClose }) => {
 
     const rzp1 = new window.Razorpay(options);
     rzp1.open();
-  };
+  }; */
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(subscriptionData.shortUrl);
@@ -94,7 +94,11 @@ const SubscriptionPaymentModal = ({ subscriptionData, onClose }) => {
         </Paragraph>
         {(subscriptionStatus === 'pending' || subscriptionStatus === 'created') && (
           <>
-            <Button type="primary" onClick={handlePayment} style={{ marginRight: '10px' }}>
+            <Button
+              type="primary"
+              onClick={() => window.open(subscriptionData.shortUrl, '_blank')}
+              style={{ marginRight: '10px' }}
+            >
               Complete Payment
             </Button>
             <Button icon={<CopyOutlined />} onClick={handleCopyLink}>

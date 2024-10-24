@@ -38,6 +38,17 @@ function SubscriptionPage() {
     }
   };
 
+  const cancelSubscription = async () => {
+    try {
+      const response = await axiosInstance.post('/vendor/subscriptions/cancel');
+      // setSubscriptionData(response.data);
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+      message.error(err.response.data.message || 'Failed to cancel subscribe!');
+    }
+  };
+
   return (
     <div>
       <Card style={{ padding: '2rem' }}>
@@ -85,6 +96,24 @@ function SubscriptionPage() {
                 >
                   {activePlan?.planId === plan.planId ? 'Update Payment' : 'Pay Now'}
                 </Button>
+
+                {activePlan?.planId === plan.planId && (
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      if (plan.active) {
+                        if (!activePlan) {
+                          message.error('Subscription not found!');
+                          return;
+                        }
+
+                        cancelSubscription();
+                      }
+                    }}
+                  >
+                    Cancel Subscription
+                  </Button>
+                )}
               </Card>
             </Badge.Ribbon>
           ))}

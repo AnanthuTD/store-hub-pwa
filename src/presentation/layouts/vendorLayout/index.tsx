@@ -31,7 +31,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
-      <NotificationProvider userId={vendor.id} role={UserRole.VENDOR}>
+      <NotificationProvider userId={vendor?._id} role={UserRole.VENDOR}>
         <Layout style={{ height: '100vh' }}>
           <Sidebar collapsed={collapsed} />
           <Layout>
