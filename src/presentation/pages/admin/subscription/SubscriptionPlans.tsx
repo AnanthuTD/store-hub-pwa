@@ -81,7 +81,7 @@ const SubscriptionPlans: React.FC = () => {
 
       <Modal
         title="Add Subscription Plan"
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
@@ -102,7 +102,7 @@ const SubscriptionPlans: React.FC = () => {
           </Form.Item>
           <Form.Item
             name="duration"
-            label="Duration (Months)"
+            label="Cycle (Months)"
             rules={[{ required: true, message: 'Please enter the duration' }]}
           >
             <InputNumber min={1} style={{ width: '100%' }} />

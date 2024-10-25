@@ -88,7 +88,7 @@ const DeliveryPartnerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
   if (directionPage) return children;
 
   return (
-    <NotificationProvider userId={deliveryPartner.id} role={UserRole.VENDOR}>
+    <NotificationProvider userId={deliveryPartner.id} role={UserRole.PARTNER}>
       <Layout style={{ maxHeight: '100vh' }}>
         <Header
           ref={headerRef}

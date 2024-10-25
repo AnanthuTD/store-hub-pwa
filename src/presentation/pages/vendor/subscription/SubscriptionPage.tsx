@@ -3,6 +3,15 @@ import { Badge, Button, Card, Divider, message, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import SubscriptionPaymentModal from './SubscriptionPaymentModal';
 import SubscriptionTable from './SubscriptionTable';
+import { io } from 'socket.io-client';
+import Cookies from 'js-cookie';
+
+const socket = io(`${import.meta.env.VITE_API_BASE_URL}/vendor`, {
+  auth: {
+    token: Cookies.get('authToken'),
+  },
+  transports: ['websocket'],
+});
 
 function SubscriptionPage() {
   const [subscriptionData, setSubscriptionData] = useState(null);
@@ -25,6 +34,14 @@ function SubscriptionPage() {
 
   useEffect(() => {
     fetchSubscriptionPlans();
+
+    socket.on('subscription:status:update', () => {
+      fetchSubscriptionPlans();
+    });
+
+    return () => {
+      socket.off('subscription:status:update');
+    };
   }, []);
 
   const handleSubscription = async (planId) => {
@@ -41,7 +58,8 @@ function SubscriptionPage() {
   const cancelSubscription = async () => {
     try {
       const response = await axiosInstance.post('/vendor/subscriptions/cancel');
-      // setSubscriptionData(response.data);
+      setSubscriptionData({ ...subscriptionData, status: 'cancelled' });
+      setActivePlan(null);
       console.log(response);
     } catch (err) {
       console.error(err);
@@ -52,7 +70,7 @@ function SubscriptionPage() {
   return (
     <div>
       <Card style={{ padding: '2rem' }}>
-        <Space direction="vertical" align="center" style={{ width: '100%' }}>
+        <Space size={'large'} align="center" style={{ width: '100%' }}>
           {/* Map over the subscriptionPlans to create a card for each plan */}
           {subscriptionPlans.map((plan) => (
             <Badge.Ribbon

@@ -11,6 +11,7 @@ import {
   ProfileOutlined,
   WechatWorkOutlined,
   BellOutlined,
+  NotificationOutlined,
 } from '@ant-design/icons';
 import { Menu, Layout, Divider, MenuProps, Typography, Badge } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -86,7 +87,8 @@ const items: MenuItem[] = [
   getItem('Notifications ', '/admin/notifications', <NotificationIcon />),
   getItem('Orders', '/admin/orders', <CreditCardOutlined />),
   getItem('Subscription Management', '/admin/subscription', <CreditCardOutlined />),
-  getItem('Notifications', '/admin/chat', <ChatIcon />),
+  getItem('Notifications', '/admin/notifications', <NotificationOutlined />),
+  getItem('Chats', '/admin/chat', <ChatIcon />),
 ];
 
 // Account section items
