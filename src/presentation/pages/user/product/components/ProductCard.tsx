@@ -10,7 +10,7 @@ import {
   Divider,
   Chip,
 } from '@mui/material';
-import { FavoriteBorder, ShoppingCartOutlined } from '@mui/icons-material';
+import { FavoriteBorder, HeartBrokenOutlined, ShoppingCartOutlined } from '@mui/icons-material';
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 import ProductVariantSelector, { Variant } from './ProductVariantSelector';
 import { IProduct } from '@/domain/entities/IProduct';
@@ -18,10 +18,18 @@ import axiosInstance from '@/config/axios';
 import { message } from 'antd';
 import { AxiosError } from 'axios';
 import { useCartCount } from '@/presentation/layouts/UserLayout';
+import { HeartFilled } from '@ant-design/icons';
+import { AddToWishlist } from '@/application/usecase/AddToWishlist';
+import { WishlistRepository } from '@/infrastructure/repositories/WishlistRepository';
+import { CheckProductInWishlist } from '@/application/usecase/CheckProductInWishlist';
 
 interface ProductCardProps {
   product: IProduct;
 }
+
+const wishlistRepo = new WishlistRepository();
+const addToWishlist = new AddToWishlist(wishlistRepo);
+const checkProductInWishlist = new CheckProductInWishlist(wishlistRepo);
 
 const checkItemInCart = async (productId: string, variantId: string): Promise<boolean> => {
   if (!productId || !variantId) return false;
@@ -45,6 +53,7 @@ const checkItemInCart = async (productId: string, variantId: string): Promise<bo
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [inCart, setInCart] = useState(false);
+  const [inWishlist, setInWishlist] = useState(false);
   const [variant, setVariant] = useState<Variant | null>(null);
   const { refreshCartCount } = useCartCount();
 
@@ -60,6 +69,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     if (variant) {
       checkItemInCart(product._id, variant?._id).then((inCart) => setInCart(inCart));
     }
+
+    checkProductInWishlist.execute(product._id).then((response) => setInWishlist(response));
   }, [variant, product]);
 
   const handlePrevImage = () => {
@@ -101,6 +112,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
 
     refreshCartCount();
+  };
+
+  const handleAddToWishlist = (productId: string) => {
+    try {
+      addToWishlist.execute(productId);
+      setInWishlist(true);
+    } catch (error) {
+      message.error(error.response?.data.message);
+    }
   };
 
   return (
@@ -198,9 +218,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 >
                   {inCart ? <ShoppingCartOutlined color="success" /> : <ShoppingCartOutlined />}
                 </IconButton>
-                {/*  <IconButton onClick={() => alert('View Product!')}>
-                  <VisibilityOutlined />
-                </IconButton> */}
+                <IconButton onClick={() => handleAddToWishlist(product._id)}>
+                  {inWishlist ? <HeartFilled /> : <HeartBrokenOutlined />}
+                </IconButton>
               </Box>
             </Box>
           </Box>

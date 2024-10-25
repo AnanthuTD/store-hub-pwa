@@ -50,9 +50,11 @@ const MainHeader = () => {
             <BellOutlined style={{ fontSize: 17 }} />
           </Badge>
         </Link>
-        <IconButton>
-          <FavoriteBorderOutlinedIcon color="action" />
-        </IconButton>
+        <Link to={'/wishlist'}>
+          <IconButton>
+            <FavoriteBorderOutlinedIcon color="action" />
+          </IconButton>
+        </Link>
       </Stack>
     </Toolbar>
   );

@@ -127,6 +127,13 @@ const userRoutes: UserRoutes = {
     icon: LoginIcon,
     layoutType: 'user',
   },
+  [UserPages.UserWishlistPage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/WishlistContainer')),
+    path: '/wishlist',
+    title: 'Chat Page',
+    icon: LoginIcon,
+    layoutType: 'user',
+  },
 };
 
 export default userRoutes;

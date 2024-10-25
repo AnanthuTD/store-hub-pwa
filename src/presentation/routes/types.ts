@@ -24,6 +24,7 @@ enum UserPages {
 
   UserChatPagePage,
   UserNotificationPage,
+  UserWishlistPage,
 }
 
 // Partner Pages Enum
