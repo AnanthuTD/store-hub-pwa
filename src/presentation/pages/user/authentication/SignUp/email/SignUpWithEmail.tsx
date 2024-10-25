@@ -8,13 +8,10 @@ import { AuthRepositoryImpl } from '@/infrastructure/repositories/UserAuthReposi
 import { RegisterUserError } from '@/application/errors';
 import { Box, Typography } from '@mui/material';
 
-interface SignUpFormProps {
-  email: string;
-}
-
-const SignUpForm: React.FC<SignUpFormProps> = ({ email }) => {
+const SignUpForm: React.FC = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
+  const email = searchParams.get('email');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
@@ -52,6 +49,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ email }) => {
   // Update password strength status
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
+    console.log(newPassword, checkPasswordStrength(newPassword));
     setPassword(newPassword);
     setPasswordStrength(checkPasswordStrength(newPassword));
   };
@@ -73,7 +71,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ email }) => {
 
       <Box gap={1} display={'flex'} flexDirection={'column'}>
         <ErrorMessage message={error} />
+
         <SignUpInputField label="Email address" value={email} disabled />
+
         <SignUpInputField
           label="First Name"
           value={firstName}

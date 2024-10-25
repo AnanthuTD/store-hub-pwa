@@ -1,14 +1,6 @@
 import React from 'react';
 import { TextField, TextFieldProps } from '@mui/material';
 
-/* interface SignUpInputFieldProps {
-  label: string;
-  value: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  type?: string;
-  disabled?: boolean;
-} */
-
 const SignUpInputField: React.FC<TextFieldProps> = ({
   label,
   value,
@@ -27,6 +19,8 @@ const SignUpInputField: React.FC<TextFieldProps> = ({
       onChange={onChange}
       type={type}
       disabled={disabled}
+      autoComplete="new-password" // Set to a unique value
+      name={Math.random().toString(36).substring(2, 15)} // Use a unique or meaningless name
     />
   );
 };
