@@ -68,7 +68,7 @@ export class AuthRepositoryImpl implements AuthRepository {
   async signIn(params: SignInParams): Promise<SignInResponse> {
     try {
       const response = await axiosInstance.post('user/auth/signin/credential', params);
-      return { data: response.data };
+      return { data: response.data.user };
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         const { status, data } = err.response;
