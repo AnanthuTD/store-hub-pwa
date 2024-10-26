@@ -29,7 +29,7 @@ function AccountPage() {
   };
 
   return selectedOption ? (
-    renderSelectedOptionPage()
+    renderSelectedOptionPage() ?? <></>
   ) : (
     <div>
       <ProfileCard />

@@ -19,9 +19,7 @@ enum UserPages {
   UserOrdersPage,
   UserWalletPage,
   UserOrderTrackingPage,
-
   UserShopDetailsPage,
-
   UserChatPagePage,
   UserNotificationPage,
   UserWishlistPage,
@@ -41,13 +39,9 @@ enum PartnerPages {
   PartnerOrderPage,
   PartnerDirectionPage,
   PartnerDeliverySummaryPage,
-
   PartnerAccountPage,
   PartnerEditProfilePage,
   PartnerWalletPage,
-
-  CallUserPage,
-
   PartnerNotificationPage,
 }
 
@@ -56,32 +50,22 @@ enum AdminPages {
   AdminSignInPage = 200,
   AdminDashboardPage,
   AdminSalesReportPage,
-
   AdminVerifiedPartnerListPage,
   AdminUnverifiedPartnerListPage,
   AdminPartnerValidationFormPage,
-
   AdminVendorVerificationPage,
   AdminVendorUnverifiedListPage,
   AdminVendorVerifiedListPage,
-
   AdminAddCategoryPage,
   AdminViewCategoryPage,
-
   AdminAddCouponPage,
   AdminViewCouponPage,
-
   AdminUsersListingPage,
-
   AdminStoreProductListingPage,
   AdminStoreListingPage,
-
   AdminOrderListingPage,
-
   AdminChatPage,
-
   AdminSubscriptionManagementPage,
-
   AdminNotificationPage,
 }
 
@@ -95,11 +79,9 @@ enum VendorPages {
   VendorEditProductsPage,
   VendorShopRegistrationPage,
   VendorOrderListPage,
-
   VendorReturnedItemPage,
   VendorReturnRequestPage,
   VendorCollectedItemPage,
-
   VendorTransactionsPage,
   VendorReportPage,
   VendorSubscriptionPage,

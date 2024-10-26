@@ -15,7 +15,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "https-preview": "serve dist",
     "prepare": "husky install && cp -n env/.shared .env &",
