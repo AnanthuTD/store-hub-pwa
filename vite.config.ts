@@ -38,7 +38,43 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  test: {
-    root: path.resolve(__dirname, './src'),
+
+  optimizeDeps: {
+    include: [
+      '@mui/material',
+      '@mui/icons-material',
+      '@mui/lab',
+      '@mui/system',
+      '@mui/utils',
+      '@mui/x-date-pickers',
+      'antd',
+      '@ant-design/icons',
+      'react',
+      'react-dom',
+      'react-redux',
+      'react-router-dom',
+      'react-hook-form',
+      'react-error-boundary',
+      'react-helmet-async',
+      'axios',
+      'dayjs',
+      'framer-motion',
+      'recharts',
+      'socket.io-client',
+    ],
+  },
+  build: {
+    sourcemap: false,
+    rollupOptions: {
+      treeshake: true, 
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        },
+      },
+      cache: false, 
+    },
   },
 });
