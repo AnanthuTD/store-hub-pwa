@@ -30,3 +30,5 @@ dist-ssr
 /playwright/.cache/
 
 /public/firebase-messaging-sw.js
+
+*.gz
