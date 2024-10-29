@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef, createContext, useContext } from 'react';
-import { Button, Row, Col, Drawer, Divider } from 'antd';
+import { Button, Row, Col, Drawer, Divider, Typography } from 'antd';
 import { SocketService } from '@/infrastructure/services/SocketService';
 import { WebRTCService } from '@/infrastructure/services/WebRTCService';
 import { CallManager } from '@/application/CallManager';
 import { EventNames } from './eventNames';
+import { useStopwatch } from 'react-timer-hook';
 
 const socketService = new SocketService();
 const webRTCService = new WebRTCService();
@@ -28,6 +29,9 @@ const CallComponent: React.FC = ({ children, userId }) => {
   const [callerSignal, setCallerSignal] = useState<RTCSessionDescriptionInit | null>(null);
   const [iceCandidates, setIceCandidates] = useState<RTCIceCandidateInit[]>([]);
   const [otherPeer, setOtherPeer] = useState(null);
+
+  // Initialize the stopwatch using react-timer-hook
+  const { seconds, minutes, hours, start, pause, reset } = useStopwatch({ autoStart: false });
 
   const callManager = new CallManager(webRTCService, socketService, setRemoteStream);
 
@@ -73,6 +77,9 @@ const CallComponent: React.FC = ({ children, userId }) => {
   }, []);
 
   useEffect(() => {
+    // start timer
+    start();
+
     socketService.on('call:candidate', (data) => {
       if (!callAccepted) {
         setIceCandidates((prev) => [...prev, data.candidate]);
@@ -113,6 +120,8 @@ const CallComponent: React.FC = ({ children, userId }) => {
   }, [stream, remoteStream]);
 
   const hangupCall = () => {
+    pause();
+    reset();
     callManager.hangupCall();
     setIncomingCall(false);
     setCallAccepted(false);
@@ -156,19 +165,30 @@ const CallComponent: React.FC = ({ children, userId }) => {
         </p>
         <Divider style={{ margin: '10px 0' }} />
 
+        {/* Display the elapsed time in HH:mm:ss */}
+        <Typography.Text strong style={{ fontSize: '24px' }}>
+          {`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds
+            .toString()
+            .padStart(2, '0')}`}
+        </Typography.Text>
+
+        <Divider />
+
         <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-          <Button
-            type="primary"
-            style={{
-              backgroundColor: '#28a745',
-              borderColor: '#28a745',
-              borderRadius: '8px',
-              padding: '0 20px',
-            }}
-            onClick={answerCall}
-          >
-            Accept Call
-          </Button>
+          {!callAccepted && (
+            <Button
+              type="primary"
+              style={{
+                backgroundColor: '#28a745',
+                borderColor: '#28a745',
+                borderRadius: '8px',
+                padding: '0 20px',
+              }}
+              onClick={answerCall}
+            >
+              Accept Call
+            </Button>
+          )}
           <Button
             onClick={hangupCall}
             style={{
