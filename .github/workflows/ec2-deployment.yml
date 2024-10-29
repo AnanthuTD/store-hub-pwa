@@ -1,0 +1,60 @@
+name: Deploy Store Hub to AWS EC2
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on pushes to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'  # Using Node.js version 20
+
+      - name: Create .env File from Secrets
+        run: |
+          echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" > .env
+          echo "VITE_MAP_API_KEY=${{ secrets.VITE_MAP_API_KEY }}" >> .env
+          echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}" >> .env
+          echo "VITE_AUTH_DOMAIN=${{ secrets.VITE_AUTH_DOMAIN }}" >> .env
+          echo "VITE_PROJECT_ID=${{ secrets.VITE_PROJECT_ID }}" >> .env
+          echo "VITE_STORAGE_BUCKET=${{ secrets.VITE_STORAGE_BUCKET }}" >> .env
+          echo "VITE_MESSAGING_SENDER_ID=${{ secrets.VITE_MESSAGING_SENDER_ID }}" >> .env
+          echo "VITE_APP_ID=${{ secrets.VITE_APP_ID }}" >> .env
+          echo "VITE_MEASUREMENT_ID=${{ secrets.VITE_MEASUREMENT_ID }}" >> .env
+          echo "VITE_VAPID_KEY=${{ secrets.VITE_VAPID_KEY }}" >> .env
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Prebuild
+        run: npm run prebuild
+
+      - name: Build Store Hub App
+        run: npm run build
+
+      - name: Clear Remote Directory and Deploy Files
+        env:
+          PEM_KEY: ${{ secrets.EC2_PEM_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          APP_DIRECTORY: "/var/www/storehub"
+        run: |
+          echo "$PEM_KEY" > ec2-key.pem
+          chmod 600 ec2-key.pem
+
+          # Clean the target directory on the server
+          ssh -o StrictHostKeyChecking=no -i ec2-key.pem "$EC2_USER@$EC2_HOST" "rm -rf $APP_DIRECTORY/*"
+
+          # Deploy the dist files to the target directory
+          scp -o StrictHostKeyChecking=no -i ec2-key.pem -r ./dist/* "$EC2_USER@$EC2_HOST:$APP_DIRECTORY/"
+
+      - name: Clean Up
+        run: rm -f ec2-key.pem
