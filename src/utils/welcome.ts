@@ -1,4 +1,4 @@
-import { title } from '@/config';
+// import { title } from '@/config';
 
 // this utility is used to welcome users in the console
 function getRandomRGBNumber() {
@@ -25,7 +25,7 @@ function welcome() {
     'padding: 10px',
   ].join(';');
 
-  console.log(`%c=== ${title} ===`, styles);
+  console.log(`%c=== Store Hub ===`, styles);
 }
 
 export default welcome;
