@@ -1,24 +1,32 @@
-import { Fragment } from 'react';
+import React, { Fragment, Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { withErrorHandler } from '@/error-handling';
 import AppErrorBoundaryFallback from '@/error-handling/fallbacks/App';
-import Pages from '@/presentation/routes/Pages';
+
 import { store } from './infrastructure/redux/store';
 import { Provider } from 'react-redux';
+
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
+const Pages = React.lazy(() => import('@/presentation/routes/Pages'));
+
+const BASE_URL = import.meta.env.BASE_URL || '';
 
 function App() {
   return (
     <Fragment>
       <CssBaseline />
       <Provider store={store}>
+        {/* Using LocalizationProvider only when necessary */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <BrowserRouter>
-            <Pages />
+          <BrowserRouter basename={BASE_URL}>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Pages />
+            </Suspense>
           </BrowserRouter>
         </LocalizationProvider>
       </Provider>
