@@ -1,6 +1,6 @@
 import isMobile from '@/utils/is-mobile';
 
-import type { Notifications } from './types';
+// import type { Notifications } from './types';
 
 const title = 'React PWA';
 
@@ -29,7 +29,7 @@ const messages = {
 
 const dateFormat = 'MMMM DD, YYYY';
 
-const notifications: Notifications = {
+const notifications /* : Notifications */ = {
   options: {
     anchorOrigin: {
       vertical: 'bottom',
