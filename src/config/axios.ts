@@ -2,8 +2,10 @@ import { clearShopOwner } from '@/infrastructure/redux/slices/vendor/vendorSlice
 import { store } from '@/infrastructure/redux/store';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
+const isProduction = import.meta.env.PROD;
+
 const config: AxiosRequestConfig = {
-  baseURL: '/api',
+  baseURL: isProduction ? `${import.meta.env.VITE_API_BASE_URL}` : '/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
