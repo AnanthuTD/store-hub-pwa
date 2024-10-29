@@ -15,6 +15,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/generateSW.js",
     "build": "vite build",
     "preview": "vite preview",
     "https-preview": "serve dist",
@@ -42,6 +43,7 @@
     "antd-img-crop": "^4.23.0",
     "axios": "^1.7.3",
     "dayjs": "^1.11.12",
+    "dotenv": "^16.4.5",
     "firebase": "^10.14.1",
     "framer-motion": "^11.5.4",
     "geolib": "^3.3.4",
