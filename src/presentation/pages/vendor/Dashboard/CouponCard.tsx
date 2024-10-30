@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, List, Typography, Space } from 'antd';
-import { RiseOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
@@ -13,13 +12,13 @@ interface data {
 
 interface MostViewedProductsCardProps {
   title?: string;
-  growthPercentage: number;
+  // growthPercentage: number;
   coupon: data[];
 }
 
 const CouponCard: React.FC<MostViewedProductsCardProps> = ({
-  title = 'Most Viewed Products',
-  growthPercentage,
+  title = 'Most Used Coupons',
+  // growthPercentage,
   coupon,
 }) => {
   return (
@@ -37,9 +36,9 @@ const CouponCard: React.FC<MostViewedProductsCardProps> = ({
         <Title level={5} style={{ color: 'white', margin: 0 }}>
           {title}
         </Title>
-        <Text style={{ color: 'lightgreen' }}>
+        {/*  <Text style={{ color: 'lightgreen' }}>
           <RiseOutlined /> +{growthPercentage}% this month
-        </Text>
+        </Text> */}
 
         <List
           itemLayout="horizontal"

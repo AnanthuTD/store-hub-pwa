@@ -55,9 +55,8 @@ const AdminSalesReport = () => {
       ['Total Platform Fees Collected', `₹${platformFees.toFixed(2)}`],
       [],
       [
-        'Product ID',
         'Product Name',
-        'Store ID',
+        'Store Name',
         'Order Date',
         'Total Revenue',
         'Total Quantity',
@@ -66,9 +65,8 @@ const AdminSalesReport = () => {
         'Platform Fees',
       ],
       ...salesData.map((item) => [
-        item.productId,
         item.productName,
-        item.storeId,
+        item.storeName,
         item.orderDate,
         item.totalRevenue,
         item.totalQuantity,
@@ -98,9 +96,8 @@ const AdminSalesReport = () => {
     ];
 
     const dataSheet = salesData.map((item) => ({
-      ProductId: item.productId,
       ProductName: item.productName,
-      StoreId: item.storeId,
+      StoreId: item.storeName,
       OrderDate: item.orderDate,
       TotalRevenue: item.totalRevenue,
       TotalQuantity: item.totalQuantity,
@@ -136,9 +133,8 @@ const AdminSalesReport = () => {
       startY: doc.lastAutoTable.finalY + 10,
       head: [
         [
-          'Product ID',
           'Product Name',
-          'Store ID',
+          'Store Name',
           'Order Date',
           'Total Revenue',
           'Total Quantity',
@@ -148,9 +144,8 @@ const AdminSalesReport = () => {
         ],
       ],
       body: salesData.map((item) => [
-        item.productId,
         item.productName,
-        item.storeId,
+        item.storeName,
         item.orderDate,
         item.totalRevenue,
         item.totalQuantity,
@@ -199,9 +194,8 @@ const AdminSalesReport = () => {
         loading={loading}
         rowKey={(record) => `${record.productId}-${record.orderDate}`}
         columns={[
-          { title: 'Product ID', dataIndex: 'productId' },
           { title: 'Product Name', dataIndex: 'productName' },
-          { title: 'Store ID', dataIndex: 'storeId' },
+          { title: 'Store Name', dataIndex: 'storeName' },
           { title: 'Order Date', dataIndex: 'orderDate' },
           { title: 'Total Revenue', dataIndex: 'totalRevenue' },
           { title: 'Total Quantity', dataIndex: 'totalQuantity' },

@@ -79,7 +79,7 @@ const App = () => {
       direction="vertical"
       size={'large'}
     >
-      <Row justify={'space-evenly'}>
+      <Row gutter={[16, 16]}>
         {analytics.map((data, index) => (
           <Col key={index}>
             <AnalyticsCards
@@ -91,16 +91,22 @@ const App = () => {
         ))}
       </Row>
 
-      <WelcomeCard
-        name={vendor?.profile?.firstName + ' ' + vendor?.profile?.lastName}
-        welcomeText="Glad to see you again! Ask me anything."
-        buttonText="Tap to record"
-        onButtonClick={handleRecord}
-      />
+      <Row gutter={[16, 16]}>
+        <Col>
+          <WelcomeCard
+            name={vendor?.profile?.firstName + ' ' + vendor?.profile?.lastName}
+            welcomeText="Glad to see you again! Ask me anything."
+            buttonText="Tap to record"
+            onButtonClick={handleRecord}
+          />
+        </Col>
 
-      <SatisfactionRateCard rate={satisfactionRate} />
+        <Col>
+          <SatisfactionRateCard rate={satisfactionRate} />
+        </Col>
+      </Row>
 
-      <Row justify={'space-evenly'}>
+      <Row gutter={[16, 16]}>
         <Col>
           <MostViewedProductsCard growthPercentage={30} products={topProducts} />
         </Col>

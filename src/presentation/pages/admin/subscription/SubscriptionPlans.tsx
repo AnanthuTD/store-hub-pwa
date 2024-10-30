@@ -1,15 +1,18 @@
 // SubscriptionPlans.tsx
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Table, Modal, message, InputNumber } from 'antd';
+import { Form, Input, Button, Table, Modal, message, InputNumber, Select } from 'antd';
 import axiosInstance from '@/config/axios';
 
 interface SubscriptionPlan {
   id: string;
   name: string;
   price: number;
-  duration: number;
+  interval: number;
   productLimit: number;
+  period: string; // Add period to the interface
 }
+
+const { Option } = Select;
 
 const SubscriptionPlans: React.FC = () => {
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
@@ -58,7 +61,8 @@ const SubscriptionPlans: React.FC = () => {
   const columns = [
     { title: 'Name', dataIndex: 'name', key: 'name' },
     { title: 'Price (INR)', dataIndex: 'price', key: 'price' },
-    { title: 'Duration (Months)', dataIndex: 'duration', key: 'duration' },
+    { title: 'Interval (Months)', dataIndex: 'interval', key: 'interval' },
+    { title: 'Period', dataIndex: 'period', key: 'period' }, // Add the period column
     { title: 'Product Limit', dataIndex: 'productLimit', key: 'productLimit' },
     {
       title: 'Actions',
@@ -101,11 +105,25 @@ const SubscriptionPlans: React.FC = () => {
             <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item
-            name="duration"
-            label="Cycle (Months)"
-            rules={[{ required: true, message: 'Please enter the duration' }]}
+            name="interval"
+            label="Interval (Months)"
+            rules={[{ required: true, message: 'Please enter the interval' }]}
           >
             <InputNumber min={1} style={{ width: '100%' }} />
+          </Form.Item>
+          <Form.Item
+            name="period"
+            label="Period"
+            initialValue="monthly" // Set default value to monthly
+            rules={[{ required: true, message: 'Please select a period' }]}
+          >
+            <Select style={{ width: '100%' }}>
+              <Option value="daily">Daily</Option>
+              <Option value="weekly">Weekly</Option>
+              <Option value="monthly">Monthly</Option>
+              <Option value="quarterly">Quarterly</Option>
+              <Option value="yearly">Yearly</Option>
+            </Select>
           </Form.Item>
           <Form.Item
             name="productLimit"

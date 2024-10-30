@@ -57,19 +57,9 @@ const AdminSalesReport = () => {
       ['Total Discounts Given', `₹${totalDiscounts.toFixed(2)}`],
       ['Total Platform Fees Collected', `₹${platformFees.toFixed(2)}`],
       [],
-      [
-        'Product ID',
-        'Product Name',
-        'Store ID',
-        'Order Date',
-        'Total Revenue',
-        'Total Quantity',
-        'Total Orders',
-      ],
+      ['Product Name', 'Order Date', 'Total Revenue', 'Total Quantity', 'Total Orders'],
       ...salesData.map((item) => [
-        item.productId,
         item.productName,
-        item.storeId,
         item.orderDate,
         item.totalRevenue,
         item.totalQuantity,
@@ -91,15 +81,11 @@ const AdminSalesReport = () => {
     const summarySheet = [
       { A: 'Summary', B: '' },
       { A: 'Total Sales', B: `₹${totalSales.toFixed(2)}` },
-      { A: 'Total Discounts Given', B: `₹${totalDiscounts.toFixed(2)}` },
-      { A: 'Total Platform Fees Collected', B: `₹${platformFees.toFixed(2)}` },
       {},
     ];
 
     const dataSheet = salesData.map((item) => ({
-      ProductId: item.productId,
       ProductName: item.productName,
-      StoreId: item.storeId,
       OrderDate: item.orderDate,
       TotalRevenue: item.totalRevenue,
       TotalQuantity: item.totalQuantity,
@@ -122,30 +108,14 @@ const AdminSalesReport = () => {
     doc.autoTable({
       startY: 20,
       head: [['Summary', '']],
-      body: [
-        ['Total Sales', `₹${totalSales.toFixed(2)}`],
-        ['Total Discounts Given', `₹${totalDiscounts.toFixed(2)}`],
-        ['Total Platform Fees Collected', `₹${platformFees.toFixed(2)}`],
-      ],
+      body: [['Total Sales', `₹${totalSales.toFixed(2)}`]],
     });
 
     doc.autoTable({
       startY: doc.lastAutoTable.finalY + 10,
-      head: [
-        [
-          'Product ID',
-          'Product Name',
-          'Store ID',
-          'Order Date',
-          'Total Revenue',
-          'Total Quantity',
-          'Total Orders',
-        ],
-      ],
+      head: [['Product Name', 'Order Date', 'Total Revenue', 'Total Quantity', 'Total Orders']],
       body: salesData.map((item) => [
-        item.productId,
         item.productName,
-        item.storeId,
         item.orderDate,
         item.totalRevenue,
         item.totalQuantity,
@@ -158,7 +128,7 @@ const AdminSalesReport = () => {
 
   return (
     <div style={{ padding: '30px', background: '#f5f5f5', borderRadius: '8px' }}>
-      <Title level={2}>Admin Sales Report</Title>
+      <Title level={2}>Sales Report</Title>
       <Row gutter={16} style={{ marginBottom: '20px' }}>
         <Col>
           <Select defaultValue="daily" onChange={setReportType} style={{ width: 200 }}>
@@ -188,15 +158,11 @@ const AdminSalesReport = () => {
         loading={loading}
         rowKey={(record) => `${record.productId}-${record.orderDate}`}
         columns={[
-          { title: 'Product ID', dataIndex: 'productId' },
           { title: 'Product Name', dataIndex: 'productName' },
-          { title: 'Store ID', dataIndex: 'storeId' },
           { title: 'Order Date', dataIndex: 'orderDate' },
           { title: 'Total Revenue', dataIndex: 'totalRevenue' },
           { title: 'Total Quantity', dataIndex: 'totalQuantity' },
           { title: 'Total Orders', dataIndex: 'totalOrders' },
-          { title: 'Total Discount', dataIndex: 'totalDiscount' },
-          { title: 'Platform Fees', dataIndex: 'totalPlatformFees' },
         ]}
         pagination={salesData.length > 0 ? { pageSize: 10 } : false}
       />
