@@ -7,7 +7,7 @@ interface GoogleSignUpButtonProps {
 
 const GoogleSignUpButton: React.FC<GoogleSignUpButtonProps> = ({ api }) => {
   return (
-    <Link href={`${import.meta.env.VITE_API_BASE_URL}/${api}`}>
+    <Link href={`${import.meta.env.VITE_API_BASE_URL}/api/${api}`}>
       <Button
         variant="outlined"
         startIcon={<img src={'/google-logo.svg'} />}
