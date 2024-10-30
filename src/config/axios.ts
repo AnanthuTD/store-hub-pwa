@@ -5,7 +5,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 const isProduction = import.meta.env.PROD;
 
 const config: AxiosRequestConfig = {
-  baseURL: isProduction ? `${import.meta.env.VITE_API_BASE_URL}` : '/api',
+  baseURL: isProduction ? `${import.meta.env.VITE_API_BASE_URL}/api` : '/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
