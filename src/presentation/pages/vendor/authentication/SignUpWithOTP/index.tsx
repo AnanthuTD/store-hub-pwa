@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Grid, Typography, Link, Switch } from '@mui/material';
 import Input from '../components/Input';
+import { message } from 'antd';
 
 function SignUpWithOTP() {
   const [mobileNumber, setMobileNumber] = useState('');
@@ -26,7 +27,7 @@ function SignUpWithOTP() {
 
   const handleSendOtp = () => {
     // Logic to send OTP
-    alert('OTP Sent!');
+    message.info('OTP Sent!');
   };
 
   return (

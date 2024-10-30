@@ -23,9 +23,6 @@ const OtpVerification = () => {
   };
 
   const handleSubmit = async () => {
-    // Handle OTP verification logic
-    alert(`Verifying OTP: ${otp}`);
-
     setError(null);
 
     if (!otp) {

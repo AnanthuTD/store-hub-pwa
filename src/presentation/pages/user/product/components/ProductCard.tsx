@@ -10,7 +10,7 @@ import {
   Divider,
   Chip,
 } from '@mui/material';
-import { FavoriteBorder, HeartBrokenOutlined, ShoppingCartOutlined } from '@mui/icons-material';
+import { HeartBrokenOutlined, ShoppingCartOutlined } from '@mui/icons-material';
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 import ProductVariantSelector, { Variant } from './ProductVariantSelector';
 import { IProduct } from '@/domain/entities/IProduct';
@@ -209,9 +209,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 Shop Now
               </Button>
               <Box display="flex" gap={1}>
-                <IconButton onClick={() => alert('Added to Wishlist!')}>
-                  <FavoriteBorder />
-                </IconButton>
                 <IconButton
                   disabled={!variant?.stock}
                   onClick={() => handleAddToCart(product._id, variant._id)}

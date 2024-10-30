@@ -58,7 +58,7 @@ const Map = () => {
               directions.routes[0].optimizedIntermediateWaypointIndex[waypointCount + 1],
             );
           } else {
-            alert('You have reached the final destination!');
+            message.info('You have reached the final destination!');
           }
         }
       }
@@ -73,7 +73,7 @@ const Map = () => {
         },
         (error) => {
           console.error(error);
-          alert('Unable to retrieve your location.');
+          message.error('Unable to retrieve your location.');
         },
         {
           enableHighAccuracy: true,

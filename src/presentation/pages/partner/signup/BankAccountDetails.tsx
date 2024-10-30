@@ -6,6 +6,7 @@ import { AppDispatch, RootState } from '@/infrastructure/redux/store';
 import { Link, useNavigate } from 'react-router-dom';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { IDeliveryPartner } from '@/domain/entities/DeliveryPartner';
+import { message } from 'antd';
 
 const BankAccountDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const BankAccountDetails: React.FC = () => {
 
   const handleSubmit = () => {
     if (accountNumber !== confirmAccountNumber) {
-      alert("Account numbers don't match!");
+      message.error("Account numbers don't match!");
       return;
     }
 

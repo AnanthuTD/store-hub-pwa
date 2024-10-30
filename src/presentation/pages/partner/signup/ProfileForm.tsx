@@ -9,6 +9,7 @@ import { storePartner } from '@/infrastructure/redux/slices/partner/partnerSlice
 import ImageUpload from '@/presentation/pages/partner/signup/components/ImageUpload';
 import SubmitButton from '@/presentation/pages/partner/signup/components/SubmitButton';
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 // Define type for form values
 type FormValues = {
@@ -73,10 +74,10 @@ const UserProfileForm: React.FC = () => {
     console.log(data);
 
     if (!data.avatar) {
-      alert('Please select a profile picture');
+      message.warning('Please select a profile picture');
       return;
     } else if (!data.dob) {
-      alert('Please select a date of birth');
+      message.warning('Please select a date of birth');
       return;
     }
     console.log('Form Values:', data);
