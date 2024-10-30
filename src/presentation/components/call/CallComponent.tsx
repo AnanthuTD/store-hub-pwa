@@ -77,8 +77,10 @@ const CallComponent: React.FC = ({ children, userId }) => {
   }, []);
 
   useEffect(() => {
-    // start timer
-    start();
+    if (callAccepted) {
+      // start timer
+      start();
+    }
 
     socketService.on('call:candidate', (data) => {
       if (!callAccepted) {
@@ -114,7 +116,6 @@ const CallComponent: React.FC = ({ children, userId }) => {
       localAudioRef.current.srcObject = stream;
     }
     if (remoteAudioRef.current && remoteStream) {
-      alert('remoteAudioRef.current');
       remoteAudioRef.current.srcObject = remoteStream;
     }
   }, [stream, remoteStream]);
@@ -161,16 +162,19 @@ const CallComponent: React.FC = ({ children, userId }) => {
             marginBottom: '10px',
           }}
         >
-          {incomingCall ? 'An incoming call is waiting...' : 'Call is in progress...'}
+          {incomingCall ? (
+            'An incoming call is waiting...'
+          ) : (
+            <Row justify={'center'} align={'middle'}>
+              <span>Call is in progress...</span>
+              <Typography.Text strong style={{ fontSize: '24px' }}>
+                {`${hours.toString().padStart(2, '0')}:${minutes
+                  .toString()
+                  .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`}
+              </Typography.Text>
+            </Row>
+          )}
         </p>
-        <Divider style={{ margin: '10px 0' }} />
-
-        {/* Display the elapsed time in HH:mm:ss */}
-        <Typography.Text strong style={{ fontSize: '24px' }}>
-          {`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds
-            .toString()
-            .padStart(2, '0')}`}
-        </Typography.Text>
 
         <Divider />
 
