@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "https://storehub.ananthutd.live/:path(.*)",
+      "destination": "https://storehub.ananthutd.live/:path"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
