@@ -1,5 +1,5 @@
 import axiosInstance from '@/config/axios';
-import { Badge, Button, Card, Divider, message, Space, Typography } from 'antd';
+import { Badge, Button, Card, Divider, message, Modal, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import SubscriptionPaymentModal from './SubscriptionPaymentModal';
 import SubscriptionTable from './SubscriptionTable';
@@ -18,6 +18,24 @@ function SubscriptionPage() {
   const [subscriptionPlans, setSubscriptionPlans] = useState([]);
   const [activePlan, setActivePlan] = useState(null);
 
+  const checkCanSubscribe = async () => {
+    try {
+      await axiosInstance.get('/vendor/subscriptions/canSubscribe');
+      return true;
+    } catch (error) {
+      // Error handling
+      console.error('Error checking product addition:', error);
+
+      // Displaying error modal
+      Modal.error({
+        title: 'Error',
+        content: error.response?.data?.message || 'An unexpected error occurred. Please try again.',
+      });
+
+      return false;
+    }
+  };
+
   const fetchSubscriptionPlans = async () => {
     try {
       const response = await axiosInstance.get('/vendor/subscriptions/plans');
@@ -33,6 +51,8 @@ function SubscriptionPage() {
   };
 
   useEffect(() => {
+    checkCanSubscribe();
+
     fetchSubscriptionPlans();
 
     socket.on('subscription:status:update', () => {
@@ -46,6 +66,10 @@ function SubscriptionPage() {
 
   const handleSubscription = async (planId) => {
     try {
+      const canSubscribe = await checkCanSubscribe();
+      if (!canSubscribe) {
+        return;
+      }
       const response = await axiosInstance.post('/vendor/subscriptions/subscribe', { planId });
       setSubscriptionData(response.data);
       console.log(response);
