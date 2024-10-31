@@ -72,7 +72,9 @@ function Index() {
       </Steps>
 
       {step === 0 && <VendorForm onSubmit={handleFormSubmit} initialValues={shopOwner || {}} />}
-      {step === 1 && <DocumentUpload onComplete={handleUploadComplete} />}
+      {step === 1 && (
+        <DocumentUpload defaultDocuments={shopOwner?.documents} onComplete={handleUploadComplete} />
+      )}
       {step === 2 && <div>Registration completed! Thank you for submitting your details.</div>}
     </>
   );

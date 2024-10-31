@@ -5,15 +5,36 @@ import axiosInstance from '@/config/axios';
 
 interface DocumentUploadProps {
   onComplete: () => void;
+  defaultDocuments: {
+    type: string;
+    imageUrl: string[];
+  }[];
 }
 
-const DocumentUpload: React.FC<DocumentUploadProps> = ({ onComplete }) => {
+const DocumentUpload: React.FC<DocumentUploadProps> = ({ onComplete, defaultDocuments }) => {
   const [aadharFront, setAadharFront] = useState<any>(null);
   const [aadharBack, setAadharBack] = useState<any>(null);
   const [panCard, setPanCard] = useState<any>(null);
   const [drivingLicenseFront, setDrivingLicenseFront] = useState<any>(null);
   const [drivingLicenseBack, setDrivingLicenseBack] = useState<any>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
+
+  console.log(defaultDocuments);
+
+  /* useEffect(() => {
+    // Load default images from props
+    defaultDocuments.forEach((doc) => {
+      if (doc.type === 'aadhar') {
+        setAadharFront({ preview: doc.imageUrl[0] });
+        setAadharBack({ preview: doc.imageUrl[1] });
+      } else if (doc.type === 'pan') {
+        setPanCard({ preview: doc.imageUrl[0] });
+      } else if (doc.type === 'drivingLicense') {
+        setDrivingLicenseFront({ preview: doc.imageUrl[0] });
+        setDrivingLicenseBack({ preview: doc.imageUrl[1] });
+      }
+    });
+  }, [defaultDocuments]); */
 
   const handleFileChange = (file: any, setFile: any) => {
     const reader = new FileReader();
