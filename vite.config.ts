@@ -9,7 +9,7 @@ import manifest from './manifest.json';
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   return {
-    base:'/',
+    base: '/',
     plugins: [
       react(),
       VitePWA({
@@ -20,18 +20,30 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html}', '**/*.{svg,png,jpg,gif}'],
+          runtimeCaching: [
+            {
+              urlPattern: /\/api\//,
+              handler: 'NetworkOnly',
+              options: {
+                cacheName: 'api-requests',
+              },
+            },
+          ],
         },
         registerType: 'autoUpdate',
       }),
     ],
     server: {
-      proxy: mode === 'development' ? {
-        "/api": {
-          target: 'http://localhost:4000',
-          changeOrigin: true,
-          // rewrite: path,
-        },
-      } : {},
+      proxy:
+        mode === 'development'
+          ? {
+              '/api': {
+                target: 'http://localhost:4000',
+                changeOrigin: true,
+                // rewrite: path,
+              },
+            }
+          : {},
     },
     resolve: {
       alias: {
