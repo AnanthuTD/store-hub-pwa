@@ -11,6 +11,8 @@ const VendorForm: React.FC<{
     onSubmit(values);
   };
 
+  console.log('initialValues', initialValues);
+
   return (
     <>
       <Typography.Title level={4}>Vendor Registration</Typography.Title>

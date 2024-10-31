@@ -55,7 +55,7 @@ const VendorValidationPage: React.FC = () => {
     try {
       const data = { documentStatus, message };
       await axiosInstance.post(`/admin/vendor/${vendorId}/validateDocuments`, data);
-      navigate('/admin/vendor/verification/pending');
+      navigate('/admin/vendor/verification/unverified');
     } catch (error) {
       console.error('Error submitting validation data', error);
     }

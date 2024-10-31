@@ -3,9 +3,9 @@ import VendorForm from './VendorForm';
 import { IVendor } from '@/domain/entities/IVendor';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/infrastructure/redux/store';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DocumentUpload from './DocumentUpload';
-import { notification, Steps } from 'antd';
+import { Alert, Button, notification, Steps } from 'antd';
 import { AxiosError } from 'axios';
 
 const { Step } = Steps;
@@ -63,6 +63,12 @@ function Index() {
     }
   }
 
+  useEffect(() => {
+    if (shopOwner?.documents?.length === 3) {
+      setStep(2);
+    }
+  }, []);
+
   return (
     <>
       <Steps current={step} style={{ marginBottom: '20px' }}>
@@ -75,7 +81,33 @@ function Index() {
       {step === 1 && (
         <DocumentUpload defaultDocuments={shopOwner?.documents} onComplete={handleUploadComplete} />
       )}
-      {step === 2 && <div>Registration completed! Thank you for submitting your details.</div>}
+      {step === 2 && (
+        <div>
+          Registration completed! Thank you for submitting your details.
+          {shopOwner && shopOwner.isVerified ? (
+            <Alert
+              message="Verification Completed"
+              description="Your can start selling your products."
+              type="success"
+              showIcon
+              style={{ marginTop: 16 }}
+            />
+          ) : (
+            <Alert
+              message="Verification Pending"
+              description="Your profile is under verification."
+              type="info"
+              action={
+                <Button type="primary" onClick={() => setStep(0)}>
+                  Edit Profile
+                </Button>
+              }
+              showIcon
+              style={{ marginTop: 16 }}
+            />
+          )}
+        </div>
+      )}
     </>
   );
 }
