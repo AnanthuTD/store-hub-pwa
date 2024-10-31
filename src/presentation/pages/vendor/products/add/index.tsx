@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Form, Button, UploadFile, notification } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Form, Button, UploadFile, notification, Modal } from 'antd';
 import ProductFormFields, { SelectOption } from './ProductFormFields';
 import axiosInstance from '@/config/axios';
 import ImageUpload from '../components/ImageUpload';
@@ -22,6 +22,25 @@ const AddProductForm: React.FC = () => {
     status: '',
     variants: [{}],
   };
+
+  const checkCanAddProduct = async () => {
+    try {
+      await axiosInstance.get('/vendor/products/canAdd');
+    } catch (error) {
+      // Error handling
+      console.error('Error checking product addition:', error);
+
+      // Displaying error modal
+      Modal.error({
+        title: 'Error',
+        content: error.response?.data?.message || 'An unexpected error occurred. Please try again.',
+      });
+    }
+  };
+
+  useEffect(() => {
+    checkCanAddProduct();
+  }, []);
 
   // Function to handle form submission
   const handleSubmit = async (values: any) => {

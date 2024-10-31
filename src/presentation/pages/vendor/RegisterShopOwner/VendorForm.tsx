@@ -13,7 +13,7 @@ const VendorForm: React.FC<{
 
   return (
     <>
-      <Typography.Title level={4}>Shop Owner Registration</Typography.Title>
+      <Typography.Title level={4}>Vendor Registration</Typography.Title>
       <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
         {/* First Name */}
         <Form.Item
