@@ -12,8 +12,9 @@ import {
   notification,
 } from 'antd';
 import { useLogin } from '@/hooks/Admin/useLogin';
-import GoogleSignUpButton from '@/presentation/components/Auth/GoogleSignUpButton';
+// import GoogleSignUpButton from '@/presentation/components/Auth/GoogleSignUpButton';
 import { passwordRules } from '@/presentation/components/passwordRules';
+import ReactAuthGoogle from '@/presentation/components/Auth/ReactAuthGoogle';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -111,7 +112,8 @@ const LoginPage: React.FC = () => {
               Welcome back! Please sign in to access the dashboard.
             </Text>
 
-            <GoogleSignUpButton api="admin/auth/google" />
+            {/* <GoogleSignUpButton api="admin/auth/google" /> */}
+            <ReactAuthGoogle api="admin/auth/v2/google" role="admin" />
 
             <Divider plain style={{ color: '#888' }}>
               or

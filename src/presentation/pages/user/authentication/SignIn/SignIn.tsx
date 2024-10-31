@@ -2,8 +2,9 @@ import { Box, Typography, Link, Divider } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2';
 import AuthThemeProvider from '../components/AuthThemeProvider';
 import Header from '../components/Header';
-import GoogleSignUpButton from '@/presentation/components/Auth/GoogleSignUpButton';
+// import GoogleSignUpButton from '@/presentation/components/Auth/GoogleSignUpButton';
 import SignInForm from '@/presentation/components/SignIn/SignInForm';
+import ReactAuthGoogle from '@/presentation/components/Auth/ReactAuthGoogle';
 
 const SignIn = () => {
   return (
@@ -37,7 +38,9 @@ const SignIn = () => {
             </Typography>
 
             {/* Google sign in button */}
-            <GoogleSignUpButton api="user/auth/google" />
+            {/* <GoogleSignUpButton api="user/auth/google" /> */}
+
+            <ReactAuthGoogle api="user/auth/v2/google" role="user" />
 
             <Box my={2} width="100%">
               <Divider>OR</Divider>

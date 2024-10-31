@@ -7,7 +7,8 @@ import { AppDispatch } from '@/infrastructure/redux/store';
 import { login } from '@/infrastructure/redux/slices/vendor/vendorSlice';
 import CheckShopOwnerLoggedIn from '../components/CheckShopOwnerLoggedIn';
 import { passwordRules } from '@/presentation/components/passwordRules';
-import GoogleSignUpButton from '@/presentation/components/Auth/GoogleSignUpButton';
+// import GoogleSignUpButton from '@/presentation/components/Auth/GoogleSignUpButton';
+import ReactAuthGoogle from '@/presentation/components/Auth/ReactAuthGoogle';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -113,7 +114,8 @@ function SignIn() {
                 Welcome back! Please sign in to your account.
               </Text>
 
-              <GoogleSignUpButton api="vendor/auth/google" />
+              {/* <GoogleSignUpButton api="vendor/auth/google" /> */}
+              <ReactAuthGoogle api="vendor/auth/v2/google" role="vendor" />
 
               <Divider plain style={{ color: '#888' }}>
                 or

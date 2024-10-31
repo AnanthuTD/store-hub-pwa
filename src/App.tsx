@@ -11,6 +11,7 @@ import { Provider } from 'react-redux';
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const Pages = React.lazy(() => import('@/presentation/routes/Pages'));
 
@@ -20,16 +21,18 @@ function App() {
   return (
     <Fragment>
       <CssBaseline />
-      <Provider store={store}>
-        {/* Using LocalizationProvider only when necessary */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <BrowserRouter basename={BASE_URL}>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Pages />
-            </Suspense>
-          </BrowserRouter>
-        </LocalizationProvider>
-      </Provider>
+      <GoogleOAuthProvider clientId="73723652828-ntcsstkv6qssa4na759lgkr5pmdh3pbb.apps.googleusercontent.com">
+        <Provider store={store}>
+          {/* Using LocalizationProvider only when necessary */}
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <BrowserRouter basename={BASE_URL}>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Pages />
+              </Suspense>
+            </BrowserRouter>
+          </LocalizationProvider>
+        </Provider>
+      </GoogleOAuthProvider>
     </Fragment>
   );
 }

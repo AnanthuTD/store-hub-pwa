@@ -1,10 +1,10 @@
 import CheckUserLoggedIn from '../components/CheckUserLoggedIn';
-import SignUp from './SignIn';
+import SignIn from './SignIn';
 
 function Index() {
   return (
     <CheckUserLoggedIn>
-      <SignUp />
+      <SignIn />
     </CheckUserLoggedIn>
   );
 }
