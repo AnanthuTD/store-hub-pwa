@@ -13,6 +13,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
+import './global.css';
+
 const Pages = React.lazy(() => import('@/presentation/routes/Pages'));
 
 const BASE_URL = import.meta.env.BASE_URL || '';
