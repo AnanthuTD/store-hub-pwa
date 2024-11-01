@@ -101,7 +101,9 @@ const NotificationManager: React.FC<{ role: UserRole }> = ({ role }) => {
       key: 'actions',
       render: (_: any, record: any) => (
         <Space>
-          <Button onClick={() => handleMarkAsRead(record._id)}>Mark as Read</Button>
+          {!record.readStatus && (
+            <Button onClick={() => handleMarkAsRead(record._id)}>Mark as Read</Button>
+          )}
           <Popconfirm
             title="Are you sure you want to delete this notification?"
             onConfirm={() => handleDelete(record._id)}
