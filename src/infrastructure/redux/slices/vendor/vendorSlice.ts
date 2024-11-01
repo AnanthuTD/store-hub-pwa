@@ -8,11 +8,12 @@ interface SelectedStore {
 
 interface UserState {
   data: IVendor | null;
-  selectedStore?: SelectedStore;
+  selectedStore?: SelectedStore | null;
 }
 
 const initialState: UserState = {
   data: null,
+  selectedStore: null,
 };
 
 const vendorSlice = createSlice({
@@ -24,6 +25,7 @@ const vendorSlice = createSlice({
     },
     logout: (state) => {
       state.data = null;
+      state.selectedStore = null;
     },
     updateShopOwner: (state, action: PayloadAction<Partial<IVendor>>) => {
       if (state.data) {
