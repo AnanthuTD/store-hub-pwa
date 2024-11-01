@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   HomeOutlined,
   UserOutlined,
@@ -13,29 +13,12 @@ import {
   BellOutlined,
   NotificationOutlined,
 } from '@ant-design/icons';
-import { Menu, Layout, Divider, MenuProps, Typography, Badge } from 'antd';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useNotification } from '@/presentation/components/NotificationContext';
-import useChat from '@/hooks/fetchUnreadChatsStatus';
+import { getItem } from '@/presentation/components/layoutHelpers';
+import { Badge } from 'antd';
 import useUserProfile from '@/hooks/useUserProfile';
-
-const { Sider } = Layout;
-
-type MenuItem = Required<MenuProps>['items'][number];
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
+import useChat from '@/hooks/fetchUnreadChatsStatus';
+import { useNotification } from '@/presentation/components/NotificationContext';
+import BaseSidebar, { MenuItem } from '@/presentation/components/BaseSidebar';
 
 const NotificationIcon = () => {
   const { unreadNotificationCount } = useNotification();
@@ -57,7 +40,6 @@ const ChatIcon = () => {
     </Badge>
   );
 };
-
 const items: MenuItem[] = [
   getItem('Dashboard', '/admin/dashboard', <HomeOutlined />),
   getItem('Verification', '/admin/verification', <UserOutlined />, [
@@ -91,54 +73,15 @@ const items: MenuItem[] = [
   getItem('Chats', '/admin/chat', <ChatIcon />),
 ];
 
-// Account section items
-const accountMenuItems: MenuItem[] = [getItem('Profile', '/admin/profile', <ProfileOutlined />)];
+const accountMenuItems = [getItem('Profile', '/admin/profile', <ProfileOutlined />)];
 
-const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const pathname = location.pathname; // Current URL path
+const AdminSidebar = ({ collapsed }: { collapsed: boolean }) => (
+  <BaseSidebar
+    title="ShopHub Admin"
+    collapsed={collapsed}
+    items={items}
+    accountMenuItems={accountMenuItems}
+  />
+);
 
-  const [activeMenu, setActiveMenu] = useState(pathname);
-
-  // Sync activeMenu state with URL path
-  useEffect(() => {
-    setActiveMenu(pathname);
-  }, [pathname]);
-
-  // Handle menu item clicks
-  const handleMenuItemClick = (e: any) => {
-    const newPath = e.key; // e.key is the URL path
-    setActiveMenu(newPath);
-    navigate(newPath); // Navigate to the new URL
-  };
-
-  return (
-    <Sider theme="light" trigger={null} collapsible collapsed={collapsed} width={250}>
-      <Typography.Title style={{ paddingLeft: 3 }} level={3}>
-        ShopHub Admin
-      </Typography.Title>
-
-      {/* Main Menu */}
-      <Menu
-        mode="inline"
-        selectedKeys={[activeMenu]} // Selected key based on the URL
-        defaultOpenKeys={[pathname]} // Open the current path by default
-        items={items}
-        onClick={handleMenuItemClick} // Handle menu clicks
-      />
-
-      <Divider>Accounts</Divider>
-
-      {/* Account Menu */}
-      <Menu
-        mode="inline"
-        selectedKeys={[activeMenu]} // Selected key based on the URL
-        items={accountMenuItems}
-        onClick={handleMenuItemClick} // Handle account menu clicks
-      />
-    </Sider>
-  );
-};
-
-export default Sidebar;
+export default AdminSidebar;

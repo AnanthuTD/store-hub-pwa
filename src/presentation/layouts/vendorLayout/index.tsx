@@ -5,7 +5,7 @@ import { AppDispatch, RootState } from '@/infrastructure/redux/store';
 import { setSelectedStore } from '@/infrastructure/redux/slices/vendor/vendorSlice';
 import { useVendorStores } from './hooks/useVendorStores';
 import { useProfile } from './hooks/useProfile';
-import Sidebar from './components/SideBar';
+import Sidebar from './components/VendorSideBar';
 import HeaderBar from './components/HeaderBar';
 import ContentArea from './components/ContentArea';
 import { NotificationProvider } from '@/presentation/components/NotificationContext';

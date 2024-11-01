@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ConfigProvider, Layout, theme } from 'antd';
-import Sidebar from './components/SideBar';
+import Sidebar from './components/AdminSideBar';
 import HeaderBar from './components/HeaderBar';
 import ContentArea from './components/ContentArea';
 import { useDispatch, useSelector } from 'react-redux';
