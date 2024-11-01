@@ -96,20 +96,36 @@ const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
   };
 
   return (
-    <Sider theme="light" trigger={null} collapsible collapsed={collapsed} width={250}>
-      <Typography.Title style={{ paddingLeft: 3 }} level={3}>
-        ShopHub Vendor
-      </Typography.Title>
-      {/* Main Menu */}
-      <Menu mode="inline" selectedKeys={[activeMenu]} items={items} onClick={handleMenuItemClick} />
-      <Divider>Accounts</Divider>
-      {/* Account Menu */}
-      <Menu
-        mode="inline"
-        selectedKeys={[activeMenu]}
-        items={accountMenuItems}
-        onClick={handleMenuItemClick}
-      />
+    <Sider
+      theme="light"
+      trigger={null}
+      collapsible
+      collapsed={collapsed}
+      width={250}
+      style={{ height: '100vh' }}
+    >
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Typography.Title style={{ paddingLeft: 3 }} level={3}>
+          ShopHub Vendor
+        </Typography.Title>
+        <div style={{ overflowY: 'auto' }} className="hidden-scrollbar">
+          {/* Main Menu */}
+          <Menu
+            mode="inline"
+            selectedKeys={[activeMenu]}
+            items={items}
+            onClick={handleMenuItemClick}
+          />
+          <Divider>Accounts</Divider>
+          {/* Account Menu */}
+          <Menu
+            mode="inline"
+            selectedKeys={[activeMenu]}
+            items={accountMenuItems}
+            onClick={handleMenuItemClick}
+          />
+        </div>
+      </div>
     </Sider>
   );
 };
