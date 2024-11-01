@@ -11,6 +11,7 @@ const config: AxiosRequestConfig = {
     'Content-Type': 'application/json',
     'ngrok-skip-browser-warning': '69420',
   },
+  withCredentials: true,
 };
 
 const axiosInstance: AxiosInstance = axios.create(config);
