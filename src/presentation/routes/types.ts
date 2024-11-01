@@ -86,6 +86,7 @@ enum VendorPages {
   VendorReportPage,
   VendorSubscriptionPage,
   VendorNotificationPage,
+  VendorProfilePage,
 }
 
 // Common Pages Enum

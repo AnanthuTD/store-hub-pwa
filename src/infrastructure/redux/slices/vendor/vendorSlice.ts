@@ -36,10 +36,20 @@ const vendorSlice = createSlice({
     setSelectedStore: (state, action: PayloadAction<SelectedStore>) => {
       state.selectedStore = action.payload;
     },
+    updateVendorProfile: (state, action: PayloadAction<IVendor | null>) => {
+      console.log(action.payload);
+      state.data = action.payload;
+    },
   },
 });
 
-export const { login, logout, clearShopOwner, updateShopOwner, setSelectedStore } =
-  vendorSlice.actions;
+export const {
+  login,
+  logout,
+  clearShopOwner,
+  updateShopOwner,
+  setSelectedStore,
+  updateVendorProfile,
+} = vendorSlice.actions;
 
 export default vendorSlice.reducer;

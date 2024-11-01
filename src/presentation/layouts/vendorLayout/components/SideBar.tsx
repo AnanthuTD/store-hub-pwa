@@ -68,16 +68,15 @@ const items: MenuItem[] = [
   getItem('Payment Overview', '/vendor/transactions', <DollarCircleOutlined />),
   getItem('Reports', '/vendor/reports', <FileTextOutlined />),
   getItem(
-    <span>
-      Notifications <NotificationIcon />
-    </span>,
+    <span style={{ marginLeft: '10px' }}>Notifications</span>,
     '/vendor/notifications', // Key for the notifications route
+    <NotificationIcon />,
   ),
 ];
 
 // Account section items
 const accountMenuItems: ItemType[] = [
-  getItem('Profile', '/admin/profile', <ProfileOutlined />),
+  getItem('Profile', '/vendor/profile', <ProfileOutlined />),
   getItem('Subscription', '/vendor/subscription', <CreditCardOutlined />),
 ];
 

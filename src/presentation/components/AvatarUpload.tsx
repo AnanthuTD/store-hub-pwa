@@ -29,7 +29,13 @@ function getAvatar(avatar: string, loading: boolean = false): UploadFile[] {
   return [];
 }
 
-const AvatarUpload: React.FC = ({ avatar, updateAvatar, url }) => {
+interface AvatarUploadProps {
+  avatar: string;
+  updateAvatar: (avatar: string) => void;
+  url: string;
+}
+
+const AvatarUpload: React.FC<AvatarUploadProps> = ({ avatar, updateAvatar, url }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
 
@@ -71,9 +77,9 @@ const AvatarUpload: React.FC = ({ avatar, updateAvatar, url }) => {
   };
 
   const beforeUpload = (file: FileType) => {
-    const isImage = file.type.startsWith('image/');
+    const isImage = ['image/png', 'image/jpeg'].includes(file.type);
     if (!isImage) {
-      message.error('You can only upload image files!');
+      message.error('You can only upload png or jpeg images!');
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
