@@ -12,10 +12,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const createServiceWorker = () => {
-    // Generate Firebase Messaging Service Worker content
-    const content = `// Firebase Messaging Service Worker
-    importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js');
-    importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging.js');
+  // Generate Firebase Messaging Service Worker content
+  const content = `// Firebase Messaging Service Worker
+    importScripts('https://www.gstatic.com/firebasejs/9.2.0/firebase-app-compat.js');
+    importScripts('https://www.gstatic.com/firebasejs/9.2.0/firebase-messaging-compat.js');
     
     // Initialize Firebase
     const firebaseConfig = {
@@ -44,12 +44,12 @@ const createServiceWorker = () => {
     });
     `;
 
-    // Path for the generated firebase-messaging-sw.js
-    const filePath = path.join(__dirname, '../public/firebase-messaging-sw.js');
+  // Path for the generated firebase-messaging-sw.js
+  const filePath = path.join(__dirname, '../public/firebase-messaging-sw.js');
 
-    // Write the generated content to the service worker file
-    fs.writeFileSync(filePath, content, 'utf8');
-    console.log('Service Worker created successfully at:', filePath);
+  // Write the generated content to the service worker file
+  fs.writeFileSync(filePath, content, 'utf8');
+  console.log('Service Worker created successfully at:', filePath);
 };
 
 createServiceWorker();
