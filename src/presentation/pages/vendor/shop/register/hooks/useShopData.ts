@@ -45,7 +45,7 @@ const useShopData = (form: FormInstance) => {
   };
 
   const formatLocation = (location: { latitude: number; longitude: number }): LocationData => {
-    return { lat: location.latitude, lng: location.longitude };
+    return { lat: location.coordinates[1], lng: location.coordinates[0] };
   };
 
   const convertTimeToDayjs = (timeStr: string): Dayjs => {

@@ -21,7 +21,6 @@ const ShopRegistrationForm: React.FC = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       setSelectedLocation(data.location);
     }
   }, [data]);

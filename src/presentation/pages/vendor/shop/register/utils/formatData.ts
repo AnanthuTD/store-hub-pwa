@@ -4,7 +4,7 @@ import { FormData, OperatingHours } from '../types';
 const formatData = (data: FormData) => {
   return {
     name: data.name,
-    location: data.location ? { latitude: data.location.lat, longitude: data.location.lng } : null,
+    location: data.location ? { coordinates: [data.location.lng, data.location.lat] } : null,
     products: [],
     ownerId: null,
     averageRating: data.averageRating,
