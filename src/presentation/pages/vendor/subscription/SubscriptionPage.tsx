@@ -1,9 +1,9 @@
 import axiosInstance from '@/config/axios';
-import { Badge, Button, Card, Divider, message, Modal, Typography } from 'antd';
+import { Badge, Card, Divider, message, Modal, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import SubscriptionPaymentModal from './SubscriptionPaymentModal';
 import SubscriptionTable from './SubscriptionTable';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import Cookies from 'js-cookie';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -12,8 +12,40 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 import { Pagination, Navigation } from 'swiper/modules';
+import ActiveSubscriptionModal from './ActiveSubscriptionModal';
+import PaynowButton from './PaynowButton';
 
-const socket = io(`${import.meta.env.VITE_API_BASE_URL}/vendor`, {
+interface SubscriptionPlan {
+  planId: string;
+  name: string;
+  price: number;
+  productLimit: number;
+  duration: number;
+  active: boolean;
+}
+
+interface SubscriptionData {
+  status: string;
+  shortUrl: string;
+  subscriptionType: string;
+  amount: number;
+}
+
+export interface ActivePlan extends SubscriptionPlan {
+  startDate: Date;
+  endDate: Date;
+  chargeAt: Date;
+  remainingCount: number;
+  totalCount: number;
+  cancelledAt?: Date | null;
+  amount: number;
+  shortUrl: string;
+  status: string;
+  currentEnd: Date;
+  currentStart: Date;
+}
+
+const socket: Socket = io(`${import.meta.env.VITE_API_BASE_URL}/vendor`, {
   auth: {
     token: Cookies.get('authToken'),
   },
@@ -21,19 +53,17 @@ const socket = io(`${import.meta.env.VITE_API_BASE_URL}/vendor`, {
 });
 
 function SubscriptionPage() {
-  const [subscriptionData, setSubscriptionData] = useState(null);
-  const [subscriptionPlans, setSubscriptionPlans] = useState([]);
-  const [activePlan, setActivePlan] = useState(null);
+  const [subscriptionData, setSubscriptionData] = useState<SubscriptionData | null>(null);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
+  const [activePlan, setActivePlan] = useState<ActivePlan | null>(null);
 
-  const checkCanSubscribe = async () => {
+  const checkCanSubscribe = async (): Promise<boolean> => {
     try {
       await axiosInstance.get('/vendor/subscriptions/canSubscribe');
       return true;
-    } catch (error) {
-      // Error handling
+    } catch (error: any) {
       console.error('Error checking product addition:', error);
 
-      // Displaying error modal
       Modal.error({
         title: 'Error',
         content: error.response?.data?.message || 'An unexpected error occurred. Please try again.',
@@ -49,7 +79,6 @@ function SubscriptionPage() {
       const { plans, activeSubscription } = response.data;
 
       setSubscriptionPlans(plans);
-
       setActivePlan(activeSubscription);
     } catch (err) {
       console.error(err);
@@ -71,30 +100,29 @@ function SubscriptionPage() {
     };
   }, []);
 
-  const handleSubscription = async (planId) => {
+  const handleSubscription = async (planId: string) => {
     try {
       const canSubscribe = await checkCanSubscribe();
-      if (!canSubscribe) {
-        return;
-      }
+      if (!canSubscribe) return;
+
       const response = await axiosInstance.post('/vendor/subscriptions/subscribe', { planId });
       setSubscriptionData(response.data);
       console.log(response);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      message.error(err.response.data.message || 'Failed to subscribe!');
+      message.error(err.response?.data?.message || 'Failed to subscribe!');
     }
   };
 
   const cancelSubscription = async () => {
     try {
       const response = await axiosInstance.post('/vendor/subscriptions/cancel');
-      setSubscriptionData({ ...subscriptionData, status: 'cancelled' });
+      setSubscriptionData((prevData) => (prevData ? { ...prevData, status: 'cancelled' } : null));
       setActivePlan(null);
       console.log(response);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      message.error(err.response.data.message || 'Failed to cancel subscribe!');
+      message.error(err.response?.data?.message || 'Failed to cancel subscription!');
     }
   };
 
@@ -128,44 +156,18 @@ function SubscriptionPage() {
                   <Typography.Paragraph>{plan.productLimit} products allowed</Typography.Paragraph>
                   <Typography.Paragraph>Duration: {plan.duration} months</Typography.Paragraph>
 
-                  <Button
-                    type="primary"
-                    onClick={() => {
-                      if (!plan.active) {
-                        handleSubscription(plan.planId);
-                      } else {
-                        if (!activePlan) {
-                          message.error('Subscription not found!');
-                          return;
-                        }
-
-                        if (activePlan && activePlan.shortUrl) {
-                          window.open(activePlan.shortUrl, '_blank');
-                        } else {
-                          message.error('Short URL not available for this subscription.');
-                        }
-                      }
-                    }}
-                    disabled={activePlan ? !plan.active : false}
-                  >
-                    {activePlan?.planId === plan.planId ? 'Update Payment' : 'Pay Now'}
-                  </Button>
-
-                  {activePlan?.planId === plan.planId && (
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        if (plan.active) {
-                          if (!activePlan) {
-                            message.error('Subscription not found!');
-                            return;
-                          }
-                          cancelSubscription();
-                        }
-                      }}
-                    >
-                      Cancel Subscription
-                    </Button>
+                  {activePlan && plan.active ? (
+                    <ActiveSubscriptionModal
+                      activePlan={activePlan}
+                      cancelSubscription={cancelSubscription}
+                    />
+                  ) : (
+                    <PaynowButton
+                      activePlan={activePlan}
+                      onSubscribe={handleSubscription}
+                      plan={plan}
+                      key={plan.planId}
+                    />
                   )}
                 </Card>
               </Badge.Ribbon>
