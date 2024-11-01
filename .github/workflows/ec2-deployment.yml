@@ -34,8 +34,8 @@ jobs:
       - name: Install Dependencies
         run: yarn install  # Changed from npm install to yarn install
 
-      - name: Run Prebuild
-        run: yarn run prebuild  # Changed from npm run prebuild to yarn run prebuild
+      # - name: Run Prebuild
+      #  run: yarn run prebuild  # Changed from npm run prebuild to yarn run prebuild
 
       - name: Build Store Hub App
         run: yarn run build  # Changed from npm run build to yarn run build
