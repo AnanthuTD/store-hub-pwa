@@ -14,6 +14,7 @@ import {
 import useVendorSignUp from '@/hooks/vendor/useVendorSignUp';
 import CheckShopOwnerLoggedIn from '../components/CheckShopOwnerLoggedIn';
 import { passwordRules } from '@/presentation/components/passwordRules';
+import { Link } from 'react-router-dom';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -216,6 +217,13 @@ const SignUpPage: React.FC = () => {
                   {loading ? 'Signing Up...' : 'Sign Up'}
                 </Button>
               </Form>
+
+              <Text style={{ textAlign: 'center' }}>
+                Already have an account?{' '}
+                <Link to="/vendor/signin" style={{ color: '#3B82F6' }}>
+                  Sign in
+                </Link>
+              </Text>
             </Space>
           </Card>
         </Content>
