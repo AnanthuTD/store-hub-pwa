@@ -29,6 +29,4 @@ dist-ssr
 /blob-report/
 /playwright/.cache/
 
-/public/firebase-messaging-sw.js
-
 *.gz
