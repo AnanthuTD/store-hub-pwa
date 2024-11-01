@@ -1,10 +1,17 @@
 import axiosInstance from '@/config/axios';
-import { Badge, Button, Card, Divider, message, Modal, Space, Typography } from 'antd';
+import { Badge, Button, Card, Divider, message, Modal, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import SubscriptionPaymentModal from './SubscriptionPaymentModal';
 import SubscriptionTable from './SubscriptionTable';
 import { io } from 'socket.io-client';
 import Cookies from 'js-cookie';
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+
+import { Pagination, Navigation } from 'swiper/modules';
 
 const socket = io(`${import.meta.env.VITE_API_BASE_URL}/vendor`, {
   auth: {
@@ -93,73 +100,78 @@ function SubscriptionPage() {
 
   return (
     <div>
-      <Card style={{ padding: '2rem' }}>
-        <Space size={'large'} align="center" style={{ width: '100%' }}>
-          {/* Map over the subscriptionPlans to create a card for each plan */}
+      <Card style={{ padding: '2rem', position: 'relative' }}>
+        <Swiper
+          slidesPerView="auto"
+          spaceBetween={20}
+          navigation={false}
+          pagination={{ clickable: true }}
+          modules={[Pagination, Navigation]}
+          style={{ padding: '1rem 0' }}
+        >
           {subscriptionPlans.map((plan) => (
-            <Badge.Ribbon
-              text={activePlan?.planId === plan.planId ? 'Active' : null}
-              key={plan.planId}
-              color={activePlan?.planId === plan.planId ? 'green' : undefined} // Optional: Set a color for the active badge
-            >
-              <Card
-                style={{
-                  padding: '1rem',
-                  width: '300px',
-                  textAlign: 'center',
-                  opacity: activePlan ? (plan.active ? 1 : 0.5) : 1, // Opacity based on whether the plan is active
-                  pointerEvents: activePlan ? (plan.active ? 'auto' : 'none') : 'auto', // Enable pointer events only for active plans
-                }}
+            <SwiperSlide key={plan.planId} style={{ width: '300px' }}>
+              <Badge.Ribbon
+                text={activePlan?.planId === plan.planId ? 'Active' : null}
+                color={activePlan?.planId === plan.planId ? 'green' : undefined}
               >
-                <Typography.Text type="secondary">{plan.name} Plan</Typography.Text>
-                <Typography.Title level={3}>₹ {plan.price} / month</Typography.Title>
-                <Typography.Paragraph>{plan.productLimit} products allowed</Typography.Paragraph>
-                <Typography.Paragraph>Duration: {plan.duration} months</Typography.Paragraph>
-
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    if (!plan.active) {
-                      handleSubscription(plan.planId);
-                    } else {
-                      if (!activePlan) {
-                        message.error('Subscription not found!');
-                        return;
-                      }
-
-                      if (activePlan && activePlan.shortUrl) {
-                        window.open(activePlan.shortUrl, '_blank');
-                      } else {
-                        message.error('Short URL not available for this subscription.');
-                      }
-                    }
+                <Card
+                  style={{
+                    padding: '1rem',
+                    textAlign: 'center',
+                    opacity: activePlan ? (plan.active ? 1 : 0.5) : 1,
+                    pointerEvents: activePlan ? (plan.active ? 'auto' : 'none') : 'auto',
                   }}
-                  disabled={activePlan ? !plan.active : false} // Disable if the plan is not active
                 >
-                  {activePlan?.planId === plan.planId ? 'Update Payment' : 'Pay Now'}
-                </Button>
+                  <Typography.Text type="secondary">{plan.name} Plan</Typography.Text>
+                  <Typography.Title level={3}>₹ {plan.price} / month</Typography.Title>
+                  <Typography.Paragraph>{plan.productLimit} products allowed</Typography.Paragraph>
+                  <Typography.Paragraph>Duration: {plan.duration} months</Typography.Paragraph>
 
-                {activePlan?.planId === plan.planId && (
                   <Button
                     type="primary"
                     onClick={() => {
-                      if (plan.active) {
+                      if (!plan.active) {
+                        handleSubscription(plan.planId);
+                      } else {
                         if (!activePlan) {
                           message.error('Subscription not found!');
                           return;
                         }
 
-                        cancelSubscription();
+                        if (activePlan && activePlan.shortUrl) {
+                          window.open(activePlan.shortUrl, '_blank');
+                        } else {
+                          message.error('Short URL not available for this subscription.');
+                        }
                       }
                     }}
+                    disabled={activePlan ? !plan.active : false}
                   >
-                    Cancel Subscription
+                    {activePlan?.planId === plan.planId ? 'Update Payment' : 'Pay Now'}
                   </Button>
-                )}
-              </Card>
-            </Badge.Ribbon>
+
+                  {activePlan?.planId === plan.planId && (
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        if (plan.active) {
+                          if (!activePlan) {
+                            message.error('Subscription not found!');
+                            return;
+                          }
+                          cancelSubscription();
+                        }
+                      }}
+                    >
+                      Cancel Subscription
+                    </Button>
+                  )}
+                </Card>
+              </Badge.Ribbon>
+            </SwiperSlide>
           ))}
-        </Space>
+        </Swiper>
       </Card>
 
       <Divider>Subscription History</Divider>
