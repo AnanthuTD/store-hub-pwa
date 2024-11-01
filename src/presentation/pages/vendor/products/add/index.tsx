@@ -9,6 +9,7 @@ const AddProductForm: React.FC = () => {
   const [imageFiles, setImageFiles] = useState<UploadFile[]>([]);
   const [productForm] = Form.useForm(); // Hook for controlling the form
   const [selectedProduct, setSelectedProduct] = useState({ name: '', _id: '' });
+  const [isFormDisabled, setIsFormDisabled] = useState(true);
 
   // Clear initial values
   const initialValues = {
@@ -26,6 +27,7 @@ const AddProductForm: React.FC = () => {
   const checkCanAddProduct = async () => {
     try {
       await axiosInstance.get('/vendor/products/canAdd');
+      setIsFormDisabled(false);
     } catch (error) {
       // Error handling
       console.error('Error checking product addition:', error);
@@ -134,7 +136,8 @@ const AddProductForm: React.FC = () => {
       layout="vertical"
       initialValues={initialValues}
       onFinish={handleSubmit}
-      form={productForm} // Control the form
+      form={productForm}
+      disabled={isFormDisabled}
     >
       {/* Modularized Form Fields */}
       <ProductFormFields onSelectProduct={onSelectProduct} />
