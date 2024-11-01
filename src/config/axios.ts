@@ -37,7 +37,7 @@ axiosInstance.interceptors.response.use(
 
       if (redirectPath)
         // Redirect to login page
-        window.location.replace(`http://localhost:5173${redirectPath}`);
+        window.location.replace(`${import.meta.env.BASE_URL}${redirectPath}`);
 
       // Alternatively, you can show a popup if needed
       // showPopup('Session expired. Please log in again.');
