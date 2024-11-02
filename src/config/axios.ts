@@ -36,9 +36,11 @@ axiosInstance.interceptors.response.use(
         redirectPath = '/partner/signup';
       }
 
-      if (redirectPath)
+      if (redirectPath) {
         // Redirect to login page
-        window.location.replace(`${import.meta.env.BASE_URL}${redirectPath}`);
+        const baseUrl = window.location.origin;
+        window.location.replace(`${baseUrl}${redirectPath}`);
+      }
 
       // Alternatively, you can show a popup if needed
       // showPopup('Session expired. Please log in again.');

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 
 const SearchAutocomplete = () => {
-  // const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(''); // Added state to track search query
   const [options, setOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -34,12 +34,14 @@ const SearchAutocomplete = () => {
   );
 
   const handleInputChange = (event: React.SyntheticEvent, value: string) => {
+    setSearchQuery(value); // Update search query state
     fetchSuggestions(value);
   };
 
-  const handleSelect = (event: React.SyntheticEvent, value: string | null) => {
-    if (value) {
-      navigate(`/products/list?query=${encodeURIComponent(value)}`);
+  const handleSelect = (event: React.SyntheticEvent, value?: string | null) => {
+    const selectedQuery = value ?? searchQuery;
+    if (selectedQuery) {
+      navigate(`/products/list?query=${encodeURIComponent(selectedQuery)}`);
     }
   };
 
@@ -55,7 +57,6 @@ const SearchAutocomplete = () => {
         boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
       }}
     >
-      <SearchIcon color="action" />
       <Autocomplete
         freeSolo
         options={options}
@@ -71,16 +72,12 @@ const SearchAutocomplete = () => {
             variant="outlined"
             InputProps={{
               ...params.InputProps,
-              endAdornment: (
-                <React.Fragment>
-                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                </React.Fragment>
-              ),
+              endAdornment: <>{loading ? <CircularProgress color="inherit" size={20} /> : null}</>,
             }}
           />
         )}
       />
-      <IconButton type="submit" sx={{ p: 1 }}>
+      <IconButton type="submit" sx={{ p: 1 }} onClick={(e) => handleSelect(e)}>
         <SearchIcon color="action" />
       </IconButton>
     </Box>
