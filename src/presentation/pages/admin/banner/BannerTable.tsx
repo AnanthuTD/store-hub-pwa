@@ -12,6 +12,7 @@ interface Banner {
   startDate: string;
   endDate: string;
   priority: number;
+  buttonText?: string;
 }
 
 const BannerTable: React.FC<{ triggerRefetch: any }> = ({ triggerRefetch }) => {
@@ -58,6 +59,7 @@ const BannerTable: React.FC<{ triggerRefetch: any }> = ({ triggerRefetch }) => {
       },
     },
     { title: 'Link', dataIndex: 'link', key: 'link' },
+    { title: 'Button Text', dataIndex: 'buttonText', key: 'buttonText' },
     { title: 'Start Date', dataIndex: 'startDate', key: 'startDate' },
     { title: 'End Date', dataIndex: 'endDate', key: 'endDate' },
     {

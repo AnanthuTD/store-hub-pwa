@@ -21,7 +21,9 @@ const BannerCreationModal: React.FC<BannerCreationModalProps> = ({ onAdd }) => {
       try {
         const formData = new FormData();
         formData.append('title', values.title);
+        formData.append('subtitle', values.subtitle);
         formData.append('link', values.link);
+        formData.append('buttonText', values.buttonText);
         formData.append('startDate', values.startDate.format('YYYY-MM-DD'));
         formData.append('endDate', values.endDate.format('YYYY-MM-DD'));
 
@@ -55,18 +57,32 @@ const BannerCreationModal: React.FC<BannerCreationModalProps> = ({ onAdd }) => {
         >
           <Input />
         </Form.Item>
+        <Form.Item
+          label="Subtitle"
+          name="subtitle"
+          rules={[{ required: true, message: 'Please enter the subtitle' }]}
+        >
+          <Input />
+        </Form.Item>
         <Form.Item label="Image" valuePropName="fileList">
           <Upload
             listType="picture"
             fileList={fileList}
-            beforeUpload={() => false} // Prevent automatic upload
+            beforeUpload={() => false}
             onChange={handleUploadChange}
-            maxCount={1} // Limit to one file
+            maxCount={1}
           >
             <Button icon={<UploadOutlined />}>Select File</Button>
           </Upload>
         </Form.Item>
         <Form.Item label="Link" name="link">
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Button Text"
+          name="buttonText"
+          rules={[{ required: true, message: 'Please enter the button text' }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item
