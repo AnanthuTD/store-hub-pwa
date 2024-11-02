@@ -86,7 +86,6 @@ export const useDeliveryPartnerSocket = (setNewOrder: (order: OrderAlert | null)
     navigator.geolocation.watchPosition(watchPositionSuccess, watchPositionError, {
       enableHighAccuracy: true,
       maximumAge: 0,
-      timeout: 5000,
     });
 
     // Cleanup function to remove listeners
