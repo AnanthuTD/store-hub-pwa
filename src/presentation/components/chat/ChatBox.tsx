@@ -4,36 +4,50 @@ import { SmileOutlined } from '@ant-design/icons';
 import { Button, Input, List, message as antdMessage } from 'antd';
 import { io } from 'socket.io-client';
 import Message from './Message';
-// import { Chat } from "@/utils/Interfaces";
+// import { Chat } from "@/utils/Interfaces"; // Ensure Chat is properly imported
 import { TextAreaRef } from 'antd/es/input/TextArea';
+
+export interface Chat {
+  id: string;
+  senderId: string;
+  message: string;
+  timestamp: Date | string;
+  conversationId: string;
+}
 
 interface ChatBoxProps {
   recipient: string;
   pastChats?: Chat[];
+  senderId: string;
 }
+
+const formatTimestamp = (timestamp: Date | string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  };
+  return new Date(timestamp).toLocaleString('en-IN', options);
+};
 
 const socketConnection = io(`${import.meta.env.VITE_API_BASE_URL}/adminChat`);
 
 const ChatBox: React.FC<ChatBoxProps> = ({ recipient, pastChats = [], senderId }) => {
   const chatLogRef = useRef<HTMLDivElement>(null);
   const textAreaRef = useRef<TextAreaRef>(null);
-  const [chats, setChats] = useState<Chat[]>([]);
+  const [chats, setChats] = useState<Chat[]>(pastChats);
   const [message, setMessage] = useState('');
 
   // Initialize Socket.IO
   useEffect(() => {
-    socketConnection.on('message', (newMessage: Chat) => {
-      const array = [...chats, newMessage];
-
-      console.log(array);
-
+    const handleMessage = (newMessage: Chat) => {
       setChats((prevChats) => [...prevChats, newMessage]);
+      scrollToBottom();
+    };
 
-      if (chatLogRef.current) {
-        chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
-      }
-    });
-
+    socketConnection.on('message', handleMessage);
     socketConnection.emit('initiate', senderId, recipient);
 
     socketConnection.on('disconnect', () => {
@@ -41,11 +55,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ recipient, pastChats = [], senderId }
     });
 
     return () => {
-      console.log('unmounting chat');
-      socketConnection.off('message');
-      socketConnection.off('me');
+      console.log('Unsubscribing from socket events');
+      socketConnection.off('message', handleMessage);
     };
-  }, [recipient]);
+  }, [recipient, senderId]);
 
   // Send message
   const handleSendMessage = () => {
@@ -57,28 +70,17 @@ const ChatBox: React.FC<ChatBoxProps> = ({ recipient, pastChats = [], senderId }
 
   // Handle Enter key for sending messages
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault(); // Prevent newline on Enter
       handleSendMessage();
     }
   };
 
-  // Auto scroll to bottom when new chats arrive
-  useEffect(() => {
+  // Scroll to bottom of chat log
+  const scrollToBottom = () => {
     if (chatLogRef.current) {
       chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
     }
-  }, [chats]);
-
-  const formatTimestamp = (timestamp: Date | string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-    };
-    return new Date(timestamp).toLocaleString('en-IN', options);
   };
 
   useEffect(() => {
