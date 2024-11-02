@@ -5,8 +5,8 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import axiosInstance from '@/config/axios';
-import './styles.css';
 import axios from 'axios';
+import './styles.css';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -20,22 +20,22 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
   const [openModal, setOpenModal] = useState(false);
   const [otp, setOtp] = useState<number | null>(null);
   const [otpMessage, setOtpMessage] = useState('');
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useEffect(() => {
     setOrders(data);
   }, [data]);
 
   // Function to update the order status
-  const updateStatus = async (order) => {
-    if (!selectedOrder && !order) {
+  const updateStatus = async (order: Order | null = null) => {
+    const orderToUpdate = order || selectedOrder;
+
+    if (!orderToUpdate) {
       message.error('No order selected');
       return;
     }
 
-    console.log(order);
-
-    const { _id: orderId, storeStatus } = order || selectedOrder;
+    const { _id: orderId, storeStatus } = orderToUpdate;
 
     if (storeStatus === 'ReadyForPickup' && !otp) {
       message.warning('Please enter OTP');
@@ -50,11 +50,10 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
       const updatedStatus = response.data.storeStatus;
 
       setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === orderId ? { ...order, storeStatus: updatedStatus } : order,
-        ),
+        prevOrders.map((o) => (o._id === orderId ? { ...o, storeStatus: updatedStatus } : o)),
       );
       message.success('Order status updated successfully');
+      setOtp(null); // Reset OTP after a successful update
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (storeStatus === 'ReadyForPickup') {
@@ -63,8 +62,7 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
           setOtp(null);
           return;
         }
-
-        message.error(error.response?.data.message);
+        message.error(error.response?.data.message || 'An unexpected error occurred');
       } else {
         message.error('Error while updating status');
       }
@@ -87,7 +85,8 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
           <Tag
             onClick={() => {
               setSelectedOrder(record);
-              updateStatus(record);
+              if (status === 'ReadyForPickup') setOpenModal(true);
+              else updateStatus(record);
             }}
             color={color}
             style={{ cursor: 'pointer' }}
@@ -165,10 +164,10 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
             ...item,
             isCancelled: item.isCancelled || false,
           }))}
-          pagination={{ pageSize: 5 }} // Added pagination to the expanded table
+          pagination={{ pageSize: 5 }}
           rowKey={(item) => item._id}
           style={{ backgroundColor: '#f0f8ff', padding: '10px' }}
-          rowClassName={(item) => (item.isCancelled ? 'strikethrough' : '')} // Apply strikethrough class if cancelled
+          rowClassName={(item) => (item.isCancelled ? 'strikethrough' : '')}
         />
       </div>
     );
@@ -182,7 +181,7 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
           expandedRowRender,
           rowExpandable: (record) => record.items.length > 0,
         }}
-        dataSource={orders} // Use the local state to render the table
+        dataSource={orders}
         rowKey={(record) => record._id}
         pagination={{ pageSize: 10 }}
       />
@@ -190,19 +189,18 @@ const OrderOverview: React.FC<OrderOverviewProps> = ({ data }) => {
       <Modal
         open={openModal}
         footer={[
-          <Button key="submit" type="primary" onClick={updateStatus}>
+          <Button key="submit" type="primary" onClick={() => updateStatus(selectedOrder)}>
             Verify
           </Button>,
         ]}
         closable={true}
-        onClose={() => setOpenModal(false)}
         onCancel={() => setOpenModal(false)}
       >
         <Typography.Text>
-          please call and verify the user before delivering the product +91xxxxxxxxxx
+          Please call and verify the user before delivering the product +91xxxxxxxxxx
         </Typography.Text>
 
-        <InputNumber onChange={(value) => setOtp(value)} />
+        <InputNumber onChange={(value) => setOtp(value)} placeholder="Enter OTP" />
 
         {otpMessage ? <Alert banner closable={false} message={otpMessage} /> : null}
       </Modal>
