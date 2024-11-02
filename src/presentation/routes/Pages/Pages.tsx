@@ -8,6 +8,7 @@ import UserLayout from '@/presentation/layouts/UserLayout';
 import DeliveryPartnerLayout from '@/presentation/layouts/DeliveryPartnerLayout';
 import VendorLayout from '@/presentation/layouts/vendorLayout';
 import type { LayoutType } from '../types';
+import NotFoundPage from '@/presentation/components/NotFoundPage';
 
 // Error Boundary Component
 const ErrorBoundary = ({ children }) => {
@@ -53,6 +54,7 @@ function Pages() {
             />
           );
         })}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Box>
   );
