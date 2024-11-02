@@ -8,6 +8,9 @@ const useRegisterFCMToken = (url: string) => {
     const registerFCMToken = async () => {
       try {
         const fcmToken = await getToken(messaging, { vapidKey: import.meta.env.VITE_VAPID_KEY });
+
+        console.log('fcmToken: ', fcmToken);
+
         if (fcmToken) {
           // Send token to your server to associate it with the user
           await axiosInstance.post(url, {

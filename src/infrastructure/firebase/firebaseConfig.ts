@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getMessaging } from 'firebase/messaging/sw';
+import { getMessaging } from 'firebase/messaging';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
