@@ -160,6 +160,15 @@ const adminRoutes: AdminRoutes = {
     icon: LoginIcon,
     layoutType: 'admin',
   },
+  [AdminPages.AdminBannerManagementPage]: {
+    component: asyncComponentLoader(
+      () => import('@/presentation/pages/admin/banner/BannerManagementPage'),
+    ),
+    path: '/admin/banner',
+    title: 'Banner Management',
+    icon: LoginIcon,
+    layoutType: 'admin',
+  },
 };
 
 export default adminRoutes;

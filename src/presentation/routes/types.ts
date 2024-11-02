@@ -67,6 +67,7 @@ enum AdminPages {
   AdminChatPage,
   AdminSubscriptionManagementPage,
   AdminNotificationPage,
+  AdminBannerManagementPage,
 }
 
 // Vendor Pages Enum

@@ -19,6 +19,7 @@ import useUserProfile from '@/hooks/useUserProfile';
 import useChat from '@/hooks/fetchUnreadChatsStatus';
 import { useNotification } from '@/presentation/components/NotificationContext';
 import BaseSidebar, { MenuItem } from '@/presentation/components/BaseSidebar';
+import { CardGiftcardOutlined } from '@mui/icons-material';
 
 const NotificationIcon = () => {
   const { unreadNotificationCount } = useNotification();
@@ -71,6 +72,7 @@ const items: MenuItem[] = [
   getItem('Subscription Management', '/admin/subscription', <CreditCardOutlined />),
   getItem('Notifications', '/admin/notifications', <NotificationOutlined />),
   getItem('Chats', '/admin/chat', <ChatIcon />),
+  getItem('Banner', '/admin/banner', <CardGiftcardOutlined />),
 ];
 
 const accountMenuItems = [getItem('Profile', '/admin/profile', <ProfileOutlined />)];
