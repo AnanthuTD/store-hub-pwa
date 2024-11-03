@@ -1,10 +1,8 @@
-'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
 import { Button, Input, List, message as antdMessage } from 'antd';
 import { io } from 'socket.io-client';
 import Message from './Message';
-// import { Chat } from "@/utils/Interfaces"; // Ensure Chat is properly imported
 import { TextAreaRef } from 'antd/es/input/TextArea';
 
 export interface Chat {
@@ -44,7 +42,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ recipient, pastChats = [], senderId }
   useEffect(() => {
     const handleMessage = (newMessage: Chat) => {
       setChats((prevChats) => [...prevChats, newMessage]);
-      scrollToBottom();
     };
 
     socketConnection.on('message', handleMessage);
@@ -55,7 +52,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ recipient, pastChats = [], senderId }
     });
 
     return () => {
-      console.log('Unsubscribing from socket events');
       socketConnection.off('message', handleMessage);
     };
   }, [recipient, senderId]);
@@ -83,6 +79,12 @@ const ChatBox: React.FC<ChatBoxProps> = ({ recipient, pastChats = [], senderId }
     }
   };
 
+  // Ensure chat scrolls to bottom on new message or on load
+  useEffect(() => {
+    scrollToBottom();
+  }, [chats]);
+
+  // Ensure past chats are set initially
   useEffect(() => {
     setChats(pastChats);
   }, [pastChats]);
