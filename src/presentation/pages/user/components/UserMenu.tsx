@@ -26,7 +26,7 @@ const UserMenu: React.FC = () => {
 
   const menu = (
     <Menu>
-      <Menu.Item key="Profile" icon={<UserOutlined />} disabled>
+      <Menu.Item key="Profile" icon={<UserOutlined />}>
         <Link to="/profile" target="_blank" rel="noopener noreferrer">
           Profile
         </Link>

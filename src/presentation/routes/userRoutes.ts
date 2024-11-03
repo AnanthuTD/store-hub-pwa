@@ -134,6 +134,13 @@ const userRoutes: UserRoutes = {
     icon: LoginIcon,
     layoutType: 'user',
   },
+  [UserPages.UserProfilePage]: {
+    component: asyncComponentLoader(() => import('@/presentation/pages/user/profile')),
+    path: '/profile',
+    title: 'Profile Page',
+    icon: LoginIcon,
+    layoutType: 'user',
+  },
 };
 
 export default userRoutes;
