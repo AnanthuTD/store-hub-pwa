@@ -22,6 +22,7 @@ import { HeartFilled } from '@ant-design/icons';
 import { AddToWishlist } from '@/application/usecase/AddToWishlist';
 import { WishlistRepository } from '@/infrastructure/repositories/WishlistRepository';
 import { CheckProductInWishlist } from '@/application/usecase/CheckProductInWishlist';
+import { useNavigate } from 'react-router-dom';
 
 interface ProductCardProps {
   product: IProduct;
@@ -56,6 +57,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [inWishlist, setInWishlist] = useState(false);
   const [variant, setVariant] = useState<Variant | null>(null);
   const { refreshCartCount } = useCartCount();
+  const navigate = useNavigate();
 
   // set the first variant as the selected variant
   useEffect(() => {
@@ -112,6 +114,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
 
     refreshCartCount();
+  };
+
+  const handleShopNow = async (productId: string, variantId: string) => {
+    await handleAddToCart(productId, variantId);
+    navigate('/checkout');
   };
 
   const handleAddToWishlist = (productId: string) => {
@@ -205,7 +212,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
             {/* Buttons */}
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'space-between' }}>
-              <Button variant="contained" color="primary" size="large">
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                onClick={() => handleShopNow(product._id, variant._id)}
+              >
                 Shop Now
               </Button>
               <Box display="flex" gap={1}>
