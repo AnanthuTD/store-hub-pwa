@@ -68,7 +68,7 @@ const SubscriptionPlans: React.FC = () => {
       title: 'Actions',
       key: 'actions',
       render: (_: any, record: SubscriptionPlan) => (
-        <Button type="primary" danger onClick={() => handleDeletePlan(record.id)}>
+        <Button type="primary" danger onClick={() => handleDeletePlan(record.planId)}>
           Delete
         </Button>
       ),
